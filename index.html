@@ -5,23 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0f3d2e" />
   <title>天使笑長｜創作工作室（PWA v1.0）</title>
-
-  <!-- Step 3 會補 manifest；你先留著這行 -->
   <link rel="manifest" href="manifest.json" />
 
   <style>
     :root{
-      --bg:#0b2f24;
-      --bg2:#0f3d2e;
-      --card:#ffffff;
-      --muted:#e7efe9;
-      --text:#0b1b14;
-      --sub:#51625a;
-      --brand:#f0a04b;
-      --danger:#c0392b;
-      --ok:#1f7a52;
-      --shadow:0 10px 30px rgba(0,0,0,.18);
-      --r:18px;
+      --bg:#0b2f24; --bg2:#0f3d2e; --card:#ffffff; --muted:#e7efe9;
+      --text:#0b1b14; --sub:#51625a; --brand:#f0a04b; --danger:#c0392b; --ok:#1f7a52;
+      --shadow:0 10px 30px rgba(0,0,0,.18); --r:18px;
     }
     *{box-sizing:border-box}
     body{
@@ -31,60 +21,41 @@
                   linear-gradient(180deg, var(--bg), #071e17 80%);
       color:var(--muted);
     }
-    header{
-      position:sticky; top:0; z-index:10;
+    header{position:sticky; top:0; z-index:10;
       background: linear-gradient(180deg, rgba(11,47,36,.96), rgba(11,47,36,.75));
       backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+    .wrap{max-width:1120px;margin:0 auto;padding:16px;}
     .top{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
     .brand{display:flex; align-items:center; gap:12px;}
     .brand .logo{
-      width:44px;height:44px;border-radius:14px;
-      display:grid;place-items:center;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
-      font-weight:900;color:#fff;
+      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+      background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);font-weight:900;color:#fff;
     }
     .brand h1{font-size:16px;margin:0; letter-spacing:.3px}
     .brand p{margin:2px 0 0; font-size:12px; color:rgba(231,239,233,.78)}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px; border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:rgba(231,239,233,.9);
-      font-size:12px;
+    .pill{display:inline-flex; align-items:center; gap:8px;padding:10px 12px;border-radius:999px;
+      background: rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
+      color:rgba(231,239,233,.9);font-size:12px;
     }
     .pill b{color:#fff}
     nav{display:flex; gap:8px; overflow:auto; padding:12px 0 4px;}
     .tab{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:rgba(231,239,233,.88);
-      padding:10px 12px; border-radius:999px;
-      cursor:pointer; user-select:none;
-      white-space:nowrap; font-size:13px;
-      transition: .15s ease;
+      border:1px solid rgba(255,255,255,.12);background: rgba(255,255,255,.06);
+      color:rgba(231,239,233,.88);padding:10px 12px;border-radius:999px;
+      cursor:pointer; user-select:none;white-space:nowrap;font-size:13px;transition: .15s ease;
     }
     .tab:hover{transform: translateY(-1px)}
-    .tab.active{
-      background: rgba(240,160,75,.22);
-      border-color: rgba(240,160,75,.45);
-      color:#fff;
-    }
+    .tab.active{background: rgba(240,160,75,.22);border-color: rgba(240,160,75,.45);color:#fff;}
     main{padding:18px 0 34px}
     .grid{display:grid; gap:14px}
-    @media (min-width:900px){ .grid.two{grid-template-columns: 1.1fr .9fr} }
+    @media (min-width:900px){ .grid.two{grid-template-columns: 1.12fr .88fr} }
     .card{
-      background: rgba(255,255,255,.95);
-      color:var(--text);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,.18);
-      padding:16px;
+      background: rgba(255,255,255,.95);color:var(--text);
+      border-radius: var(--r);box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.18);padding:16px;
     }
     .card h2{margin:0 0 8px; font-size:16px}
     .sub{color:var(--sub); font-size:12.5px; line-height:1.55}
@@ -92,33 +63,18 @@
     .row > *{flex:1}
     label{display:block; font-size:12px; color:var(--sub); margin:8px 0 6px}
     input, select, textarea{
-      width:100%;
-      border-radius: 14px;
-      border:1px solid rgba(0,0,0,.12);
-      padding:11px 12px;
-      font-size:14px;
-      outline:none;
-      background: #fff;
+      width:100%; border-radius: 14px; border:1px solid rgba(0,0,0,.12);
+      padding:11px 12px; font-size:14px; outline:none; background: #fff;
     }
     textarea{min-height:140px; resize:vertical; line-height:1.6}
     .btnbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    button{
-      border:0; cursor:pointer;
-      padding:10px 12px;
-      border-radius: 14px;
-      font-weight:800;
-      font-size:13px;
-    }
+    button{border:0; cursor:pointer; padding:10px 12px; border-radius: 14px; font-weight:800; font-size:13px;}
     .btn{background: var(--brand); color:#1f1204; box-shadow: 0 10px 18px rgba(240,160,75,.35);}
     .btn.secondary{background: #ecf4ef; color:#173326; border:1px solid rgba(0,0,0,.08); box-shadow:none;}
     .btn.danger{background: var(--danger); color:#fff}
     .btn.ghost{background: transparent; color:#173326; border:1px dashed rgba(0,0,0,.25);}
-    .badge{
-      display:inline-flex; align-items:center;
-      padding:6px 10px; border-radius:999px;
-      background: rgba(31,122,82,.10);
-      color: var(--ok);
-      font-weight:900; font-size:12px;
+    .badge{display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px;
+      background: rgba(31,122,82,.10); color: var(--ok); font-weight:900; font-size:12px;
     }
     .badge.gray{background: rgba(0,0,0,.06); color:#3b4c44}
     .badge.orange{background: rgba(240,160,75,.18); color:#6c3b04}
@@ -129,23 +85,35 @@
     .itemtitle{font-weight:900; font-size:14px; margin:0 0 2px}
     .meta{font-size:12px; color:var(--sub)}
     .tools{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .mini{padding:7px 10px; border-radius: 12px; background:#ecf4ef; border:1px solid rgba(0,0,0,.08); font-weight:900; font-size:12px; color:#173326;}
+    .mini{padding:7px 10px; border-radius: 12px; background:#ecf4ef; border:1px solid rgba(0,0,0,.08);
+      font-weight:900; font-size:12px; color:#173326;
+    }
     .mini.warn{background: rgba(240,160,75,.18); border-color: rgba(240,160,75,.25)}
     .mini.danger{background: rgba(192,57,43,.12); border-color: rgba(192,57,43,.18); color:#7a1d14}
-    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; background: rgba(0,0,0,.06); padding:2px 6px; border-radius: 8px; border:1px solid rgba(0,0,0,.06);}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size:12px; background: rgba(0,0,0,.06); padding:2px 6px; border-radius: 8px; border:1px solid rgba(0,0,0,.06);
+    }
     .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background: rgba(0,0,0,.78); color:#fff;
-      padding:10px 12px; border-radius: 999px;
-      font-size:13px; opacity:0; pointer-events:none;
-      transition: .2s ease; z-index:999;
+      background: rgba(0,0,0,.78); color:#fff; padding:10px 12px; border-radius: 999px;
+      font-size:13px; opacity:0; pointer-events:none; transition: .2s ease; z-index:999;
     }
     .toast.show{opacity:1}
-    .hint{border-left:4px solid rgba(240,160,75,.75); background: rgba(240,160,75,.10); padding:10px 12px; border-radius: 14px; color:#1f1204; font-size:13px; line-height:1.6;}
+    .hint{border-left:4px solid rgba(240,160,75,.75); background: rgba(240,160,75,.10);
+      padding:10px 12px; border-radius: 14px; color:#1f1204; font-size:13px; line-height:1.6;
+    }
     .small{font-size:12px;color:var(--sub);line-height:1.55}
     .split{display:flex; gap:10px; flex-wrap:wrap}
     .split > *{flex:1}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
+    dialog{
+      width:min(900px, 94vw);
+      border:0; border-radius: 18px; padding:0; box-shadow: var(--shadow);
+    }
+    dialog::backdrop{background: rgba(0,0,0,.45)}
+    .dlgHead{padding:14px 16px;background:#0f3d2e;color:#fff;border-radius: 18px 18px 0 0}
+    .dlgBody{padding:14px 16px;background:#fff;color:#0b1b14}
+    .dlgBody pre{white-space:pre-wrap; word-break:break-word; margin:0; line-height:1.7}
   </style>
 </head>
 
@@ -160,65 +128,39 @@
           <p>咒語包 × 協作提示 × 草稿/完稿 × 發片打包 × 書稿/課程母本</p>
         </div>
       </div>
-      <div class="pill">
-        <span>狀態：</span>
-        <b id="syncState">本機儲存</b>
-        <span class="kbd">localStorage</span>
-      </div>
+      <div class="pill"><span>狀態：</span><b id="syncState">本機儲存</b><span class="kbd">localStorage</span></div>
     </div>
     <nav id="nav"></nav>
   </div>
 </header>
 
-<main class="wrap">
-  <div id="view"></div>
-</main>
+<main class="wrap"><div id="view"></div></main>
 
 <div class="toast" id="toast">已複製</div>
 
+<dialog id="dlg">
+  <div class="dlgHead">
+    <div style="font-weight:900" id="dlgTitle">全文</div>
+    <div style="opacity:.85;font-size:12px" id="dlgMeta"></div>
+  </div>
+  <div class="dlgBody">
+    <div class="btnbar" style="margin-top:0">
+      <button class="btn secondary" id="dlgCopy">複製全文</button>
+      <button class="btn secondary" id="dlgCopyPrompt">複製協作提示</button>
+      <button class="btn ghost" id="dlgClose">關閉</button>
+    </div>
+    <div class="hr"></div>
+    <pre id="dlgText"></pre>
+  </div>
+</dialog>
+
 <script>
 /* =========================
-   v1.0：先把你要的功能補齊
+   v1.0：功能擴充版（仍不改版本名稱）
    ========================= */
-
 const APP = { version:"v1.0", storageKey:"angel_studio_v1" };
 const SERIES = ["幸福教養","心腦科學","心靈感悟","詩詞人生","幸福小腦袋","其他"];
 const FORMATS = ["長影片","短影片","Podcast"];
-
-/* 你的系列咒語包（每個系列不同） */
-const SPELL = {
-  "幸福教養": {
-    tone: "輕鬆溫馨陪伴口吻｜不說教｜站在家長身邊",
-    sections: ["開場Hook","承諾","完整故事","心腦科學解析","好用工具（方法）","CTA"],
-    ctaKeywords: "把心練穩、天使笑長主頁、心理學、腦神經科學、理解和愛、陪伴、親子、一起成長、分享、讓更多孩子家庭受惠、訂閱、不錯過更新、每週更新"
-  },
-  "心腦科學": {
-    tone: "親民幽默口吻｜用生活比喻說科學｜降專業門檻",
-    sections: ["開場Hook","承諾","正文（白話化，1000–2500字）","CTA"],
-    ctaKeywords: "理解、心穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
-  },
-  "詩詞人生": {
-    tone: "文雅哲學口吻｜沉穩留白｜慢慢讀",
-    sections: ["開場Hook","詩詞作者簡介","詩詞創作背景","詩詞全文／內容","心理學與腦神經延伸","生活問題運用（1000–1500字）","CTA"],
-    ctaKeywords: "心自在、穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
-  },
-  "心靈感悟": {
-    tone: "哲思、發人深省口吻｜不急著下結論｜允許留白",
-    sections: ["靈感關鍵字（延伸成1000–1500字短文）","CTA"],
-    ctaKeywords: "心自在、穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
-  },
-  "幸福小腦袋": {
-    tone: "淺顯易懂｜輕鬆活潑口吻｜親子共讀友善",
-    sections: ["主題（延伸成1000–1500字短文）","給家長的小提醒","共讀提問／小練習","CTA"],
-    ctaKeywords: "提醒家長、陪伴共讀、天使笑長"
-  },
-  "其他": {
-    tone: "以你當下的語感為主｜保留真實現場",
-    sections: ["開場","正文","收束","CTA（可選）"],
-    ctaKeywords: "天使笑長主頁、理解、陪伴"
-  }
-};
-
 const VIEWS = [
   { id:"create", label:"創作影片" },
   { id:"mother", label:"幸福教養｜母本庫（書×課）" },
@@ -228,6 +170,45 @@ const VIEWS = [
   { id:"settings", label:"設定／備份" },
 ];
 
+const SPELL = {
+  "幸福教養": {
+    tone: "輕鬆溫馨陪伴口吻｜不說教｜站在家長身邊",
+    sections: ["開場Hook","承諾","完整故事","心腦科學解析","好用工具（方法）","CTA"],
+    ctaKeywords: "把心練穩、天使笑長主頁、心理學、腦神經科學、理解和愛、陪伴、親子、一起成長、一起探討、分享、讓更多孩子家庭受惠、訂閱、不錯過更新、每週更新",
+    ctaTemplate: "如果你也在練習把心站穩，\n歡迎來到天使笑長的主頁。\n這裡有心理學、腦神經科學、心靈成長與幸福教養系列內容，\n陪你把心，一次一次放回中間。\n（每週更新）"
+  },
+  "心腦科學": {
+    tone: "親民幽默口吻｜用生活比喻說科學｜降專業門檻",
+    sections: ["開場Hook","承諾","正文（白話化，1000–2500字）","CTA"],
+    ctaKeywords: "理解、心穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
+    ctaTemplate: "如果你也喜歡用白話把腦科學說清楚，\n歡迎到天使笑長主頁逛逛。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你把理解變成穩定。（每週更新）"
+  },
+  "詩詞人生": {
+    tone: "文雅哲學口吻｜沉穩留白｜慢慢讀",
+    sections: ["開場Hook","詩詞作者簡介","詩詞創作背景","詩詞全文／內容","心理學與腦神經延伸","生活問題運用（1000–1500字）","CTA"],
+    ctaKeywords: "心自在、穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
+    ctaTemplate: "如果你也喜歡用詩詞把心慢慢放鬆，\n歡迎到天使笑長主頁。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你活得更自在。（每週更新）"
+  },
+  "心靈感悟": {
+    tone: "哲思、發人深省口吻｜不急著下結論｜允許留白",
+    sections: ["靈感關鍵字（延伸成1000–1500字短文）","CTA"],
+    ctaKeywords: "心自在、穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
+    ctaTemplate: "如果你也在練習不急著解釋、先把心放回中間，\n歡迎到天使笑長主頁。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你更穩、更自在。（每週更新）"
+  },
+  "幸福小腦袋": {
+    tone: "淺顯易懂｜輕鬆活潑口吻｜親子共讀友善",
+    sections: ["主題（延伸成1000–1500字短文）","給家長的小提醒","共讀提問／小練習","CTA"],
+    ctaKeywords: "提醒家長、陪伴共讀、天使笑長",
+    ctaTemplate: "提醒家長：陪孩子一起讀、一起練，\n比你講一百句更有用。\n— 天使笑長"
+  },
+  "其他": {
+    tone: "以你當下的語感為主｜保留真實現場",
+    sections: ["開場","正文","收束","CTA（可選）"],
+    ctaKeywords: "天使笑長主頁、理解、陪伴",
+    ctaTemplate: "想看更多內容，歡迎到天使笑長主頁。"
+  }
+};
+
 function nowISO(){ return new Date().toISOString(); }
 function uid(){ return Math.random().toString(16).slice(2)+"-"+Date.now().toString(16); }
 function fmtDate(iso){
@@ -236,7 +217,6 @@ function fmtDate(iso){
   return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
 function toast(msg="已完成"){
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -244,34 +224,39 @@ function toast(msg="已完成"){
   setTimeout(()=>t.classList.remove("show"), 1300);
 }
 async function copyText(text){
-  try{
-    await navigator.clipboard.writeText(text);
-    toast("已複製");
-  }catch(e){
+  try{ await navigator.clipboard.writeText(text); toast("已複製"); }
+  catch(e){
     const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
     toast("已複製（備援）");
   }
 }
 
-/* ========= 資料儲存 ========= */
+/* ===== 儲存 ===== */
 function loadState(){
   try{
     const raw = localStorage.getItem(APP.storageKey);
-    if(!raw) return { entries:[], bookProjects:[], courseProjects:[], settings:{homepage:"", lastSeries:"幸福教養"} };
+    if(!raw) return {
+      entries:[],
+      bookProjects:[],
+      courseProjects:[],
+      bookContent:[],     // {id,bookId,chapter,title,body,sourceEntryId,createdAt,updatedAt}
+      courseContent:[],   // {id,courseId,module,unitTitle,story,insight,practice,takeaway,sourceEntryId,createdAt,updatedAt}
+      settings:{homepage:"", lastSeries:"幸福教養"}
+    };
     return JSON.parse(raw);
   }catch(e){
-    return { entries:[], bookProjects:[], courseProjects:[], settings:{homepage:"", lastSeries:"幸福教養"} };
+    return {
+      entries:[], bookProjects:[], courseProjects:[],
+      bookContent:[], courseContent:[],
+      settings:{homepage:"", lastSeries:"幸福教養"}
+    };
   }
 }
 function saveState(s){ localStorage.setItem(APP.storageKey, JSON.stringify(s)); }
 let state = loadState();
 
-/* ========= UI：導覽 ========= */
+/* ===== 導覽 ===== */
 let current = "create";
 function renderNav(){
   const nav = document.getElementById("nav");
@@ -281,19 +266,17 @@ function renderNav(){
   });
 }
 
-/* ========= 協作提示生成 ========= */
+/* ===== 協作提示 ===== */
 function baseCollabPrompt(series, dir, entry){
   const sp = SPELL[series] || SPELL["其他"];
   const homepage = (state.settings.homepage||"").trim();
   const homeLine = homepage ? `\n主頁連結：${homepage}` : "";
-
   const dirMap = {
-    "書稿":"請把這段內容整理成《幸福教養》可入書的書稿段落（約 1500–2500 字），敘事要有畫面、節奏自然、洞察溫柔篤定。",
+    "書稿":"請把這段內容整理成《幸福教養》可入書的書稿段落（約 1500–2500 字），敘事要有畫面、節奏自然、洞察溫柔篤定。請保留我的原句與口氣。",
     "課程":"請把這段內容轉化成一個課程單元：包含「一個故事 / 一個理解（白話心腦轉譯）/ 一個練習（30–60秒可做）/ 一句帶走的話」。",
-    "工具":"請從這段內容找出「最需要被扶住的瞬間」，設計一個 30–60 秒內完成的小工具（步驟清楚、可當場使用）。",
-    "發片":"請把這段內容整理成發片用的大綱：Hook/承諾/故事/理解/工具指路/CTA。不要寫成逐字口說稿，只要結構與要點。"
+    "工具":"請從這段內容找出『最需要被扶住的瞬間』，設計一個 30–60 秒內完成的小工具（步驟清楚、可當場使用）。",
+    "發片":"請把這段內容整理成發片用的大綱：Hook/承諾/故事/理解/工具指路/CTA。不要逐字口說稿，只要結構與要點。"
   };
-
   return `請依「${series}」系列的文案咒語包協助我。
 語感：${sp.tone}
 必須保留生活現場與我的真實語氣（不說教）。${homeLine}
@@ -330,7 +313,7 @@ function updateCollabPrompt(){
   box.value = baseCollabPrompt(series, dir, entry);
 }
 
-/* ========= 資料：草稿/完稿 ========= */
+/* ===== Entries ===== */
 function upsertEntry(payload){
   payload.updatedAt = nowISO();
   if(!payload.id){
@@ -344,7 +327,6 @@ function upsertEntry(payload){
   }
   saveState(state);
 }
-
 function getEntryForm(){
   const series = document.getElementById("series").value;
   const format = document.getElementById("format").value;
@@ -359,8 +341,9 @@ function getEntryForm(){
 }
 
 function EntryCard(e){
-  const b = e.status==="final" ? "badge" : "badge gray";
-  const tag = e.status==="final" ? "完稿" : "草稿";
+  const isFinal = e.status==="final";
+  const b = isFinal ? "badge" : "badge gray";
+  const tag = isFinal ? "完稿" : "草稿";
   const dir = e.collabDir ? `<span class="badge orange">${escapeHtml(e.collabDir)}</span>` : "";
   const snippet = (e.body||"").slice(0,120).replace(/\n/g," ");
   return `
@@ -376,14 +359,15 @@ function EntryCard(e){
       </div>
       <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${(e.body||"").length>120?"…":""}</div>
       <div class="tools">
+        <button class="mini" data-action="open" data-id="${e.id}">開啟全文</button>
         <button class="mini" data-action="edit" data-id="${e.id}">編輯</button>
-        <button class="mini warn" data-action="toggle" data-id="${e.id}">${e.status==="final"?"轉草稿":"轉完稿"}</button>
+        <button class="mini warn" data-action="toggle" data-id="${e.id}">${isFinal?"轉草稿":"轉完稿"}</button>
         <button class="mini danger" data-action="del" data-id="${e.id}">刪除</button>
       </div>
     </div>`;
 }
 
-/* ========= Views ========= */
+/* ===== Spell Card ===== */
 function buildSpellCard(series){
   const sp = SPELL[series] || SPELL["其他"];
   const secs = sp.sections.map(s=>`<li>${escapeHtml(s)}</li>`).join("");
@@ -408,6 +392,7 @@ function buildSpellCard(series){
   `;
 }
 
+/* ===== Views ===== */
 function CreateView(){
   const last = state.settings.lastSeries || "幸福教養";
   return `
@@ -514,7 +499,7 @@ function ListView(status){
   return `
     <div class="card">
       <h2>${title}</h2>
-      <div class="sub">依系列分類＋主題檢索</div>
+      <div class="sub">依系列分類＋主題檢索｜可開啟全文、複製全文、複製協作提示</div>
       <div class="hr"></div>
       ${FilterBar(prefix, status)}
       <div class="hr"></div>
@@ -525,43 +510,58 @@ function ListView(status){
   `;
 }
 
-/* 發片打包（先給能用的版本：連結＋日期＋介紹文草稿＋複製） */
-function generateDescription(e){
+/* ===== 打包 ===== */
+function generateDescription(e, kind="video"){
   const homepage = (state.settings.homepage||"").trim();
   const home = homepage ? `\n\n👉 主頁：${homepage}` : "";
   const tags = ["#幸福教養","#心理學","#腦神經科學","#心靈成長","#親子"].join(" ");
-  return `【${e.topic}】
+  const base = `【${e.topic}】\n\n（在這裡放你的影片摘要／重點）\n`;
+  if(kind==="podcast"){
+    return `${base}\n【Podcast 版本】\n用更慢的節奏，把理解放進心裡。\n\n${tags}${home}`.trim();
+  }
+  return `${base}\n${tags}${home}`.trim();
+}
 
-（在這裡放你的影片摘要／重點）
-
-${tags}${home}`.trim();
+function getSeriesCTA(series){
+  const sp = SPELL[series] || SPELL["其他"];
+  const homepage = (state.settings.homepage||"").trim();
+  let cta = sp.ctaTemplate || "";
+  if(homepage) cta += `\n\n主頁：${homepage}`;
+  return cta.trim();
 }
 
 function PackView(){
   const finals = state.entries.filter(e=>e.status==="final");
+  const has = finals.length>0;
   return `
     <div class="grid two">
       <div class="card">
         <h2>📦 發片打包區</h2>
-        <div class="sub">把完稿整理成「工具連結／影片介紹／排程」的一包。</div>
+        <div class="sub">完稿 → 工具連結／介紹文／CTA 一鍵套用／排程</div>
         <div class="hr"></div>
 
         <label>選擇一篇完稿</label>
-        <select id="packPick">
-          ${finals.map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${escapeHtml(e.topic)}</option>`).join("")}
+        <select id="packPick" ${has?"":"disabled"}>
+          ${has ? finals.map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${escapeHtml(e.topic)}</option>`).join("")
+                : `<option>目前沒有完稿</option>`}
         </select>
 
         <div class="row">
-          <div><label>工具連結（可選）</label><input id="toolLink" placeholder="例如：你的 PWA 工具連結 / Google 表單連結…" /></div>
+          <div><label>工具連結（可選）</label><input id="toolLink" placeholder="例如：PWA 工具連結 / Google 表單…" /></div>
           <div><label>預計發片日期（可選）</label><input id="scheduleDate" type="date" /></div>
         </div>
 
-        <label>影片介紹（可生成後再自行修改）</label>
+        <label>影片介紹</label>
         <textarea id="packDesc" placeholder="按『生成介紹文』自動產出初稿。"></textarea>
 
+        <label>CTA（依系列不同，一鍵套用）</label>
+        <textarea id="packCTA" placeholder="按『套用系列 CTA』自動填入。"></textarea>
+
         <div class="btnbar">
-          <button class="btn" id="btnGenDesc">生成介紹文</button>
-          <button class="btn secondary" id="btnCopyDesc">複製介紹文</button>
+          <button class="btn" id="btnGenDesc" ${has?"":"disabled"}>生成介紹文</button>
+          <button class="btn secondary" id="btnGenPodDesc" ${has?"":"disabled"}>生成 Podcast 介紹</button>
+          <button class="btn secondary" id="btnApplyCTA" ${has?"":"disabled"}>套用系列 CTA</button>
+          <button class="btn secondary" id="btnCopyPackAll" ${has?"":"disabled"}>複製（介紹＋CTA）</button>
         </div>
 
         <div class="hr"></div>
@@ -576,7 +576,7 @@ function PackView(){
 
       <div class="card">
         <h2>🪄 打包協作提示</h2>
-        <div class="sub">若你想把介紹文/置頂留言/Shorts 拆條也交給我，直接複製：</div>
+        <div class="sub">想把介紹文/置頂留言/Shorts 拆條也交給我，直接複製：</div>
         <div class="hr"></div>
         <textarea class="mono" id="packPrompt" style="min-height:260px">請依我選定的完稿內容，幫我產出：
 1) 影片介紹
@@ -591,39 +591,41 @@ function PackView(){
   `;
 }
 
-/* 母本庫：書稿/課程專案（先能新增/列表/刪除） */
+/* ===== 母本庫：書稿內容庫 / 課程內容庫 ===== */
 function MotherView(){
+  const books = state.bookProjects;
+  const courses = state.courseProjects;
+
   return `
-    <div class="grid two">
+    <div class="grid" style="gap:14px">
       <div class="card">
         <h2>📖 書籍專案（母本）</h2>
-        <div class="sub">這裡放書稿專案，不是口說稿。</div>
+        <div class="sub">書稿不是口說稿：用「章節/段落」堆出一本書。</div>
         <div class="hr"></div>
 
         <div class="row">
           <div><label>書名（可暫定）</label><input id="bookTitle" placeholder="例：《不打不罵不氣幸福教養》" /></div>
-          <div>
-            <label>書寫狀態</label>
+          <div><label>書寫狀態</label>
             <select id="bookStatus"><option>醞釀中</option><option>書寫中</option><option>初稿完成</option><option>修訂中</option></select>
           </div>
         </div>
-        <label>核心一句話（可選）</label>
-        <input id="bookCore" placeholder="例：把心站穩，孩子就有路走。" />
-        <label>目標讀者（可選）</label>
-        <input id="bookAudience" placeholder="例：育兒家長／老師／想活得自在的人" />
-
+        <label>核心一句話（可選）</label><input id="bookCore" placeholder="例：把心站穩，孩子就有路走。" />
+        <label>目標讀者（可選）</label><input id="bookAudience" placeholder="例：育兒家長／老師／想活得自在的人" />
         <div class="btnbar"><button class="btn" id="btnAddBook">新增書籍專案</button></div>
 
         <div class="hr"></div>
         <div class="list">
-          ${state.bookProjects.map(b=>`
+          ${books.map(b=>`
             <div class="item">
               <div class="itemhead">
                 <div>
                   <div class="itemtitle">${escapeHtml(b.title)}</div>
                   <div class="meta">${escapeHtml(b.status)}｜${fmtDate(b.updatedAt||b.createdAt)}</div>
                 </div>
-                <div class="tools"><button class="mini danger" data-action="delBook" data-id="${b.id}">刪除</button></div>
+                <div class="tools">
+                  <button class="mini" data-action="pickBook" data-id="${b.id}">選用</button>
+                  <button class="mini danger" data-action="delBook" data-id="${b.id}">刪除</button>
+                </div>
               </div>
               <div class="small" style="margin-top:8px"><b>核心：</b>${escapeHtml(b.core||"（未填）")}</div>
               <div class="small"><b>讀者：</b>${escapeHtml(b.audience||"（未填）")}</div>
@@ -631,54 +633,132 @@ function MotherView(){
         </div>
       </div>
 
-      <div class="card">
-        <h2>🎓 課程專案（母本）</h2>
-        <div class="sub">課程是學習路徑：陪人做到。</div>
-        <div class="hr"></div>
+      <div class="grid two">
+        <div class="card">
+          <h2>🧱 書稿內容庫（章節/段落）</h2>
+          <div class="sub">可直接從「完稿」匯入成書稿段落，讓你的故事更生動。</div>
+          <div class="hr"></div>
 
-        <div class="row">
-          <div><label>課程名稱</label><input id="courseTitle" placeholder="例：把『等一下』練出來：孩子的選擇力" /></div>
-          <div>
-            <label>課程型態</label>
-            <select id="courseType"><option>家長課</option><option>教師專業課</option><option>成人內在成長</option></select>
+          <label>選擇書籍（先在上面按「選用」）</label>
+          <input id="pickedBook" placeholder="尚未選用書籍" readonly />
+
+          <div class="row">
+            <div><label>章節（自行輸入）</label><input id="bookChapter" placeholder="例：第二章｜無欲則剛" /></div>
+            <div><label>段落標題</label><input id="bookParaTitle" placeholder="例：超市裡談價碼" /></div>
           </div>
-        </div>
-        <label>一句話承諾（可選）</label>
-        <input id="coursePromise" placeholder="例：陪你在關鍵時刻能多停一下、少用力一點。" />
-        <div class="row">
-          <div><label>適合對象（可選）</label><input id="courseAudience" placeholder="例：育兒家長／第一線老師" /></div>
-          <div>
-            <label>課程狀態</label>
-            <select id="courseStatus"><option>醞釀中</option><option>設計中</option><option>試教中</option><option>穩定上線</option></select>
+
+          <label>段落內容</label>
+          <textarea id="bookParaBody" placeholder="貼上你的故事／段落…"></textarea>
+
+          <div class="row">
+            <div>
+              <label>從完稿匯入（可選）</label>
+              <select id="importFinalToBook">
+                <option value="">不匯入</option>
+                ${state.entries.filter(e=>e.status==="final").map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.topic)}</option>`).join("")}
+              </select>
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button class="btn secondary" id="btnFillBookFromFinal">帶入完稿內容</button>
+            </div>
           </div>
+
+          <div class="btnbar">
+            <button class="btn" id="btnAddBookPara">新增段落</button>
+            <button class="btn secondary" id="btnExportBookText">匯出此書（純文字）</button>
+          </div>
+
+          <div class="hr"></div>
+          <div class="list" id="bookContentList"></div>
         </div>
 
-        <div class="btnbar"><button class="btn" id="btnAddCourse">新增課程專案</button></div>
+        <div class="card">
+          <h2>🎓 課程專案（母本）</h2>
+          <div class="sub">課程是學習路徑：陪人做到。</div>
+          <div class="hr"></div>
 
-        <div class="hr"></div>
-        <div class="list">
-          ${state.courseProjects.map(c=>`
-            <div class="item">
-              <div class="itemhead">
-                <div>
-                  <div class="itemtitle">${escapeHtml(c.title)}</div>
-                  <div class="meta">${escapeHtml(c.type)}｜${escapeHtml(c.status)}｜${fmtDate(c.updatedAt||c.createdAt)}</div>
+          <div class="row">
+            <div><label>課程名稱</label><input id="courseTitle" placeholder="例：把『等一下』練出來：孩子的選擇力" /></div>
+            <div><label>課程型態</label>
+              <select id="courseType"><option>家長課</option><option>教師專業課</option><option>成人內在成長</option></select>
+            </div>
+          </div>
+          <label>一句話承諾（可選）</label><input id="coursePromise" placeholder="例：陪你在關鍵時刻能多停一下、少用力一點。" />
+          <div class="row">
+            <div><label>適合對象（可選）</label><input id="courseAudience" placeholder="例：育兒家長／第一線老師" /></div>
+            <div><label>課程狀態</label>
+              <select id="courseStatus"><option>醞釀中</option><option>設計中</option><option>試教中</option><option>穩定上線</option></select>
+            </div>
+          </div>
+          <div class="btnbar"><button class="btn" id="btnAddCourse">新增課程專案</button></div>
+
+          <div class="hr"></div>
+          <div class="list">
+            ${courses.map(c=>`
+              <div class="item">
+                <div class="itemhead">
+                  <div>
+                    <div class="itemtitle">${escapeHtml(c.title)}</div>
+                    <div class="meta">${escapeHtml(c.type)}｜${escapeHtml(c.status)}｜${fmtDate(c.updatedAt||c.createdAt)}</div>
+                  </div>
+                  <div class="tools">
+                    <button class="mini" data-action="pickCourse" data-id="${c.id}">選用</button>
+                    <button class="mini danger" data-action="delCourse" data-id="${c.id}">刪除</button>
+                  </div>
                 </div>
-                <div class="tools"><button class="mini danger" data-action="delCourse" data-id="${c.id}">刪除</button></div>
-              </div>
-              <div class="small" style="margin-top:8px"><b>承諾：</b>${escapeHtml(c.promise||"（未填）")}</div>
-              <div class="small"><b>對象：</b>${escapeHtml(c.audience||"（未填）")}</div>
-            </div>`).join("") || `<div class="sub">還沒有課程專案。</div>`}
-        </div>
+                <div class="small" style="margin-top:8px"><b>承諾：</b>${escapeHtml(c.promise||"（未填）")}</div>
+                <div class="small"><b>對象：</b>${escapeHtml(c.audience||"（未填）")}</div>
+              </div>`).join("") || `<div class="sub">還沒有課程專案。</div>`}
+          </div>
 
-        <div class="hr"></div>
-        <div class="hint"><b>下一步我們會加：</b>課程「模組/單元」管理＋單元模板（故事/理解/練習/帶走句）。</div>
+          <div class="hr"></div>
+          <h2 style="margin-top:0">🧩 課程內容庫（模組/單元）</h2>
+          <div class="sub">單元模板：故事/理解/練習/帶走句。可從完稿匯入。</div>
+
+          <label>選擇課程（先在上面按「選用」）</label>
+          <input id="pickedCourse" placeholder="尚未選用課程" readonly />
+
+          <div class="row">
+            <div><label>模組</label><input id="courseModule" placeholder="例：模組1｜大人先穩" /></div>
+            <div><label>單元標題</label><input id="courseUnitTitle" placeholder="例：超市裡的『等一下』" /></div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>從完稿匯入（可選）</label>
+              <select id="importFinalToCourse">
+                <option value="">不匯入</option>
+                ${state.entries.filter(e=>e.status==="final").map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.topic)}</option>`).join("")}
+              </select>
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button class="btn secondary" id="btnFillCourseFromFinal">帶入完稿（填故事）</button>
+            </div>
+          </div>
+
+          <label>故事（現場）</label>
+          <textarea id="unitStory" placeholder="貼故事原文（你的生命現場）"></textarea>
+          <label>理解（白話心腦轉譯）</label>
+          <textarea id="unitInsight" placeholder="把『發生了什麼』翻譯成『大腦在做什麼』"></textarea>
+          <label>練習（30–60秒可做）</label>
+          <textarea id="unitPractice" placeholder="例：手摸胸口＋4吸6吐×3，紅→黃→綠"></textarea>
+          <label>帶走一句話</label>
+          <input id="unitTakeaway" placeholder="例：忍一下不是壓抑，是讓選擇力長出來。" />
+
+          <div class="btnbar">
+            <button class="btn" id="btnAddCourseUnit">新增單元</button>
+            <button class="btn secondary" id="btnExportCourseText">匯出此課（純文字）</button>
+          </div>
+
+          <div class="hr"></div>
+          <div class="list" id="courseContentList"></div>
+        </div>
       </div>
     </div>
   `;
 }
 
-/* 設定／備份 */
+/* ===== Settings ===== */
 function SettingsView(){
   return `
     <div class="grid two">
@@ -702,22 +782,20 @@ function SettingsView(){
       </div>
 
       <div class="card">
-        <h2>📌 本版已補齊功能</h2>
+        <h2>📌 已擴充功能清單</h2>
         <div class="small">
-          - 系列咒語包（每系列不同）<br/>
-          - 協作提示一鍵生成/複製（書稿/課程/工具/發片）<br/>
-          - 草稿/完稿（含檢索）<br/>
-          - 發片打包（連結/日期/介紹文/協作提示）<br/>
-          - 母本庫：書稿/課程專案（MVP）<br/>
-          - 設定/備份（匯出/匯入）<br/><br/>
-          <b>下一步：</b>我們再加「書稿內容庫（章節/段落）」＋「課程模組/單元」。
+          - 草稿/完稿：開啟全文＋複製全文＋複製協作提示<br/>
+          - 發片打包：系列 CTA 一鍵套用＋Podcast 介紹一鍵生成<br/>
+          - 母本庫：書稿（章/段落）＋課程（模組/單元）＋可由完稿匯入<br/>
+          - 仍維持：咒語包、協作提示、檢索、備份<br/><br/>
+          <b>下一步：</b>把「段落/單元」做成可編輯/可刪除/可移動排序。
         </div>
       </div>
     </div>
   `;
 }
 
-/* ========= 主 render ========= */
+/* ===== Render ===== */
 function render(){
   renderNav();
   const view = document.getElementById("view");
@@ -729,10 +807,24 @@ function render(){
   if(current==="settings") view.innerHTML = SettingsView();
   bindEvents();
   if(document.getElementById("collabPrompt")) updateCollabPrompt();
+  refreshMotherLists();
 }
 render();
 
-/* ========= 事件綁定 ========= */
+/* ===== Dialog 全文 ===== */
+let dlgEntryId = null;
+function openDialogForEntry(id){
+  const e = state.entries.find(x=>x.id===id);
+  if(!e) return;
+  dlgEntryId = id;
+  document.getElementById("dlgTitle").textContent = e.topic;
+  document.getElementById("dlgMeta").textContent = `${e.series}｜${e.format}｜${fmtDate(e.updatedAt||e.createdAt)}`;
+  document.getElementById("dlgText").textContent = e.body || "";
+  document.getElementById("dlg").showModal();
+}
+function closeDlg(){ document.getElementById("dlg").close(); dlgEntryId=null; }
+
+/* ===== Filter ===== */
 function applyFilter(status, prefix){
   const series = (document.getElementById(prefix+"Series")?.value||"").trim();
   const kw = (document.getElementById(prefix+"Kw")?.value||"").trim().toLowerCase();
@@ -743,9 +835,8 @@ function applyFilter(status, prefix){
     (e.body||"").toLowerCase().includes(kw)
   );
   document.getElementById(prefix+"List").innerHTML = items.map(EntryCard).join("") || `<div class="sub">沒有符合的內容。</div>`;
-  bindEvents(); // 重新綁定卡片按鈕
+  bindEvents();
 }
-
 function clearFilter(status, prefix){
   const s = document.getElementById(prefix+"Series");
   const k = document.getElementById(prefix+"Kw");
@@ -754,20 +845,121 @@ function clearFilter(status, prefix){
   applyFilter(status, prefix);
 }
 
-function bindEvents(){
-  /* 導覽已在 renderNav 綁過 */
+/* ===== 母本：選用狀態 ===== */
+state.settings.pickedBookId ||= "";
+state.settings.pickedCourseId ||= "";
+function pickedBook(){ return state.settings.pickedBookId || ""; }
+function pickedCourse(){ return state.settings.pickedCourseId || ""; }
 
-  /* 創作頁：系列切換 → 右側咒語包更新 + 記住 lastSeries */
+function refreshMotherLists(){
+  // 書稿內容列表
+  const el = document.getElementById("bookContentList");
+  const pickedB = pickedBook();
+  const pickedBName = state.bookProjects.find(b=>b.id===pickedB)?.title || "";
+  const pickedBookInput = document.getElementById("pickedBook");
+  if(pickedBookInput) pickedBookInput.value = pickedBName || "尚未選用書籍";
+
+  if(el){
+    const list = state.bookContent.filter(x=>x.bookId===pickedB);
+    el.innerHTML = list.map(p=>`
+      <div class="item">
+        <div class="itemhead">
+          <div>
+            <div class="itemtitle">${escapeHtml(p.chapter||"（未填章節）")}｜${escapeHtml(p.title||"（未填標題）")}</div>
+            <div class="meta">${fmtDate(p.updatedAt||p.createdAt)}${p.sourceEntryId?`｜來源完稿`:""}</div>
+          </div>
+          <div class="tools">
+            <button class="mini" data-action="copyBookPara" data-id="${p.id}">複製</button>
+            <button class="mini danger" data-action="delBookPara" data-id="${p.id}">刪除</button>
+          </div>
+        </div>
+        <div class="small" style="margin-top:8px">${escapeHtml((p.body||"").slice(0,120).replace(/\n/g," "))}${(p.body||"").length>120?"…":""}</div>
+      </div>
+    `).join("") || `<div class="sub">先「選用書籍」→ 再新增段落。</div>`;
+  }
+
+  // 課程內容列表
+  const el2 = document.getElementById("courseContentList");
+  const pickedC = pickedCourse();
+  const pickedCName = state.courseProjects.find(c=>c.id===pickedC)?.title || "";
+  const pickedCourseInput = document.getElementById("pickedCourse");
+  if(pickedCourseInput) pickedCourseInput.value = pickedCName || "尚未選用課程";
+
+  if(el2){
+    const list = state.courseContent.filter(x=>x.courseId===pickedC);
+    el2.innerHTML = list.map(u=>`
+      <div class="item">
+        <div class="itemhead">
+          <div>
+            <div class="itemtitle">${escapeHtml(u.module||"（未填模組）")}｜${escapeHtml(u.unitTitle||"（未填單元）")}</div>
+            <div class="meta">${fmtDate(u.updatedAt||u.createdAt)}${u.sourceEntryId?`｜來源完稿`:""}</div>
+          </div>
+          <div class="tools">
+            <button class="mini" data-action="copyCourseUnit" data-id="${u.id}">複製</button>
+            <button class="mini danger" data-action="delCourseUnit" data-id="${u.id}">刪除</button>
+          </div>
+        </div>
+        <div class="small" style="margin-top:8px"><b>帶走句：</b>${escapeHtml(u.takeaway||"（未填）")}</div>
+      </div>
+    `).join("") || `<div class="sub">先「選用課程」→ 再新增單元。</div>`;
+  }
+
+  bindEvents();
+}
+
+/* ===== 匯出書/課純文字 ===== */
+function exportBookText(bookId){
+  const book = state.bookProjects.find(b=>b.id===bookId);
+  if(!book) return "";
+  const paras = state.bookContent.filter(p=>p.bookId===bookId);
+  let out = `【書名】${book.title}\n【狀態】${book.status}\n【核心】${book.core||""}\n【讀者】${book.audience||""}\n\n`;
+  // 依章節分組（簡單排序：章節字串）
+  const groups = {};
+  paras.forEach(p=>{
+    const ch = p.chapter || "（未分章）";
+    groups[ch] ||= [];
+    groups[ch].push(p);
+  });
+  Object.keys(groups).sort().forEach(ch=>{
+    out += `\n=== ${ch} ===\n`;
+    groups[ch].forEach(p=>{
+      out += `\n# ${p.title||"（未命名段落）"}\n${p.body||""}\n`;
+    });
+  });
+  return out.trim();
+}
+
+function exportCourseText(courseId){
+  const c = state.courseProjects.find(x=>x.id===courseId);
+  if(!c) return "";
+  const units = state.courseContent.filter(u=>u.courseId===courseId);
+  let out = `【課程】${c.title}\n【型態】${c.type}\n【狀態】${c.status}\n【承諾】${c.promise||""}\n【對象】${c.audience||""}\n\n`;
+  const groups = {};
+  units.forEach(u=>{
+    const m = u.module || "（未分模組）";
+    groups[m] ||= [];
+    groups[m].push(u);
+  });
+  Object.keys(groups).sort().forEach(m=>{
+    out += `\n=== ${m} ===\n`;
+    groups[m].forEach(u=>{
+      out += `\n# ${u.unitTitle||"（未命名單元）"}\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}\n`;
+    });
+  });
+  return out.trim();
+}
+
+/* ===== Events ===== */
+function bindEvents(){
   const seriesSel = document.getElementById("series");
   if(seriesSel){
     seriesSel.addEventListener("change", ()=>{
       state.settings.lastSeries = seriesSel.value;
       saveState(state);
-      render(); // 讓右側咒語包跟著換
+      render(); // 右側咒語包同步
     });
   }
 
-  /* 協作提示：跟著輸入更新 */
   ["topic","body","notes","collabDir"].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.addEventListener("input", updateCollabPrompt);
@@ -787,7 +979,6 @@ function bindEvents(){
       render();
     });
   }
-
   const btnSaveFinal = document.getElementById("btnSaveFinal");
   if(btnSaveFinal){
     btnSaveFinal.addEventListener("click", ()=>{
@@ -798,7 +989,6 @@ function bindEvents(){
       render();
     });
   }
-
   const btnReset = document.getElementById("btnReset");
   if(btnReset){
     btnReset.addEventListener("click", ()=>{
@@ -826,7 +1016,10 @@ function bindEvents(){
     });
   }
 
-  /* 列表卡片：編輯/狀態/刪除 */
+  /* 列表卡片 */
+  document.querySelectorAll("[data-action='open']").forEach(btn=>{
+    btn.addEventListener("click", ()=>openDialogForEntry(btn.dataset.id));
+  });
   document.querySelectorAll("[data-action='edit']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
@@ -846,7 +1039,6 @@ function bindEvents(){
       },0);
     });
   });
-
   document.querySelectorAll("[data-action='toggle']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
@@ -859,7 +1051,6 @@ function bindEvents(){
       render();
     });
   });
-
   document.querySelectorAll("[data-action='del']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
@@ -887,6 +1078,25 @@ function bindEvents(){
     });
   });
 
+  /* Dialog */
+  const dlg = document.getElementById("dlg");
+  if(dlg){
+    const closeBtn = document.getElementById("dlgClose");
+    if(closeBtn) closeBtn.onclick = closeDlg;
+    const copyBtn = document.getElementById("dlgCopy");
+    if(copyBtn) copyBtn.onclick = ()=>{
+      const e = state.entries.find(x=>x.id===dlgEntryId);
+      copyText(e?.body||"");
+    };
+    const copyPromptBtn = document.getElementById("dlgCopyPrompt");
+    if(copyPromptBtn) copyPromptBtn.onclick = ()=>{
+      const e = state.entries.find(x=>x.id===dlgEntryId);
+      if(!e) return;
+      const prompt = baseCollabPrompt(e.series, e.collabDir||"書稿", {topic:e.topic, body:e.body, notes:e.notes||""});
+      copyText(prompt);
+    };
+  }
+
   /* 打包 */
   const btnGenDesc = document.getElementById("btnGenDesc");
   if(btnGenDesc){
@@ -894,17 +1104,49 @@ function bindEvents(){
       const id = document.getElementById("packPick").value;
       const e = state.entries.find(x=>x.id===id);
       if(!e) return;
-      document.getElementById("packDesc").value = generateDescription(e);
+      document.getElementById("packDesc").value = generateDescription(e, "video");
       toast("已生成介紹文");
     });
   }
-  const btnCopyDesc = document.getElementById("btnCopyDesc");
-  if(btnCopyDesc) btnCopyDesc.addEventListener("click", ()=>copyText(document.getElementById("packDesc").value));
+  const btnGenPodDesc = document.getElementById("btnGenPodDesc");
+  if(btnGenPodDesc){
+    btnGenPodDesc.addEventListener("click", ()=>{
+      const id = document.getElementById("packPick").value;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      document.getElementById("packDesc").value = generateDescription(e, "podcast");
+      toast("已生成 Podcast 介紹");
+    });
+  }
+  const btnApplyCTA = document.getElementById("btnApplyCTA");
+  if(btnApplyCTA){
+    btnApplyCTA.addEventListener("click", ()=>{
+      const id = document.getElementById("packPick").value;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      document.getElementById("packCTA").value = getSeriesCTA(e.series);
+      toast("已套用系列 CTA");
+    });
+  }
+  const btnCopyPackAll = document.getElementById("btnCopyPackAll");
+  if(btnCopyPackAll){
+    btnCopyPackAll.addEventListener("click", ()=>{
+      const tool = (document.getElementById("toolLink").value||"").trim();
+      const dt = (document.getElementById("scheduleDate").value||"").trim();
+      const desc = (document.getElementById("packDesc").value||"").trim();
+      const cta = (document.getElementById("packCTA").value||"").trim();
+      const extra = [];
+      if(tool) extra.push(`工具連結：${tool}`);
+      if(dt) extra.push(`預計發片：${dt}`);
+      const head = extra.length?`【打包資訊】\n${extra.join("\n")}\n\n`:"";
+      copyText(`${head}${desc}\n\n${cta}`.trim());
+    });
+  }
 
   const btnCopyPackPrompt = document.getElementById("btnCopyPackPrompt");
   if(btnCopyPackPrompt) btnCopyPackPrompt.addEventListener("click", ()=>copyText(document.getElementById("packPrompt").value));
 
-  /* 母本：新增/刪除 */
+  /* 母本：新增/刪除/選用 */
   const btnAddBook = document.getElementById("btnAddBook");
   if(btnAddBook){
     btnAddBook.addEventListener("click", ()=>{
@@ -925,7 +1167,16 @@ function bindEvents(){
       const id = btn.dataset.id;
       if(!confirm("刪除書籍專案？")) return;
       state.bookProjects = state.bookProjects.filter(b=>b.id!==id);
+      if(state.settings.pickedBookId===id) state.settings.pickedBookId="";
       saveState(state); toast("已刪除"); render();
+    });
+  });
+  document.querySelectorAll("[data-action='pickBook']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.settings.pickedBookId = btn.dataset.id;
+      saveState(state);
+      toast("已選用書籍");
+      refreshMotherLists();
     });
   });
 
@@ -950,11 +1201,141 @@ function bindEvents(){
       const id = btn.dataset.id;
       if(!confirm("刪除課程專案？")) return;
       state.courseProjects = state.courseProjects.filter(c=>c.id!==id);
+      if(state.settings.pickedCourseId===id) state.settings.pickedCourseId="";
       saveState(state); toast("已刪除"); render();
     });
   });
+  document.querySelectorAll("[data-action='pickCourse']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.settings.pickedCourseId = btn.dataset.id;
+      saveState(state);
+      toast("已選用課程");
+      refreshMotherLists();
+    });
+  });
 
-  /* 備份：匯出/匯入/清空 */
+  /* 書稿段落：從完稿帶入 / 新增 / 匯出 / 刪除 / 複製 */
+  const btnFillBookFromFinal = document.getElementById("btnFillBookFromFinal");
+  if(btnFillBookFromFinal){
+    btnFillBookFromFinal.addEventListener("click", ()=>{
+      const id = document.getElementById("importFinalToBook").value;
+      if(!id) return;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      document.getElementById("bookParaTitle").value = e.topic;
+      document.getElementById("bookParaBody").value = e.body;
+      toast("已帶入完稿");
+    });
+  }
+  const btnAddBookPara = document.getElementById("btnAddBookPara");
+  if(btnAddBookPara){
+    btnAddBookPara.addEventListener("click", ()=>{
+      const bookId = pickedBook();
+      if(!bookId) return alert("請先在上方書籍專案按『選用』");
+      const chapter = (document.getElementById("bookChapter").value||"").trim();
+      const title = (document.getElementById("bookParaTitle").value||"").trim();
+      const body = (document.getElementById("bookParaBody").value||"").trim();
+      if(!body) return alert("請先填段落內容");
+      const sourceEntryId = (document.getElementById("importFinalToBook").value||"").trim() || "";
+      state.bookContent.unshift({
+        id: uid(), bookId, chapter, title, body, sourceEntryId,
+        createdAt:nowISO(), updatedAt:nowISO()
+      });
+      saveState(state); toast("已新增段落"); refreshMotherLists();
+      document.getElementById("bookParaBody").value = "";
+    });
+  }
+  document.querySelectorAll("[data-action='delBookPara']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("刪除段落？")) return;
+      state.bookContent = state.bookContent.filter(x=>x.id!==id);
+      saveState(state); toast("已刪除段落"); refreshMotherLists();
+    });
+  });
+  document.querySelectorAll("[data-action='copyBookPara']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const p = state.bookContent.find(x=>x.id===btn.dataset.id);
+      if(!p) return;
+      copyText(`${p.chapter||""}\n${p.title||""}\n\n${p.body||""}`.trim());
+    });
+  });
+  const btnExportBookText = document.getElementById("btnExportBookText");
+  if(btnExportBookText){
+    btnExportBookText.addEventListener("click", ()=>{
+      const bookId = pickedBook();
+      if(!bookId) return alert("請先選用一本書");
+      const text = exportBookText(bookId);
+      copyText(text);
+      toast("已複製書稿純文字");
+    });
+  }
+
+  /* 課程單元：從完稿帶入 / 新增 / 匯出 / 刪除 / 複製 */
+  const btnFillCourseFromFinal = document.getElementById("btnFillCourseFromFinal");
+  if(btnFillCourseFromFinal){
+    btnFillCourseFromFinal.addEventListener("click", ()=>{
+      const id = document.getElementById("importFinalToCourse").value;
+      if(!id) return;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      document.getElementById("courseUnitTitle").value = e.topic;
+      document.getElementById("unitStory").value = e.body;
+      toast("已帶入完稿（故事）");
+    });
+  }
+  const btnAddCourseUnit = document.getElementById("btnAddCourseUnit");
+  if(btnAddCourseUnit){
+    btnAddCourseUnit.addEventListener("click", ()=>{
+      const courseId = pickedCourse();
+      if(!courseId) return alert("請先在課程專案按『選用』");
+      const module = (document.getElementById("courseModule").value||"").trim();
+      const unitTitle = (document.getElementById("courseUnitTitle").value||"").trim();
+      const story = (document.getElementById("unitStory").value||"").trim();
+      const insight = (document.getElementById("unitInsight").value||"").trim();
+      const practice = (document.getElementById("unitPractice").value||"").trim();
+      const takeaway = (document.getElementById("unitTakeaway").value||"").trim();
+      if(!unitTitle) return alert("請先填單元標題");
+      if(!story) return alert("請先填故事（或從完稿帶入）");
+      const sourceEntryId = (document.getElementById("importFinalToCourse").value||"").trim() || "";
+      state.courseContent.unshift({
+        id: uid(), courseId, module, unitTitle, story, insight, practice, takeaway, sourceEntryId,
+        createdAt:nowISO(), updatedAt:nowISO()
+      });
+      saveState(state); toast("已新增單元"); refreshMotherLists();
+      document.getElementById("unitStory").value = "";
+      document.getElementById("unitInsight").value = "";
+      document.getElementById("unitPractice").value = "";
+      document.getElementById("unitTakeaway").value = "";
+    });
+  }
+  document.querySelectorAll("[data-action='delCourseUnit']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("刪除單元？")) return;
+      state.courseContent = state.courseContent.filter(x=>x.id!==id);
+      saveState(state); toast("已刪除單元"); refreshMotherLists();
+    });
+  });
+  document.querySelectorAll("[data-action='copyCourseUnit']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const u = state.courseContent.find(x=>x.id===btn.dataset.id);
+      if(!u) return;
+      copyText(`【${u.module||""}｜${u.unitTitle||""}】\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}`.trim());
+    });
+  });
+  const btnExportCourseText = document.getElementById("btnExportCourseText");
+  if(btnExportCourseText){
+    btnExportCourseText.addEventListener("click", ()=>{
+      const courseId = pickedCourse();
+      if(!courseId) return alert("請先選用一門課");
+      const text = exportCourseText(courseId);
+      copyText(text);
+      toast("已複製課程純文字");
+    });
+  }
+
+  /* 設定：匯出/匯入/清空 */
   const btnExport = document.getElementById("btnExport");
   if(btnExport){
     btnExport.addEventListener("click", ()=>{
@@ -966,7 +1347,6 @@ function bindEvents(){
       toast("已匯出備份");
     });
   }
-
   const fileImport = document.getElementById("fileImport");
   if(fileImport){
     fileImport.addEventListener("change", async ()=>{
@@ -977,6 +1357,10 @@ function bindEvents(){
         const obj = JSON.parse(txt);
         if(!obj || typeof obj!=="object") throw new Error("bad");
         state = obj;
+        // 防呆：缺欄位補上
+        state.bookContent ||= [];
+        state.courseContent ||= [];
+        state.settings ||= {homepage:"", lastSeries:"幸福教養"};
         saveState(state);
         toast("已匯入");
         render();
@@ -985,7 +1369,6 @@ function bindEvents(){
       }
     });
   }
-
   const btnWipe = document.getElementById("btnWipe");
   if(btnWipe){
     btnWipe.addEventListener("click", ()=>{
@@ -996,9 +1379,57 @@ function bindEvents(){
       render();
     });
   }
+
+  /* 篩選 */
+  document.querySelectorAll("[data-action='applyFilter']").forEach(btn=>{
+    btn.addEventListener("click", ()=>applyFilter(btn.dataset.status, btn.dataset.prefix));
+  });
+  document.querySelectorAll("[data-action='clearFilter']").forEach(btn=>{
+    btn.addEventListener("click", ()=>clearFilter(btn.dataset.status, btn.dataset.prefix));
+  });
 }
 
-/* Step 2 才會補完整 sw.js；你先留著註冊 */
+/* ===== 書/課匯出文字 ===== */
+function exportBookText(bookId){
+  const book = state.bookProjects.find(b=>b.id===bookId);
+  if(!book) return "";
+  const paras = state.bookContent.filter(p=>p.bookId===bookId);
+  let out = `【書名】${book.title}\n【狀態】${book.status}\n【核心】${book.core||""}\n【讀者】${book.audience||""}\n\n`;
+  const groups = {};
+  paras.forEach(p=>{
+    const ch = p.chapter || "（未分章）";
+    groups[ch] ||= [];
+    groups[ch].push(p);
+  });
+  Object.keys(groups).sort().forEach(ch=>{
+    out += `\n=== ${ch} ===\n`;
+    groups[ch].forEach(p=>{
+      out += `\n# ${p.title||"（未命名段落）"}\n${p.body||""}\n`;
+    });
+  });
+  return out.trim();
+}
+function exportCourseText(courseId){
+  const c = state.courseProjects.find(x=>x.id===courseId);
+  if(!c) return "";
+  const units = state.courseContent.filter(u=>u.courseId===courseId);
+  let out = `【課程】${c.title}\n【型態】${c.type}\n【狀態】${c.status}\n【承諾】${c.promise||""}\n【對象】${c.audience||""}\n\n`;
+  const groups = {};
+  units.forEach(u=>{
+    const m = u.module || "（未分模組）";
+    groups[m] ||= [];
+    groups[m].push(u);
+  });
+  Object.keys(groups).sort().forEach(m=>{
+    out += `\n=== ${m} ===\n`;
+    groups[m].forEach(u=>{
+      out += `\n# ${u.unitTitle||"（未命名單元）"}\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}\n`;
+    });
+  });
+  return out.trim();
+}
+
+/* ===== Service Worker（先保留，等你要離線再補 sw.js） ===== */
 if("serviceWorker" in navigator){
   window.addEventListener("load", async ()=>{
     try{
@@ -1011,4 +1442,4 @@ if("serviceWorker" in navigator){
 }
 </script>
 </body>
-</html>
+  </html>
