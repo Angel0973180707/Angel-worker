@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0f3d2e" />
+  <title>天使笑長｜創作工作室（PWA v1.0）</title>
+
+  <!-- Step 3 會補 manifest；你先留著這行 -->
+  <link rel="manifest" href="manifest.json" />
+
+  <style>
+    :root{
+      --bg:#0b2f24;
+      --bg2:#0f3d2e;
+      --card:#ffffff;
+      --muted:#e7efe9;
+      --text:#0b1b14;
+      --sub:#51625a;
+      --brand:#f0a04b;
+      --danger:#c0392b;
+      --ok:#1f7a52;
+      --shadow:0 10px 30px rgba(0,0,0,.18);
+      --r:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(240,160,75,.25), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #071e17 80%);
+      color:var(--muted);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background: linear-gradient(180deg, rgba(11,47,36,.96), rgba(11,47,36,.75));
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+    .top{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .brand{display:flex; align-items:center; gap:12px;}
+    .brand .logo{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      font-weight:900;color:#fff;
+    }
+    .brand h1{font-size:16px;margin:0; letter-spacing:.3px}
+    .brand p{margin:2px 0 0; font-size:12px; color:rgba(231,239,233,.78)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(231,239,233,.9);
+      font-size:12px;
+    }
+    .pill b{color:#fff}
+    nav{display:flex; gap:8px; overflow:auto; padding:12px 0 4px;}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:rgba(231,239,233,.88);
+      padding:10px 12px; border-radius:999px;
+      cursor:pointer; user-select:none;
+      white-space:nowrap; font-size:13px;
+      transition: .15s ease;
+    }
+    .tab:hover{transform: translateY(-1px)}
+    .tab.active{
+      background: rgba(240,160,75,.22);
+      border-color: rgba(240,160,75,.45);
+      color:#fff;
+    }
+    main{padding:18px 0 34px}
+    .grid{display:grid; gap:14px}
+    @media (min-width:900px){ .grid.two{grid-template-columns: 1.1fr .9fr} }
+    .card{
+      background: rgba(255,255,255,.95);
+      color:var(--text);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.18);
+      padding:16px;
+    }
+    .card h2{margin:0 0 8px; font-size:16px}
+    .sub{color:var(--sub); font-size:12.5px; line-height:1.55}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .row > *{flex:1}
+    label{display:block; font-size:12px; color:var(--sub); margin:8px 0 6px}
+    input, select, textarea{
+      width:100%;
+      border-radius: 14px;
+      border:1px solid rgba(0,0,0,.12);
+      padding:11px 12px;
+      font-size:14px;
+      outline:none;
+      background: #fff;
+    }
+    textarea{min-height:140px; resize:vertical; line-height:1.6}
+    .btnbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    button{
+      border:0; cursor:pointer;
+      padding:10px 12px;
+      border-radius: 14px;
+      font-weight:800;
+      font-size:13px;
+    }
+    .btn{background: var(--brand); color:#1f1204; box-shadow: 0 10px 18px rgba(240,160,75,.35);}
+    .btn.secondary{background: #ecf4ef; color:#173326; border:1px solid rgba(0,0,0,.08); box-shadow:none;}
+    .btn.danger{background: var(--danger); color:#fff}
+    .btn.ghost{background: transparent; color:#173326; border:1px dashed rgba(0,0,0,.25);}
+    .badge{
+      display:inline-flex; align-items:center;
+      padding:6px 10px; border-radius:999px;
+      background: rgba(31,122,82,.10);
+      color: var(--ok);
+      font-weight:900; font-size:12px;
+    }
+    .badge.gray{background: rgba(0,0,0,.06); color:#3b4c44}
+    .badge.orange{background: rgba(240,160,75,.18); color:#6c3b04}
+    .hr{height:1px;background:rgba(0,0,0,.08);margin:14px 0}
+    .list{display:grid; gap:10px}
+    .item{border:1px solid rgba(0,0,0,.08); border-radius: 16px; padding:12px; background:#fff;}
+    .itemhead{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+    .itemtitle{font-weight:900; font-size:14px; margin:0 0 2px}
+    .meta{font-size:12px; color:var(--sub)}
+    .tools{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .mini{padding:7px 10px; border-radius: 12px; background:#ecf4ef; border:1px solid rgba(0,0,0,.08); font-weight:900; font-size:12px; color:#173326;}
+    .mini.warn{background: rgba(240,160,75,.18); border-color: rgba(240,160,75,.25)}
+    .mini.danger{background: rgba(192,57,43,.12); border-color: rgba(192,57,43,.18); color:#7a1d14}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; background: rgba(0,0,0,.06); padding:2px 6px; border-radius: 8px; border:1px solid rgba(0,0,0,.06);}
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(0,0,0,.78); color:#fff;
+      padding:10px 12px; border-radius: 999px;
+      font-size:13px; opacity:0; pointer-events:none;
+      transition: .2s ease; z-index:999;
+    }
+    .toast.show{opacity:1}
+    .hint{border-left:4px solid rgba(240,160,75,.75); background: rgba(240,160,75,.10); padding:10px 12px; border-radius: 14px; color:#1f1204; font-size:13px; line-height:1.6;}
+    .small{font-size:12px;color:var(--sub);line-height:1.55}
+    .split{display:flex; gap:10px; flex-wrap:wrap}
+    .split > *{flex:1}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">幸</div>
+        <div>
+          <h1>天使笑長｜創作工作室（PWA v1.0）</h1>
+          <p>咒語包 × 協作提示 × 草稿/完稿 × 發片打包 × 書稿/課程母本</p>
+        </div>
+      </div>
+      <div class="pill">
+        <span>狀態：</span>
+        <b id="syncState">本機儲存</b>
+        <span class="kbd">localStorage</span>
+      </div>
+    </div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="view"></div>
+</main>
+
+<div class="toast" id="toast">已複製</div>
+
+<script>
+/* =========================
+   v1.0：先把你要的功能補齊
+   ========================= */
+
+const APP = { version:"v1.0", storageKey:"angel_studio_v1" };
+const SERIES = ["幸福教養","心腦科學","心靈感悟","詩詞人生","幸福小腦袋","其他"];
+const FORMATS = ["長影片","短影片","Podcast"];
+
+/* 你的系列咒語包（每個系列不同） */
+const SPELL = {
+  "幸福教養": {
+    tone: "輕鬆溫馨陪伴口吻｜不說教｜站在家長身邊",
+    sections: ["開場Hook","承諾","完整故事","心腦科學解析","好用工具（方法）","CTA"],
+    ctaKeywords: "把心練穩、天使笑長主頁、心理學、腦神經科學、理解和愛、陪伴、親子、一起成長、分享、讓更多孩子家庭受惠、訂閱、不錯過更新、每週更新"
+  },
+  "心腦科學": {
+    tone: "親民幽默口吻｜用生活比喻說科學｜降專業門檻",
+    sections: ["開場Hook","承諾","正文（白話化，1000–2500字）","CTA"],
+    ctaKeywords: "理解、心穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
+  },
+  "詩詞人生": {
+    tone: "文雅哲學口吻｜沉穩留白｜慢慢讀",
+    sections: ["開場Hook","詩詞作者簡介","詩詞創作背景","詩詞全文／內容","心理學與腦神經延伸","生活問題運用（1000–1500字）","CTA"],
+    ctaKeywords: "心自在、穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
+  },
+  "心靈感悟": {
+    tone: "哲思、發人深省口吻｜不急著下結論｜允許留白",
+    sections: ["靈感關鍵字（延伸成1000–1500字短文）","CTA"],
+    ctaKeywords: "心自在、穩定、天使笑長策劃、心理學、腦神經科學、心靈成長、幸福教養、每週更新"
+  },
+  "幸福小腦袋": {
+    tone: "淺顯易懂｜輕鬆活潑口吻｜親子共讀友善",
+    sections: ["主題（延伸成1000–1500字短文）","給家長的小提醒","共讀提問／小練習","CTA"],
+    ctaKeywords: "提醒家長、陪伴共讀、天使笑長"
+  },
+  "其他": {
+    tone: "以你當下的語感為主｜保留真實現場",
+    sections: ["開場","正文","收束","CTA（可選）"],
+    ctaKeywords: "天使笑長主頁、理解、陪伴"
+  }
+};
+
+const VIEWS = [
+  { id:"create", label:"創作影片" },
+  { id:"mother", label:"幸福教養｜母本庫（書×課）" },
+  { id:"drafts", label:"文案草稿區" },
+  { id:"final",  label:"完稿區" },
+  { id:"pack",   label:"發片打包區" },
+  { id:"settings", label:"設定／備份" },
+];
+
+function nowISO(){ return new Date().toISOString(); }
+function uid(){ return Math.random().toString(16).slice(2)+"-"+Date.now().toString(16); }
+function fmtDate(iso){
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+function toast(msg="已完成"){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1300);
+}
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("已複製");
+  }catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    toast("已複製（備援）");
+  }
+}
+
+/* ========= 資料儲存 ========= */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(APP.storageKey);
+    if(!raw) return { entries:[], bookProjects:[], courseProjects:[], settings:{homepage:"", lastSeries:"幸福教養"} };
+    return JSON.parse(raw);
+  }catch(e){
+    return { entries:[], bookProjects:[], courseProjects:[], settings:{homepage:"", lastSeries:"幸福教養"} };
+  }
+}
+function saveState(s){ localStorage.setItem(APP.storageKey, JSON.stringify(s)); }
+let state = loadState();
+
+/* ========= UI：導覽 ========= */
+let current = "create";
+function renderNav(){
+  const nav = document.getElementById("nav");
+  nav.innerHTML = VIEWS.map(v => `<div class="tab ${v.id===current?'active':''}" data-id="${v.id}">${v.label}</div>`).join("");
+  nav.querySelectorAll(".tab").forEach(t=>{
+    t.addEventListener("click",()=>{ current=t.dataset.id; render(); });
+  });
+}
+
+/* ========= 協作提示生成 ========= */
+function baseCollabPrompt(series, dir, entry){
+  const sp = SPELL[series] || SPELL["其他"];
+  const homepage = (state.settings.homepage||"").trim();
+  const homeLine = homepage ? `\n主頁連結：${homepage}` : "";
+
+  const dirMap = {
+    "書稿":"請把這段內容整理成《幸福教養》可入書的書稿段落（約 1500–2500 字），敘事要有畫面、節奏自然、洞察溫柔篤定。",
+    "課程":"請把這段內容轉化成一個課程單元：包含「一個故事 / 一個理解（白話心腦轉譯）/ 一個練習（30–60秒可做）/ 一句帶走的話」。",
+    "工具":"請從這段內容找出「最需要被扶住的瞬間」，設計一個 30–60 秒內完成的小工具（步驟清楚、可當場使用）。",
+    "發片":"請把這段內容整理成發片用的大綱：Hook/承諾/故事/理解/工具指路/CTA。不要寫成逐字口說稿，只要結構與要點。"
+  };
+
+  return `請依「${series}」系列的文案咒語包協助我。
+語感：${sp.tone}
+必須保留生活現場與我的真實語氣（不說教）。${homeLine}
+
+【我希望你幫我做的事】
+${dirMap[dir]||dirMap["書稿"]}
+
+【系列咒語結構】
+- ${sp.sections.join("\n- ")}
+
+【CTA 關鍵字池】
+${sp.ctaKeywords}
+
+【主題】
+${entry.topic}
+
+【原文／素材】
+${entry.body}
+
+【補充】
+${entry.notes || "（無）"}`.trim();
+}
+
+function updateCollabPrompt(){
+  const series = document.getElementById("series")?.value || state.settings.lastSeries || "幸福教養";
+  const entry = {
+    topic:(document.getElementById("topic")?.value||"").trim(),
+    body:(document.getElementById("body")?.value||"").trim(),
+    notes:(document.getElementById("notes")?.value||"").trim(),
+  };
+  const dir = document.getElementById("collabDir")?.value || "書稿";
+  const box = document.getElementById("collabPrompt");
+  if(!box) return;
+  box.value = baseCollabPrompt(series, dir, entry);
+}
+
+/* ========= 資料：草稿/完稿 ========= */
+function upsertEntry(payload){
+  payload.updatedAt = nowISO();
+  if(!payload.id){
+    payload.id = uid();
+    payload.createdAt = nowISO();
+    state.entries.unshift(payload);
+  }else{
+    const idx = state.entries.findIndex(x=>x.id===payload.id);
+    if(idx>=0) state.entries[idx] = {...state.entries[idx], ...payload};
+    else { payload.createdAt = nowISO(); state.entries.unshift(payload); }
+  }
+  saveState(state);
+}
+
+function getEntryForm(){
+  const series = document.getElementById("series").value;
+  const format = document.getElementById("format").value;
+  const topic = (document.getElementById("topic").value||"").trim();
+  const body = (document.getElementById("body").value||"").trim();
+  const notes = (document.getElementById("notes").value||"").trim();
+  const collabDir = document.getElementById("collabDir").value;
+  const id = (document.getElementById("entryId").value||"").trim();
+  if(!topic) return alert("請先填「主題」"), null;
+  if(!body) return alert("請先填「全文／故事／正文」"), null;
+  return { id:id||"", series, format, topic, body, notes, collabDir };
+}
+
+function EntryCard(e){
+  const b = e.status==="final" ? "badge" : "badge gray";
+  const tag = e.status==="final" ? "完稿" : "草稿";
+  const dir = e.collabDir ? `<span class="badge orange">${escapeHtml(e.collabDir)}</span>` : "";
+  const snippet = (e.body||"").slice(0,120).replace(/\n/g," ");
+  return `
+    <div class="item">
+      <div class="itemhead">
+        <div>
+          <div class="itemtitle">${escapeHtml(e.topic)}</div>
+          <div class="meta">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${fmtDate(e.updatedAt||e.createdAt)}</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+          <span class="${b}">${tag}</span>${dir}
+        </div>
+      </div>
+      <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${(e.body||"").length>120?"…":""}</div>
+      <div class="tools">
+        <button class="mini" data-action="edit" data-id="${e.id}">編輯</button>
+        <button class="mini warn" data-action="toggle" data-id="${e.id}">${e.status==="final"?"轉草稿":"轉完稿"}</button>
+        <button class="mini danger" data-action="del" data-id="${e.id}">刪除</button>
+      </div>
+    </div>`;
+}
+
+/* ========= Views ========= */
+function buildSpellCard(series){
+  const sp = SPELL[series] || SPELL["其他"];
+  const secs = sp.sections.map(s=>`<li>${escapeHtml(s)}</li>`).join("");
+  return `
+    <div class="card">
+      <h2>🪄 文案咒語包｜${escapeHtml(series)}</h2>
+      <div class="sub">${escapeHtml(sp.tone)}</div>
+      <div class="hr"></div>
+      <div class="split">
+        <div>
+          <div class="small"><b>結構提醒（依系列不同）</b></div>
+          <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.7">${secs}</ul>
+        </div>
+        <div>
+          <div class="small"><b>CTA 關鍵字池</b></div>
+          <div class="small" style="margin-top:8px">${escapeHtml(sp.ctaKeywords)}</div>
+          <div class="hr"></div>
+          <div class="hint"><b>小提醒：</b>先寫真實，再用咒語包把路照亮。</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function CreateView(){
+  const last = state.settings.lastSeries || "幸福教養";
+  return `
+  <div class="grid two">
+    <div class="grid" style="gap:14px">
+      <div class="card">
+        <h2>📝 創作影片｜原文輸入</h2>
+        <div class="sub">先寫真實，不用一次寫好。卡住時用「咒語包」與「協作提示」扶你走完。</div>
+        <input type="hidden" id="entryId" value="" />
+
+        <div class="row">
+          <div>
+            <label>系列名稱</label>
+            <select id="series">
+              ${SERIES.map(s=>`<option ${s===last?'selected':''}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div>
+            <label>片型</label>
+            <select id="format">${FORMATS.map(f=>`<option>${f}</option>`).join("")}</select>
+          </div>
+        </div>
+
+        <label>主題</label>
+        <input id="topic" placeholder="例：無欲則剛：孩子學會『等一下』，選擇力就開始長出來" />
+
+        <label>故事全文／詩詞全文／正文全文</label>
+        <textarea id="body" placeholder="把你走過的『生命現場』貼進來就好。"></textarea>
+
+        <label>補充（可選）</label>
+        <textarea id="notes" placeholder="例如：要保留的原句／你想放進哪一章哪一課／你希望加強的角度…"></textarea>
+
+        <div class="hr"></div>
+
+        <label>協作方向（你要我幫你走到哪）</label>
+        <select id="collabDir">
+          <option>書稿</option><option>課程</option><option>工具</option><option>發片</option>
+        </select>
+
+        <label>一鍵協作提示（複製貼給我）</label>
+        <textarea id="collabPrompt" class="mono" style="min-height:190px"></textarea>
+
+        <div class="btnbar">
+          <button class="btn secondary" id="btnCopyPrompt">複製協作提示</button>
+          <button class="btn" id="btnSaveDraft">先存草稿</button>
+          <button class="btn" id="btnSaveFinal">存為完稿</button>
+          <button class="btn ghost" id="btnReset">清空輸入</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2 style="margin-top:0">🧡 主頁（可選）</h2>
+        <div class="sub">填了後協作提示與打包區會自動帶入。</div>
+        <label>主頁連結</label>
+        <input id="homepage" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
+        <div class="btnbar"><button class="btn secondary" id="btnSaveHome">儲存主頁</button></div>
+      </div>
+
+      <div class="card">
+        <h2>📌 快速回顧</h2>
+        <div class="sub">草稿：${state.entries.filter(e=>e.status==="draft").length}　｜　完稿：${state.entries.filter(e=>e.status==="final").length}</div>
+        <div class="hr"></div>
+        <div class="list">
+          ${state.entries.slice(0,3).map(EntryCard).join("") || `<div class="sub">還沒有內容。先寫一段真實故事吧。</div>`}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="gap:14px">
+      ${buildSpellCard(last)}
+      <div class="card">
+        <h2>🪶 協作提醒</h2>
+        <div class="sub">你負責「真實」，我負責「結構與轉化」。不用一次完成，只要先留下生命現場。</div>
+        <div class="hr"></div>
+        <div class="hint"><b>小技巧：</b>你把故事貼進來後，只要切換「書稿／課程／工具／發片」，協作提示就會自動換成不同任務。</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function FilterBar(idPrefix, status){
+  return `
+    <div class="row">
+      <div>
+        <label>系列篩選</label>
+        <select id="${idPrefix}Series"><option value="">全部</option>${SERIES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("")}</select>
+      </div>
+      <div>
+        <label>主題關鍵字</label>
+        <input id="${idPrefix}Kw" placeholder="輸入關鍵字…" />
+      </div>
+    </div>
+    <div class="btnbar">
+      <button class="btn secondary" data-action="applyFilter" data-status="${status}" data-prefix="${idPrefix}">套用篩選</button>
+      <button class="btn ghost" data-action="clearFilter" data-status="${status}" data-prefix="${idPrefix}">清除</button>
+    </div>
+  `;
+}
+
+function ListView(status){
+  const title = status==="draft" ? "🌱 文案草稿區" : "🌳 完稿區";
+  const list = state.entries.filter(e=>e.status===status);
+  const prefix = status==="draft" ? "d" : "f";
+  return `
+    <div class="card">
+      <h2>${title}</h2>
+      <div class="sub">依系列分類＋主題檢索</div>
+      <div class="hr"></div>
+      ${FilterBar(prefix, status)}
+      <div class="hr"></div>
+      <div class="list" id="${prefix}List">
+        ${list.map(EntryCard).join("") || `<div class="sub">目前沒有內容。</div>`}
+      </div>
+    </div>
+  `;
+}
+
+/* 發片打包（先給能用的版本：連結＋日期＋介紹文草稿＋複製） */
+function generateDescription(e){
+  const homepage = (state.settings.homepage||"").trim();
+  const home = homepage ? `\n\n👉 主頁：${homepage}` : "";
+  const tags = ["#幸福教養","#心理學","#腦神經科學","#心靈成長","#親子"].join(" ");
+  return `【${e.topic}】
+
+（在這裡放你的影片摘要／重點）
+
+${tags}${home}`.trim();
+}
+
+function PackView(){
+  const finals = state.entries.filter(e=>e.status==="final");
+  return `
+    <div class="grid two">
+      <div class="card">
+        <h2>📦 發片打包區</h2>
+        <div class="sub">把完稿整理成「工具連結／影片介紹／排程」的一包。</div>
+        <div class="hr"></div>
+
+        <label>選擇一篇完稿</label>
+        <select id="packPick">
+          ${finals.map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${escapeHtml(e.topic)}</option>`).join("")}
+        </select>
+
+        <div class="row">
+          <div><label>工具連結（可選）</label><input id="toolLink" placeholder="例如：你的 PWA 工具連結 / Google 表單連結…" /></div>
+          <div><label>預計發片日期（可選）</label><input id="scheduleDate" type="date" /></div>
+        </div>
+
+        <label>影片介紹（可生成後再自行修改）</label>
+        <textarea id="packDesc" placeholder="按『生成介紹文』自動產出初稿。"></textarea>
+
+        <div class="btnbar">
+          <button class="btn" id="btnGenDesc">生成介紹文</button>
+          <button class="btn secondary" id="btnCopyDesc">複製介紹文</button>
+        </div>
+
+        <div class="hr"></div>
+        <div class="small">
+          <b>其他你可再加：</b><br/>
+          1) 首圖風格提示（16:9 水彩 / 寫實電影感）<br/>
+          2) Shorts 拆條清單（3–5 條）<br/>
+          3) 置頂留言（1 句）<br/>
+          4) 片尾引流（主頁 / 工具 / 相關長片）
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🪄 打包協作提示</h2>
+        <div class="sub">若你想把介紹文/置頂留言/Shorts 拆條也交給我，直接複製：</div>
+        <div class="hr"></div>
+        <textarea class="mono" id="packPrompt" style="min-height:260px">請依我選定的完稿內容，幫我產出：
+1) 影片介紹
+2) 置頂留言（1 句）
+3) Shorts 拆條提案 3 則（標題＋一句 hook）
+口吻請維持該系列的文案咒語包語感，溫柔不說教。</textarea>
+        <div class="btnbar">
+          <button class="btn secondary" id="btnCopyPackPrompt">複製打包協作提示</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* 母本庫：書稿/課程專案（先能新增/列表/刪除） */
+function MotherView(){
+  return `
+    <div class="grid two">
+      <div class="card">
+        <h2>📖 書籍專案（母本）</h2>
+        <div class="sub">這裡放書稿專案，不是口說稿。</div>
+        <div class="hr"></div>
+
+        <div class="row">
+          <div><label>書名（可暫定）</label><input id="bookTitle" placeholder="例：《不打不罵不氣幸福教養》" /></div>
+          <div>
+            <label>書寫狀態</label>
+            <select id="bookStatus"><option>醞釀中</option><option>書寫中</option><option>初稿完成</option><option>修訂中</option></select>
+          </div>
+        </div>
+        <label>核心一句話（可選）</label>
+        <input id="bookCore" placeholder="例：把心站穩，孩子就有路走。" />
+        <label>目標讀者（可選）</label>
+        <input id="bookAudience" placeholder="例：育兒家長／老師／想活得自在的人" />
+
+        <div class="btnbar"><button class="btn" id="btnAddBook">新增書籍專案</button></div>
+
+        <div class="hr"></div>
+        <div class="list">
+          ${state.bookProjects.map(b=>`
+            <div class="item">
+              <div class="itemhead">
+                <div>
+                  <div class="itemtitle">${escapeHtml(b.title)}</div>
+                  <div class="meta">${escapeHtml(b.status)}｜${fmtDate(b.updatedAt||b.createdAt)}</div>
+                </div>
+                <div class="tools"><button class="mini danger" data-action="delBook" data-id="${b.id}">刪除</button></div>
+              </div>
+              <div class="small" style="margin-top:8px"><b>核心：</b>${escapeHtml(b.core||"（未填）")}</div>
+              <div class="small"><b>讀者：</b>${escapeHtml(b.audience||"（未填）")}</div>
+            </div>`).join("") || `<div class="sub">還沒有書籍專案。</div>`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎓 課程專案（母本）</h2>
+        <div class="sub">課程是學習路徑：陪人做到。</div>
+        <div class="hr"></div>
+
+        <div class="row">
+          <div><label>課程名稱</label><input id="courseTitle" placeholder="例：把『等一下』練出來：孩子的選擇力" /></div>
+          <div>
+            <label>課程型態</label>
+            <select id="courseType"><option>家長課</option><option>教師專業課</option><option>成人內在成長</option></select>
+          </div>
+        </div>
+        <label>一句話承諾（可選）</label>
+        <input id="coursePromise" placeholder="例：陪你在關鍵時刻能多停一下、少用力一點。" />
+        <div class="row">
+          <div><label>適合對象（可選）</label><input id="courseAudience" placeholder="例：育兒家長／第一線老師" /></div>
+          <div>
+            <label>課程狀態</label>
+            <select id="courseStatus"><option>醞釀中</option><option>設計中</option><option>試教中</option><option>穩定上線</option></select>
+          </div>
+        </div>
+
+        <div class="btnbar"><button class="btn" id="btnAddCourse">新增課程專案</button></div>
+
+        <div class="hr"></div>
+        <div class="list">
+          ${state.courseProjects.map(c=>`
+            <div class="item">
+              <div class="itemhead">
+                <div>
+                  <div class="itemtitle">${escapeHtml(c.title)}</div>
+                  <div class="meta">${escapeHtml(c.type)}｜${escapeHtml(c.status)}｜${fmtDate(c.updatedAt||c.createdAt)}</div>
+                </div>
+                <div class="tools"><button class="mini danger" data-action="delCourse" data-id="${c.id}">刪除</button></div>
+              </div>
+              <div class="small" style="margin-top:8px"><b>承諾：</b>${escapeHtml(c.promise||"（未填）")}</div>
+              <div class="small"><b>對象：</b>${escapeHtml(c.audience||"（未填）")}</div>
+            </div>`).join("") || `<div class="sub">還沒有課程專案。</div>`}
+        </div>
+
+        <div class="hr"></div>
+        <div class="hint"><b>下一步我們會加：</b>課程「模組/單元」管理＋單元模板（故事/理解/練習/帶走句）。</div>
+      </div>
+    </div>
+  `;
+}
+
+/* 設定／備份 */
+function SettingsView(){
+  return `
+    <div class="grid two">
+      <div class="card">
+        <h2>⚙️ 設定</h2>
+        <div class="sub">資料存在本機（localStorage）。建議定期匯出備份。</div>
+        <div class="hr"></div>
+        <label>主頁連結（可選）</label>
+        <input id="homepage2" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
+        <div class="btnbar"><button class="btn secondary" id="btnSaveHome2">儲存</button></div>
+
+        <div class="hr"></div>
+        <div class="row">
+          <div><label>匯出備份（JSON）</label><button class="btn" id="btnExport">匯出</button></div>
+          <div><label>匯入備份（JSON）</label><input type="file" id="fileImport" accept="application/json" /></div>
+        </div>
+
+        <div class="hr"></div>
+        <button class="btn danger" id="btnWipe">清空所有資料</button>
+        <div class="small" style="margin-top:8px">⚠️ 清空前請先匯出備份。</div>
+      </div>
+
+      <div class="card">
+        <h2>📌 本版已補齊功能</h2>
+        <div class="small">
+          - 系列咒語包（每系列不同）<br/>
+          - 協作提示一鍵生成/複製（書稿/課程/工具/發片）<br/>
+          - 草稿/完稿（含檢索）<br/>
+          - 發片打包（連結/日期/介紹文/協作提示）<br/>
+          - 母本庫：書稿/課程專案（MVP）<br/>
+          - 設定/備份（匯出/匯入）<br/><br/>
+          <b>下一步：</b>我們再加「書稿內容庫（章節/段落）」＋「課程模組/單元」。
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ========= 主 render ========= */
+function render(){
+  renderNav();
+  const view = document.getElementById("view");
+  if(current==="create") view.innerHTML = CreateView();
+  if(current==="drafts") view.innerHTML = ListView("draft");
+  if(current==="final") view.innerHTML = ListView("final");
+  if(current==="pack") view.innerHTML = PackView();
+  if(current==="mother") view.innerHTML = MotherView();
+  if(current==="settings") view.innerHTML = SettingsView();
+  bindEvents();
+  if(document.getElementById("collabPrompt")) updateCollabPrompt();
+}
+render();
+
+/* ========= 事件綁定 ========= */
+function applyFilter(status, prefix){
+  const series = (document.getElementById(prefix+"Series")?.value||"").trim();
+  const kw = (document.getElementById(prefix+"Kw")?.value||"").trim().toLowerCase();
+  let items = state.entries.filter(e=>e.status===status);
+  if(series) items = items.filter(e=>e.series===series);
+  if(kw) items = items.filter(e=>
+    (e.topic||"").toLowerCase().includes(kw) ||
+    (e.body||"").toLowerCase().includes(kw)
+  );
+  document.getElementById(prefix+"List").innerHTML = items.map(EntryCard).join("") || `<div class="sub">沒有符合的內容。</div>`;
+  bindEvents(); // 重新綁定卡片按鈕
+}
+
+function clearFilter(status, prefix){
+  const s = document.getElementById(prefix+"Series");
+  const k = document.getElementById(prefix+"Kw");
+  if(s) s.value = "";
+  if(k) k.value = "";
+  applyFilter(status, prefix);
+}
+
+function bindEvents(){
+  /* 導覽已在 renderNav 綁過 */
+
+  /* 創作頁：系列切換 → 右側咒語包更新 + 記住 lastSeries */
+  const seriesSel = document.getElementById("series");
+  if(seriesSel){
+    seriesSel.addEventListener("change", ()=>{
+      state.settings.lastSeries = seriesSel.value;
+      saveState(state);
+      render(); // 讓右側咒語包跟著換
+    });
+  }
+
+  /* 協作提示：跟著輸入更新 */
+  ["topic","body","notes","collabDir"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("input", updateCollabPrompt);
+    if(id==="collabDir" && el) el.addEventListener("change", updateCollabPrompt);
+  });
+
+  const btnCopyPrompt = document.getElementById("btnCopyPrompt");
+  if(btnCopyPrompt) btnCopyPrompt.addEventListener("click", ()=>copyText(document.getElementById("collabPrompt").value));
+
+  const btnSaveDraft = document.getElementById("btnSaveDraft");
+  if(btnSaveDraft){
+    btnSaveDraft.addEventListener("click", ()=>{
+      const payload = getEntryForm(); if(!payload) return;
+      payload.status = "draft";
+      upsertEntry(payload);
+      toast("已存草稿");
+      render();
+    });
+  }
+
+  const btnSaveFinal = document.getElementById("btnSaveFinal");
+  if(btnSaveFinal){
+    btnSaveFinal.addEventListener("click", ()=>{
+      const payload = getEntryForm(); if(!payload) return;
+      payload.status = "final";
+      upsertEntry(payload);
+      toast("已存完稿");
+      render();
+    });
+  }
+
+  const btnReset = document.getElementById("btnReset");
+  if(btnReset){
+    btnReset.addEventListener("click", ()=>{
+      ["entryId","topic","body","notes"].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.value = "";
+      });
+      toast("已清空（不影響已存內容）");
+      updateCollabPrompt();
+    });
+  }
+
+  const btnSaveHome = document.getElementById("btnSaveHome");
+  if(btnSaveHome){
+    btnSaveHome.addEventListener("click", ()=>{
+      state.settings.homepage = (document.getElementById("homepage").value||"").trim();
+      saveState(state); toast("已儲存"); updateCollabPrompt();
+    });
+  }
+  const btnSaveHome2 = document.getElementById("btnSaveHome2");
+  if(btnSaveHome2){
+    btnSaveHome2.addEventListener("click", ()=>{
+      state.settings.homepage = (document.getElementById("homepage2").value||"").trim();
+      saveState(state); toast("已儲存"); render();
+    });
+  }
+
+  /* 列表卡片：編輯/狀態/刪除 */
+  document.querySelectorAll("[data-action='edit']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      current="create"; render();
+      setTimeout(()=>{
+        document.getElementById("entryId").value = e.id;
+        document.getElementById("format").value = e.format;
+        document.getElementById("series").value = e.series;
+        document.getElementById("topic").value = e.topic;
+        document.getElementById("body").value = e.body;
+        document.getElementById("notes").value = e.notes || "";
+        document.getElementById("collabDir").value = e.collabDir || "書稿";
+        updateCollabPrompt();
+        toast("已載入到創作頁");
+      },0);
+    });
+  });
+
+  document.querySelectorAll("[data-action='toggle']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      e.status = (e.status==="draft") ? "final" : "draft";
+      e.updatedAt = nowISO();
+      saveState(state);
+      toast("已更新狀態");
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-action='del']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("確定刪除？（無法復原）")) return;
+      state.entries = state.entries.filter(x=>x.id!==id);
+      saveState(state);
+      toast("已刪除");
+      render();
+    });
+  });
+
+  /* 篩選 */
+  document.querySelectorAll("[data-action='applyFilter']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const status = btn.dataset.status;
+      const prefix = btn.dataset.prefix;
+      applyFilter(status, prefix);
+    });
+  });
+  document.querySelectorAll("[data-action='clearFilter']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const status = btn.dataset.status;
+      const prefix = btn.dataset.prefix;
+      clearFilter(status, prefix);
+    });
+  });
+
+  /* 打包 */
+  const btnGenDesc = document.getElementById("btnGenDesc");
+  if(btnGenDesc){
+    btnGenDesc.addEventListener("click", ()=>{
+      const id = document.getElementById("packPick").value;
+      const e = state.entries.find(x=>x.id===id);
+      if(!e) return;
+      document.getElementById("packDesc").value = generateDescription(e);
+      toast("已生成介紹文");
+    });
+  }
+  const btnCopyDesc = document.getElementById("btnCopyDesc");
+  if(btnCopyDesc) btnCopyDesc.addEventListener("click", ()=>copyText(document.getElementById("packDesc").value));
+
+  const btnCopyPackPrompt = document.getElementById("btnCopyPackPrompt");
+  if(btnCopyPackPrompt) btnCopyPackPrompt.addEventListener("click", ()=>copyText(document.getElementById("packPrompt").value));
+
+  /* 母本：新增/刪除 */
+  const btnAddBook = document.getElementById("btnAddBook");
+  if(btnAddBook){
+    btnAddBook.addEventListener("click", ()=>{
+      const title = (document.getElementById("bookTitle").value||"").trim();
+      if(!title) return alert("請先輸入書名（可暫定）");
+      state.bookProjects.unshift({
+        id: uid(), title,
+        core:(document.getElementById("bookCore").value||"").trim(),
+        audience:(document.getElementById("bookAudience").value||"").trim(),
+        status:(document.getElementById("bookStatus").value||"醞釀中"),
+        createdAt:nowISO(), updatedAt:nowISO()
+      });
+      saveState(state); toast("已新增書籍專案"); render();
+    });
+  }
+  document.querySelectorAll("[data-action='delBook']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("刪除書籍專案？")) return;
+      state.bookProjects = state.bookProjects.filter(b=>b.id!==id);
+      saveState(state); toast("已刪除"); render();
+    });
+  });
+
+  const btnAddCourse = document.getElementById("btnAddCourse");
+  if(btnAddCourse){
+    btnAddCourse.addEventListener("click", ()=>{
+      const title = (document.getElementById("courseTitle").value||"").trim();
+      if(!title) return alert("請先輸入課程名稱");
+      state.courseProjects.unshift({
+        id: uid(), title,
+        promise:(document.getElementById("coursePromise").value||"").trim(),
+        audience:(document.getElementById("courseAudience").value||"").trim(),
+        type:(document.getElementById("courseType").value||"家長課"),
+        status:(document.getElementById("courseStatus").value||"醞釀中"),
+        createdAt:nowISO(), updatedAt:nowISO()
+      });
+      saveState(state); toast("已新增課程專案"); render();
+    });
+  }
+  document.querySelectorAll("[data-action='delCourse']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("刪除課程專案？")) return;
+      state.courseProjects = state.courseProjects.filter(c=>c.id!==id);
+      saveState(state); toast("已刪除"); render();
+    });
+  });
+
+  /* 備份：匯出/匯入/清空 */
+  const btnExport = document.getElementById("btnExport");
+  if(btnExport){
+    btnExport.addEventListener("click", ()=>{
+      const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `angel-studio-backup-${APP.version}.json`;
+      a.click();
+      toast("已匯出備份");
+    });
+  }
+
+  const fileImport = document.getElementById("fileImport");
+  if(fileImport){
+    fileImport.addEventListener("change", async ()=>{
+      const f = fileImport.files && fileImport.files[0];
+      if(!f) return;
+      const txt = await f.text();
+      try{
+        const obj = JSON.parse(txt);
+        if(!obj || typeof obj!=="object") throw new Error("bad");
+        state = obj;
+        saveState(state);
+        toast("已匯入");
+        render();
+      }catch(e){
+        alert("匯入失敗：請確認檔案格式。");
+      }
+    });
+  }
+
+  const btnWipe = document.getElementById("btnWipe");
+  if(btnWipe){
+    btnWipe.addEventListener("click", ()=>{
+      if(!confirm("確定清空所有資料？（無法復原，請先匯出備份）")) return;
+      localStorage.removeItem(APP.storageKey);
+      state = loadState();
+      toast("已清空");
+      render();
+    });
+  }
+}
+
+/* Step 2 才會補完整 sw.js；你先留著註冊 */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", async ()=>{
+    try{
+      await navigator.serviceWorker.register("sw.js");
+      document.getElementById("syncState").textContent = "可離線使用";
+    }catch(e){
+      document.getElementById("syncState").textContent = "未啟用離線";
+    }
+  });
+}
+</script>
+</body>
+</html>
