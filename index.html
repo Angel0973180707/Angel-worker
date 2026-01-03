@@ -125,7 +125,7 @@
         <div class="logo">幸</div>
         <div>
           <h1>天使笑長｜創作工作室（PWA v1.0）</h1>
-          <p>咒語包 × 協作提示 × 草稿/完稿 × 發片打包 × 書稿/課程母本</p>
+          <p>素材庫（生命故事）× 咒語包 × 協作提示 × 草稿/完稿 × 發片打包</p>
         </div>
       </div>
       <div class="pill"><span>狀態：</span><b id="syncState">本機儲存</b><span class="kbd">localStorage</span></div>
@@ -156,14 +156,14 @@
 
 <script>
 /* =========================
-   v1.0：功能擴充版（仍不改版本名稱）
+   v1.0：功能擴充（新增：素材庫）
    ========================= */
 const APP = { version:"v1.0", storageKey:"angel_studio_v1" };
 const SERIES = ["幸福教養","心腦科學","心靈感悟","詩詞人生","幸福小腦袋","其他"];
 const FORMATS = ["長影片","短影片","Podcast"];
 const VIEWS = [
+  { id:"sources", label:"素材庫（生命故事）" }, // NEW
   { id:"create", label:"創作影片" },
-  { id:"mother", label:"幸福教養｜母本庫（書×課）" },
   { id:"drafts", label:"文案草稿區" },
   { id:"final",  label:"完稿區" },
   { id:"pack",   label:"發片打包區" },
@@ -237,27 +237,24 @@ function loadState(){
   try{
     const raw = localStorage.getItem(APP.storageKey);
     if(!raw) return {
+      sources:[],           // NEW
       entries:[],
-      bookProjects:[],
-      courseProjects:[],
-      bookContent:[],     // {id,bookId,chapter,title,body,sourceEntryId,createdAt,updatedAt}
-      courseContent:[],   // {id,courseId,module,unitTitle,story,insight,practice,takeaway,sourceEntryId,createdAt,updatedAt}
       settings:{homepage:"", lastSeries:"幸福教養"}
     };
-    return JSON.parse(raw);
+    const s = JSON.parse(raw);
+    s.sources ||= [];
+    s.entries ||= [];
+    s.settings ||= {homepage:"", lastSeries:"幸福教養"};
+    return s;
   }catch(e){
-    return {
-      entries:[], bookProjects:[], courseProjects:[],
-      bookContent:[], courseContent:[],
-      settings:{homepage:"", lastSeries:"幸福教養"}
-    };
+    return { sources:[], entries:[], settings:{homepage:"", lastSeries:"幸福教養"} };
   }
 }
 function saveState(s){ localStorage.setItem(APP.storageKey, JSON.stringify(s)); }
 let state = loadState();
 
 /* ===== 導覽 ===== */
-let current = "create";
+let current = "sources";
 function renderNav(){
   const nav = document.getElementById("nav");
   nav.innerHTML = VIEWS.map(v => `<div class="tab ${v.id===current?'active':''}" data-id="${v.id}">${v.label}</div>`).join("");
@@ -266,7 +263,47 @@ function renderNav(){
   });
 }
 
-/* ===== 協作提示 ===== */
+/* =========================
+   素材庫（生命故事）- NEW
+   ========================= */
+function buildSourceText(src){
+  // 讓素材進到「創作」時，呈現為一份乾淨的“原文素材”
+  const parts = [];
+  parts.push(`【故事標題】\n${src.title||""}`.trim());
+  if(src.scene) parts.push(`【生命場景】\n${src.scene}`);
+  if(src.dialogue) parts.push(`【現場對話／原句】\n${src.dialogue}`);
+  if(src.feelings) parts.push(`【我的感受／內在觀察】\n${src.feelings}`);
+  if(src.insight) parts.push(`【我的洞察】\n${src.insight}`);
+  if(src.keepLines) parts.push(`【想保留的原句／語感】\n${src.keepLines}`);
+  if(src.lesson) parts.push(`【我想陪孩子／大人學到什麼】\n${src.lesson}`);
+  if(src.notes) parts.push(`【補充】\n${src.notes}`);
+  return parts.join("\n\n").trim();
+}
+
+function sourcePrompt(src){
+  const homepage = (state.settings.homepage||"").trim();
+  const homeLine = homepage ? `\n主頁連結：${homepage}\n` : "\n";
+  return `我正在建立「素材庫（生命故事）」。
+請你幫我把下面這段素材，做成「可轉入口說稿／書稿／課程」的乾淨骨架，但先不要寫成口說稿成品。
+
+【你的任務】
+1) 幫我抓出：這個故事最關鍵的『一個瞬間』
+2) 幫我提煉：一句核心洞察（溫柔不說教）
+3) 幫我列出：三個可延伸方向
+   - 口說稿方向（陪伴式）
+   - 書稿方向（可反覆閱讀、留白、段落）
+   - 課程方向（要練的能力 + 30–60秒練習）
+4) 幫我保留我原句的語感（尤其是我說過的話）
+
+${homeLine}
+【素材標題】
+${src.title||""}
+
+【素材全文】
+${buildSourceText(src)}`.trim();
+}
+
+/* ===== 協作提示（口說稿/系列） ===== */
 function baseCollabPrompt(series, dir, entry){
   const sp = SPELL[series] || SPELL["其他"];
   const homepage = (state.settings.homepage||"").trim();
@@ -327,6 +364,7 @@ function upsertEntry(payload){
   }
   saveState(state);
 }
+
 function getEntryForm(){
   const series = document.getElementById("series").value;
   const format = document.getElementById("format").value;
@@ -340,6 +378,7 @@ function getEntryForm(){
   return { id:id||"", series, format, topic, body, notes, collabDir };
 }
 
+/* ===== Components ===== */
 function EntryCard(e){
   const isFinal = e.status==="final";
   const b = isFinal ? "badge" : "badge gray";
@@ -359,15 +398,38 @@ function EntryCard(e){
       </div>
       <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${(e.body||"").length>120?"…":""}</div>
       <div class="tools">
-        <button class="mini" data-action="open" data-id="${e.id}">開啟全文</button>
-        <button class="mini" data-action="edit" data-id="${e.id}">編輯</button>
-        <button class="mini warn" data-action="toggle" data-id="${e.id}">${isFinal?"轉草稿":"轉完稿"}</button>
-        <button class="mini danger" data-action="del" data-id="${e.id}">刪除</button>
+        <button class="mini" data-action="openEntry" data-id="${e.id}">開啟全文</button>
+        <button class="mini" data-action="editEntry" data-id="${e.id}">編輯</button>
+        <button class="mini warn" data-action="toggleEntry" data-id="${e.id}">${isFinal?"轉草稿":"轉完稿"}</button>
+        <button class="mini danger" data-action="delEntry" data-id="${e.id}">刪除</button>
       </div>
     </div>`;
 }
 
-/* ===== Spell Card ===== */
+function SourceCard(s){
+  const snippet = buildSourceText(s).slice(0,120).replace(/\n/g," ");
+  return `
+    <div class="item">
+      <div class="itemhead">
+        <div>
+          <div class="itemtitle">${escapeHtml(s.title||"（未命名素材）")}</div>
+          <div class="meta">素材｜${fmtDate(s.updatedAt||s.createdAt)}</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+          <span class="badge orange">生命故事</span>
+        </div>
+      </div>
+      <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${buildSourceText(s).length>120?"…":""}</div>
+      <div class="tools">
+        <button class="mini" data-action="openSource" data-id="${s.id}">開啟全文</button>
+        <button class="mini" data-action="editSource" data-id="${s.id}">編輯</button>
+        <button class="mini warn" data-action="toCreate" data-id="${s.id}">轉入創作</button>
+        <button class="mini" data-action="copySourcePrompt" data-id="${s.id}">複製素材協作提示</button>
+        <button class="mini danger" data-action="delSource" data-id="${s.id}">刪除</button>
+      </div>
+    </div>`;
+}
+
 function buildSpellCard(series){
   const sp = SPELL[series] || SPELL["其他"];
   const secs = sp.sections.map(s=>`<li>${escapeHtml(s)}</li>`).join("");
@@ -392,7 +454,90 @@ function buildSpellCard(series){
   `;
 }
 
-/* ===== Views ===== */
+/* =========================
+   Views
+   ========================= */
+function SourcesView(){
+  return `
+  <div class="grid two">
+    <div class="card">
+      <h2>📚 素材庫（生命故事）</h2>
+      <div class="sub">素材不是稿件。它是「源頭」：先存真實，再決定要轉入口說稿／書稿／課程。</div>
+      <div class="hr"></div>
+
+      <input type="hidden" id="sourceId" value="" />
+
+      <label>素材標題（建議用一句話命名）</label>
+      <input id="srcTitle" placeholder="例：超市裡談零用錢價碼：孩子的『等一下』怎麼長出來" />
+
+      <label>生命場景（事情怎麼發生的）</label>
+      <textarea id="srcScene" placeholder="例：放學後去超市…我和哥哥談零用錢…"></textarea>
+
+      <label>現場對話／原句（保留你原話，很珍貴）</label>
+      <textarea id="srcDialogue" placeholder="例：『有錢煩惱，沒錢也煩惱…』"></textarea>
+
+      <label>我的感受／內在觀察（你怎麼看見自己/孩子）</label>
+      <textarea id="srcFeelings" placeholder="例：我看見他開始有煩惱…妹妹淡定…"></textarea>
+
+      <label>我的洞察（不必教，只要看見）</label>
+      <textarea id="srcInsight" placeholder="例：慾望需要學會和平共處…收入多少才夠用…"></textarea>
+
+      <label>想保留的原句／語感（必留）</label>
+      <textarea id="srcKeepLines" placeholder="例：『錢比人偉大！』『無欲則剛！』"></textarea>
+
+      <label>我想陪孩子／大人學到什麼（可空）</label>
+      <textarea id="srcLesson" placeholder="例：把『等一下』練出來；學會欲望與金錢的平衡…"></textarea>
+
+      <label>補充（可空）</label>
+      <textarea id="srcNotes" placeholder="例：要延伸成零用錢練功房工具／要放進書的哪一章…"></textarea>
+
+      <div class="btnbar">
+        <button class="btn" id="btnSaveSource">存素材</button>
+        <button class="btn secondary" id="btnSaveSourceNew">存素材並清空</button>
+        <button class="btn secondary" id="btnCopySourceText">複製素材全文</button>
+        <button class="btn ghost" id="btnResetSource">清空欄位</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="hint">
+        <b>用法：</b>先把生命現場丟進來 → 再按卡片上的「轉入創作」，
+        系統會自動把素材整理成一份乾淨原文，讓你用咒語包去產出不同系列的口說稿。
+      </div>
+    </div>
+
+    <div class="grid" style="gap:14px">
+      <div class="card">
+        <h2>🔎 素材檢索</h2>
+        <div class="sub">用標題關鍵字快速找你的故事。</div>
+        <div class="row">
+          <div>
+            <label>關鍵字</label>
+            <input id="srcKw" placeholder="輸入關鍵字…" />
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn secondary" id="btnFilterSource">套用</button>
+          </div>
+        </div>
+        <div class="btnbar">
+          <button class="btn ghost" id="btnClearFilterSource">清除</button>
+        </div>
+        <div class="hr"></div>
+        <div class="list" id="sourceList">
+          ${state.sources.map(SourceCard).join("") || `<div class="sub">還沒有素材。先把你的故事存進來。</div>`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🧡 主頁（可選）</h2>
+        <div class="sub">填了後「素材協作提示」與「口說稿協作提示」會自動帶入。</div>
+        <label>主頁連結</label>
+        <input id="homepage0" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
+        <div class="btnbar"><button class="btn secondary" id="btnSaveHome0">儲存主頁</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function CreateView(){
   const last = state.settings.lastSeries || "幸福教養";
   return `
@@ -400,8 +545,9 @@ function CreateView(){
     <div class="grid" style="gap:14px">
       <div class="card">
         <h2>📝 創作影片｜原文輸入</h2>
-        <div class="sub">先寫真實，不用一次寫好。卡住時用「咒語包」與「協作提示」扶你走完。</div>
+        <div class="sub">這裡放「可生成稿件的原文」。通常來自素材庫一鍵轉入。</div>
         <input type="hidden" id="entryId" value="" />
+        <input type="hidden" id="fromSourceId" value="" />
 
         <div class="row">
           <div>
@@ -419,11 +565,11 @@ function CreateView(){
         <label>主題</label>
         <input id="topic" placeholder="例：無欲則剛：孩子學會『等一下』，選擇力就開始長出來" />
 
-        <label>故事全文／詩詞全文／正文全文</label>
+        <label>全文／故事／正文（從素材轉入的原文）</label>
         <textarea id="body" placeholder="把你走過的『生命現場』貼進來就好。"></textarea>
 
         <label>補充（可選）</label>
-        <textarea id="notes" placeholder="例如：要保留的原句／你想放進哪一章哪一課／你希望加強的角度…"></textarea>
+        <textarea id="notes" placeholder="例如：要保留的原句／你希望加強的角度…"></textarea>
 
         <div class="hr"></div>
 
@@ -443,20 +589,17 @@ function CreateView(){
         </div>
 
         <div class="hr"></div>
-
-        <h2 style="margin-top:0">🧡 主頁（可選）</h2>
-        <div class="sub">填了後協作提示與打包區會自動帶入。</div>
-        <label>主頁連結</label>
-        <input id="homepage" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
-        <div class="btnbar"><button class="btn secondary" id="btnSaveHome">儲存主頁</button></div>
+        <div class="small">
+          <b>小提醒：</b>你若是從素材庫轉入，這裡會保留「素材來源」，以後做書/課程時能追溯。
+        </div>
       </div>
 
       <div class="card">
         <h2>📌 快速回顧</h2>
-        <div class="sub">草稿：${state.entries.filter(e=>e.status==="draft").length}　｜　完稿：${state.entries.filter(e=>e.status==="final").length}</div>
+        <div class="sub">素材：${state.sources.length}　｜　草稿：${state.entries.filter(e=>e.status==="draft").length}　｜　完稿：${state.entries.filter(e=>e.status==="final").length}</div>
         <div class="hr"></div>
         <div class="list">
-          ${state.entries.slice(0,3).map(EntryCard).join("") || `<div class="sub">還沒有內容。先寫一段真實故事吧。</div>`}
+          ${state.entries.slice(0,3).map(EntryCard).join("") || `<div class="sub">還沒有稿件內容。你可以先從素材庫轉入。</div>`}
         </div>
       </div>
     </div>
@@ -467,7 +610,7 @@ function CreateView(){
         <h2>🪶 協作提醒</h2>
         <div class="sub">你負責「真實」，我負責「結構與轉化」。不用一次完成，只要先留下生命現場。</div>
         <div class="hr"></div>
-        <div class="hint"><b>小技巧：</b>你把故事貼進來後，只要切換「書稿／課程／工具／發片」，協作提示就會自動換成不同任務。</div>
+        <div class="hint"><b>更順的流程：</b>先存素材 → 再轉入創作 → 再用系列咒語包出稿。</div>
       </div>
     </div>
   </div>`;
@@ -521,7 +664,6 @@ function generateDescription(e, kind="video"){
   }
   return `${base}\n${tags}${home}`.trim();
 }
-
 function getSeriesCTA(series){
   const sp = SPELL[series] || SPELL["其他"];
   const homepage = (state.settings.homepage||"").trim();
@@ -529,7 +671,6 @@ function getSeriesCTA(series){
   if(homepage) cta += `\n\n主頁：${homepage}`;
   return cta.trim();
 }
-
 function PackView(){
   const finals = state.entries.filter(e=>e.status==="final");
   const has = finals.length>0;
@@ -591,173 +732,6 @@ function PackView(){
   `;
 }
 
-/* ===== 母本庫：書稿內容庫 / 課程內容庫 ===== */
-function MotherView(){
-  const books = state.bookProjects;
-  const courses = state.courseProjects;
-
-  return `
-    <div class="grid" style="gap:14px">
-      <div class="card">
-        <h2>📖 書籍專案（母本）</h2>
-        <div class="sub">書稿不是口說稿：用「章節/段落」堆出一本書。</div>
-        <div class="hr"></div>
-
-        <div class="row">
-          <div><label>書名（可暫定）</label><input id="bookTitle" placeholder="例：《不打不罵不氣幸福教養》" /></div>
-          <div><label>書寫狀態</label>
-            <select id="bookStatus"><option>醞釀中</option><option>書寫中</option><option>初稿完成</option><option>修訂中</option></select>
-          </div>
-        </div>
-        <label>核心一句話（可選）</label><input id="bookCore" placeholder="例：把心站穩，孩子就有路走。" />
-        <label>目標讀者（可選）</label><input id="bookAudience" placeholder="例：育兒家長／老師／想活得自在的人" />
-        <div class="btnbar"><button class="btn" id="btnAddBook">新增書籍專案</button></div>
-
-        <div class="hr"></div>
-        <div class="list">
-          ${books.map(b=>`
-            <div class="item">
-              <div class="itemhead">
-                <div>
-                  <div class="itemtitle">${escapeHtml(b.title)}</div>
-                  <div class="meta">${escapeHtml(b.status)}｜${fmtDate(b.updatedAt||b.createdAt)}</div>
-                </div>
-                <div class="tools">
-                  <button class="mini" data-action="pickBook" data-id="${b.id}">選用</button>
-                  <button class="mini danger" data-action="delBook" data-id="${b.id}">刪除</button>
-                </div>
-              </div>
-              <div class="small" style="margin-top:8px"><b>核心：</b>${escapeHtml(b.core||"（未填）")}</div>
-              <div class="small"><b>讀者：</b>${escapeHtml(b.audience||"（未填）")}</div>
-            </div>`).join("") || `<div class="sub">還沒有書籍專案。</div>`}
-        </div>
-      </div>
-
-      <div class="grid two">
-        <div class="card">
-          <h2>🧱 書稿內容庫（章節/段落）</h2>
-          <div class="sub">可直接從「完稿」匯入成書稿段落，讓你的故事更生動。</div>
-          <div class="hr"></div>
-
-          <label>選擇書籍（先在上面按「選用」）</label>
-          <input id="pickedBook" placeholder="尚未選用書籍" readonly />
-
-          <div class="row">
-            <div><label>章節（自行輸入）</label><input id="bookChapter" placeholder="例：第二章｜無欲則剛" /></div>
-            <div><label>段落標題</label><input id="bookParaTitle" placeholder="例：超市裡談價碼" /></div>
-          </div>
-
-          <label>段落內容</label>
-          <textarea id="bookParaBody" placeholder="貼上你的故事／段落…"></textarea>
-
-          <div class="row">
-            <div>
-              <label>從完稿匯入（可選）</label>
-              <select id="importFinalToBook">
-                <option value="">不匯入</option>
-                ${state.entries.filter(e=>e.status==="final").map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.topic)}</option>`).join("")}
-              </select>
-            </div>
-            <div style="display:flex;align-items:flex-end">
-              <button class="btn secondary" id="btnFillBookFromFinal">帶入完稿內容</button>
-            </div>
-          </div>
-
-          <div class="btnbar">
-            <button class="btn" id="btnAddBookPara">新增段落</button>
-            <button class="btn secondary" id="btnExportBookText">匯出此書（純文字）</button>
-          </div>
-
-          <div class="hr"></div>
-          <div class="list" id="bookContentList"></div>
-        </div>
-
-        <div class="card">
-          <h2>🎓 課程專案（母本）</h2>
-          <div class="sub">課程是學習路徑：陪人做到。</div>
-          <div class="hr"></div>
-
-          <div class="row">
-            <div><label>課程名稱</label><input id="courseTitle" placeholder="例：把『等一下』練出來：孩子的選擇力" /></div>
-            <div><label>課程型態</label>
-              <select id="courseType"><option>家長課</option><option>教師專業課</option><option>成人內在成長</option></select>
-            </div>
-          </div>
-          <label>一句話承諾（可選）</label><input id="coursePromise" placeholder="例：陪你在關鍵時刻能多停一下、少用力一點。" />
-          <div class="row">
-            <div><label>適合對象（可選）</label><input id="courseAudience" placeholder="例：育兒家長／第一線老師" /></div>
-            <div><label>課程狀態</label>
-              <select id="courseStatus"><option>醞釀中</option><option>設計中</option><option>試教中</option><option>穩定上線</option></select>
-            </div>
-          </div>
-          <div class="btnbar"><button class="btn" id="btnAddCourse">新增課程專案</button></div>
-
-          <div class="hr"></div>
-          <div class="list">
-            ${courses.map(c=>`
-              <div class="item">
-                <div class="itemhead">
-                  <div>
-                    <div class="itemtitle">${escapeHtml(c.title)}</div>
-                    <div class="meta">${escapeHtml(c.type)}｜${escapeHtml(c.status)}｜${fmtDate(c.updatedAt||c.createdAt)}</div>
-                  </div>
-                  <div class="tools">
-                    <button class="mini" data-action="pickCourse" data-id="${c.id}">選用</button>
-                    <button class="mini danger" data-action="delCourse" data-id="${c.id}">刪除</button>
-                  </div>
-                </div>
-                <div class="small" style="margin-top:8px"><b>承諾：</b>${escapeHtml(c.promise||"（未填）")}</div>
-                <div class="small"><b>對象：</b>${escapeHtml(c.audience||"（未填）")}</div>
-              </div>`).join("") || `<div class="sub">還沒有課程專案。</div>`}
-          </div>
-
-          <div class="hr"></div>
-          <h2 style="margin-top:0">🧩 課程內容庫（模組/單元）</h2>
-          <div class="sub">單元模板：故事/理解/練習/帶走句。可從完稿匯入。</div>
-
-          <label>選擇課程（先在上面按「選用」）</label>
-          <input id="pickedCourse" placeholder="尚未選用課程" readonly />
-
-          <div class="row">
-            <div><label>模組</label><input id="courseModule" placeholder="例：模組1｜大人先穩" /></div>
-            <div><label>單元標題</label><input id="courseUnitTitle" placeholder="例：超市裡的『等一下』" /></div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>從完稿匯入（可選）</label>
-              <select id="importFinalToCourse">
-                <option value="">不匯入</option>
-                ${state.entries.filter(e=>e.status==="final").map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.topic)}</option>`).join("")}
-              </select>
-            </div>
-            <div style="display:flex;align-items:flex-end">
-              <button class="btn secondary" id="btnFillCourseFromFinal">帶入完稿（填故事）</button>
-            </div>
-          </div>
-
-          <label>故事（現場）</label>
-          <textarea id="unitStory" placeholder="貼故事原文（你的生命現場）"></textarea>
-          <label>理解（白話心腦轉譯）</label>
-          <textarea id="unitInsight" placeholder="把『發生了什麼』翻譯成『大腦在做什麼』"></textarea>
-          <label>練習（30–60秒可做）</label>
-          <textarea id="unitPractice" placeholder="例：手摸胸口＋4吸6吐×3，紅→黃→綠"></textarea>
-          <label>帶走一句話</label>
-          <input id="unitTakeaway" placeholder="例：忍一下不是壓抑，是讓選擇力長出來。" />
-
-          <div class="btnbar">
-            <button class="btn" id="btnAddCourseUnit">新增單元</button>
-            <button class="btn secondary" id="btnExportCourseText">匯出此課（純文字）</button>
-          </div>
-
-          <div class="hr"></div>
-          <div class="list" id="courseContentList"></div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
 /* ===== Settings ===== */
 function SettingsView(){
   return `
@@ -782,13 +756,13 @@ function SettingsView(){
       </div>
 
       <div class="card">
-        <h2>📌 已擴充功能清單</h2>
+        <h2>📌 目前流程（你會更不混亂）</h2>
         <div class="small">
-          - 草稿/完稿：開啟全文＋複製全文＋複製協作提示<br/>
-          - 發片打包：系列 CTA 一鍵套用＋Podcast 介紹一鍵生成<br/>
-          - 母本庫：書稿（章/段落）＋課程（模組/單元）＋可由完稿匯入<br/>
-          - 仍維持：咒語包、協作提示、檢索、備份<br/><br/>
-          <b>下一步：</b>把「段落/單元」做成可編輯/可刪除/可移動排序。
+          1) <b>素材庫</b>：先存生命現場（源頭）<br/>
+          2) 轉入 <b>創作影片</b>：選系列→用咒語包出稿<br/>
+          3) 存成 <b>草稿/完稿</b><br/>
+          4) 進 <b>打包區</b>：產介紹/CTA<br/><br/>
+          <b>下一輪我會接上：</b>素材 → 書稿段落／課程單元（真正分產線）
         </div>
       </div>
     </div>
@@ -799,30 +773,47 @@ function SettingsView(){
 function render(){
   renderNav();
   const view = document.getElementById("view");
+  if(current==="sources") view.innerHTML = SourcesView();
   if(current==="create") view.innerHTML = CreateView();
   if(current==="drafts") view.innerHTML = ListView("draft");
   if(current==="final") view.innerHTML = ListView("final");
   if(current==="pack") view.innerHTML = PackView();
-  if(current==="mother") view.innerHTML = MotherView();
   if(current==="settings") view.innerHTML = SettingsView();
   bindEvents();
   if(document.getElementById("collabPrompt")) updateCollabPrompt();
-  refreshMotherLists();
 }
 render();
 
-/* ===== Dialog 全文 ===== */
-let dlgEntryId = null;
-function openDialogForEntry(id){
-  const e = state.entries.find(x=>x.id===id);
-  if(!e) return;
-  dlgEntryId = id;
-  document.getElementById("dlgTitle").textContent = e.topic;
-  document.getElementById("dlgMeta").textContent = `${e.series}｜${e.format}｜${fmtDate(e.updatedAt||e.createdAt)}`;
-  document.getElementById("dlgText").textContent = e.body || "";
+/* ===== Dialog 全文（共用：entry/source） ===== */
+let dlgMode = null; // "entry" | "source"
+let dlgId = null;
+function openDialog(mode, id){
+  dlgMode = mode; dlgId = id;
+  let title = "", meta = "", text = "", prompt = "";
+
+  if(mode==="entry"){
+    const e = state.entries.find(x=>x.id===id);
+    if(!e) return;
+    title = e.topic;
+    meta = `${e.series}｜${e.format}｜${fmtDate(e.updatedAt||e.createdAt)}`;
+    text = e.body || "";
+    prompt = baseCollabPrompt(e.series, e.collabDir||"書稿", {topic:e.topic, body:e.body, notes:e.notes||""});
+  }else{
+    const s = state.sources.find(x=>x.id===id);
+    if(!s) return;
+    title = s.title || "（未命名素材）";
+    meta = `素材｜${fmtDate(s.updatedAt||s.createdAt)}`;
+    text = buildSourceText(s);
+    prompt = sourcePrompt(s);
+  }
+
+  document.getElementById("dlgTitle").textContent = title;
+  document.getElementById("dlgMeta").textContent = meta;
+  document.getElementById("dlgText").textContent = text;
+  document.getElementById("dlgCopyPrompt").dataset.prompt = prompt;
   document.getElementById("dlg").showModal();
 }
-function closeDlg(){ document.getElementById("dlg").close(); dlgEntryId=null; }
+function closeDlg(){ document.getElementById("dlg").close(); dlgMode=null; dlgId=null; }
 
 /* ===== Filter ===== */
 function applyFilter(status, prefix){
@@ -845,112 +836,197 @@ function clearFilter(status, prefix){
   applyFilter(status, prefix);
 }
 
-/* ===== 母本：選用狀態 ===== */
-state.settings.pickedBookId ||= "";
-state.settings.pickedCourseId ||= "";
-function pickedBook(){ return state.settings.pickedBookId || ""; }
-function pickedCourse(){ return state.settings.pickedCourseId || ""; }
-
-function refreshMotherLists(){
-  // 書稿內容列表
-  const el = document.getElementById("bookContentList");
-  const pickedB = pickedBook();
-  const pickedBName = state.bookProjects.find(b=>b.id===pickedB)?.title || "";
-  const pickedBookInput = document.getElementById("pickedBook");
-  if(pickedBookInput) pickedBookInput.value = pickedBName || "尚未選用書籍";
-
-  if(el){
-    const list = state.bookContent.filter(x=>x.bookId===pickedB);
-    el.innerHTML = list.map(p=>`
-      <div class="item">
-        <div class="itemhead">
-          <div>
-            <div class="itemtitle">${escapeHtml(p.chapter||"（未填章節）")}｜${escapeHtml(p.title||"（未填標題）")}</div>
-            <div class="meta">${fmtDate(p.updatedAt||p.createdAt)}${p.sourceEntryId?`｜來源完稿`:""}</div>
-          </div>
-          <div class="tools">
-            <button class="mini" data-action="copyBookPara" data-id="${p.id}">複製</button>
-            <button class="mini danger" data-action="delBookPara" data-id="${p.id}">刪除</button>
-          </div>
-        </div>
-        <div class="small" style="margin-top:8px">${escapeHtml((p.body||"").slice(0,120).replace(/\n/g," "))}${(p.body||"").length>120?"…":""}</div>
-      </div>
-    `).join("") || `<div class="sub">先「選用書籍」→ 再新增段落。</div>`;
-  }
-
-  // 課程內容列表
-  const el2 = document.getElementById("courseContentList");
-  const pickedC = pickedCourse();
-  const pickedCName = state.courseProjects.find(c=>c.id===pickedC)?.title || "";
-  const pickedCourseInput = document.getElementById("pickedCourse");
-  if(pickedCourseInput) pickedCourseInput.value = pickedCName || "尚未選用課程";
-
-  if(el2){
-    const list = state.courseContent.filter(x=>x.courseId===pickedC);
-    el2.innerHTML = list.map(u=>`
-      <div class="item">
-        <div class="itemhead">
-          <div>
-            <div class="itemtitle">${escapeHtml(u.module||"（未填模組）")}｜${escapeHtml(u.unitTitle||"（未填單元）")}</div>
-            <div class="meta">${fmtDate(u.updatedAt||u.createdAt)}${u.sourceEntryId?`｜來源完稿`:""}</div>
-          </div>
-          <div class="tools">
-            <button class="mini" data-action="copyCourseUnit" data-id="${u.id}">複製</button>
-            <button class="mini danger" data-action="delCourseUnit" data-id="${u.id}">刪除</button>
-          </div>
-        </div>
-        <div class="small" style="margin-top:8px"><b>帶走句：</b>${escapeHtml(u.takeaway||"（未填）")}</div>
-      </div>
-    `).join("") || `<div class="sub">先「選用課程」→ 再新增單元。</div>`;
-  }
-
-  bindEvents();
-}
-
-/* ===== 匯出書/課純文字 ===== */
-function exportBookText(bookId){
-  const book = state.bookProjects.find(b=>b.id===bookId);
-  if(!book) return "";
-  const paras = state.bookContent.filter(p=>p.bookId===bookId);
-  let out = `【書名】${book.title}\n【狀態】${book.status}\n【核心】${book.core||""}\n【讀者】${book.audience||""}\n\n`;
-  // 依章節分組（簡單排序：章節字串）
-  const groups = {};
-  paras.forEach(p=>{
-    const ch = p.chapter || "（未分章）";
-    groups[ch] ||= [];
-    groups[ch].push(p);
-  });
-  Object.keys(groups).sort().forEach(ch=>{
-    out += `\n=== ${ch} ===\n`;
-    groups[ch].forEach(p=>{
-      out += `\n# ${p.title||"（未命名段落）"}\n${p.body||""}\n`;
-    });
-  });
-  return out.trim();
-}
-
-function exportCourseText(courseId){
-  const c = state.courseProjects.find(x=>x.id===courseId);
-  if(!c) return "";
-  const units = state.courseContent.filter(u=>u.courseId===courseId);
-  let out = `【課程】${c.title}\n【型態】${c.type}\n【狀態】${c.status}\n【承諾】${c.promise||""}\n【對象】${c.audience||""}\n\n`;
-  const groups = {};
-  units.forEach(u=>{
-    const m = u.module || "（未分模組）";
-    groups[m] ||= [];
-    groups[m].push(u);
-  });
-  Object.keys(groups).sort().forEach(m=>{
-    out += `\n=== ${m} ===\n`;
-    groups[m].forEach(u=>{
-      out += `\n# ${u.unitTitle||"（未命名單元）"}\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}\n`;
-    });
-  });
-  return out.trim();
-}
-
-/* ===== Events ===== */
+/* =========================
+   Events
+   ========================= */
 function bindEvents(){
+  // dialog
+  const closeBtn = document.getElementById("dlgClose");
+  if(closeBtn) closeBtn.onclick = closeDlg;
+
+  const copyBtn = document.getElementById("dlgCopy");
+  if(copyBtn) copyBtn.onclick = ()=>copyText(document.getElementById("dlgText").textContent||"");
+
+  const copyPromptBtn = document.getElementById("dlgCopyPrompt");
+  if(copyPromptBtn) copyPromptBtn.onclick = ()=>copyText(copyPromptBtn.dataset.prompt||"");
+
+  // sources page
+  const btnSaveHome0 = document.getElementById("btnSaveHome0");
+  if(btnSaveHome0){
+    btnSaveHome0.addEventListener("click", ()=>{
+      state.settings.homepage = (document.getElementById("homepage0").value||"").trim();
+      saveState(state); toast("已儲存");
+    });
+  }
+
+  const btnSaveSource = document.getElementById("btnSaveSource");
+  if(btnSaveSource){
+    btnSaveSource.addEventListener("click", ()=>{
+      const id = (document.getElementById("sourceId").value||"").trim();
+      const src = {
+        id: id || uid(),
+        title:(document.getElementById("srcTitle").value||"").trim(),
+        scene:(document.getElementById("srcScene").value||"").trim(),
+        dialogue:(document.getElementById("srcDialogue").value||"").trim(),
+        feelings:(document.getElementById("srcFeelings").value||"").trim(),
+        insight:(document.getElementById("srcInsight").value||"").trim(),
+        keepLines:(document.getElementById("srcKeepLines").value||"").trim(),
+        lesson:(document.getElementById("srcLesson").value||"").trim(),
+        notes:(document.getElementById("srcNotes").value||"").trim(),
+        updatedAt: nowISO(),
+      };
+      if(!src.title && !src.scene && !src.dialogue) return alert("至少填「標題/場景/對話」其中一項，才像一筆素材。");
+      const idx = state.sources.findIndex(x=>x.id===src.id);
+      if(idx>=0){
+        state.sources[idx] = {...state.sources[idx], ...src};
+      }else{
+        src.createdAt = nowISO();
+        state.sources.unshift(src);
+      }
+      saveState(state);
+      toast("已存素材");
+      render();
+    });
+  }
+
+  const btnSaveSourceNew = document.getElementById("btnSaveSourceNew");
+  if(btnSaveSourceNew){
+    btnSaveSourceNew.addEventListener("click", ()=>{
+      document.getElementById("btnSaveSource").click();
+      setTimeout(()=>{
+        const sid = document.getElementById("sourceId");
+        if(sid) sid.value = "";
+        ["srcTitle","srcScene","srcDialogue","srcFeelings","srcInsight","srcKeepLines","srcLesson","srcNotes"].forEach(id=>{
+          const el = document.getElementById(id); if(el) el.value="";
+        });
+        toast("已存並清空");
+      },0);
+    });
+  }
+
+  const btnCopySourceText = document.getElementById("btnCopySourceText");
+  if(btnCopySourceText){
+    btnCopySourceText.addEventListener("click", ()=>{
+      const src = {
+        title:(document.getElementById("srcTitle").value||"").trim(),
+        scene:(document.getElementById("srcScene").value||"").trim(),
+        dialogue:(document.getElementById("srcDialogue").value||"").trim(),
+        feelings:(document.getElementById("srcFeelings").value||"").trim(),
+        insight:(document.getElementById("srcInsight").value||"").trim(),
+        keepLines:(document.getElementById("srcKeepLines").value||"").trim(),
+        lesson:(document.getElementById("srcLesson").value||"").trim(),
+        notes:(document.getElementById("srcNotes").value||"").trim(),
+      };
+      copyText(buildSourceText(src));
+    });
+  }
+
+  const btnResetSource = document.getElementById("btnResetSource");
+  if(btnResetSource){
+    btnResetSource.addEventListener("click", ()=>{
+      const sid = document.getElementById("sourceId");
+      if(sid) sid.value = "";
+      ["srcTitle","srcScene","srcDialogue","srcFeelings","srcInsight","srcKeepLines","srcLesson","srcNotes"].forEach(id=>{
+        const el = document.getElementById(id); if(el) el.value="";
+      });
+      toast("已清空");
+    });
+  }
+
+  const btnFilterSource = document.getElementById("btnFilterSource");
+  if(btnFilterSource){
+    btnFilterSource.addEventListener("click", ()=>{
+      const kw = (document.getElementById("srcKw").value||"").trim().toLowerCase();
+      let items = state.sources.slice();
+      if(kw){
+        items = items.filter(s=>{
+          const text = (s.title||"")+" "+buildSourceText(s);
+          return text.toLowerCase().includes(kw);
+        });
+      }
+      const list = document.getElementById("sourceList");
+      list.innerHTML = items.map(SourceCard).join("") || `<div class="sub">沒有符合的素材。</div>`;
+      bindEvents();
+    });
+  }
+  const btnClearFilterSource = document.getElementById("btnClearFilterSource");
+  if(btnClearFilterSource){
+    btnClearFilterSource.addEventListener("click", ()=>{
+      const kw = document.getElementById("srcKw"); if(kw) kw.value="";
+      render();
+      toast("已清除篩選");
+    });
+  }
+
+  // source card actions
+  document.querySelectorAll("[data-action='openSource']").forEach(btn=>{
+    btn.addEventListener("click", ()=>openDialog("source", btn.dataset.id));
+  });
+  document.querySelectorAll("[data-action='editSource']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const s = state.sources.find(x=>x.id===btn.dataset.id);
+      if(!s) return;
+      current = "sources"; render();
+      setTimeout(()=>{
+        document.getElementById("sourceId").value = s.id;
+        document.getElementById("srcTitle").value = s.title||"";
+        document.getElementById("srcScene").value = s.scene||"";
+        document.getElementById("srcDialogue").value = s.dialogue||"";
+        document.getElementById("srcFeelings").value = s.feelings||"";
+        document.getElementById("srcInsight").value = s.insight||"";
+        document.getElementById("srcKeepLines").value = s.keepLines||"";
+        document.getElementById("srcLesson").value = s.lesson||"";
+        document.getElementById("srcNotes").value = s.notes||"";
+        toast("已載入素材");
+      },0);
+    });
+  });
+  document.querySelectorAll("[data-action='delSource']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      if(!confirm("刪除素材？（無法復原）")) return;
+      state.sources = state.sources.filter(x=>x.id!==id);
+      saveState(state);
+      toast("已刪除素材");
+      render();
+    });
+  });
+  document.querySelectorAll("[data-action='copySourcePrompt']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const s = state.sources.find(x=>x.id===btn.dataset.id);
+      if(!s) return;
+      copyText(sourcePrompt(s));
+    });
+  });
+  document.querySelectorAll("[data-action='toCreate']").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const s = state.sources.find(x=>x.id===btn.dataset.id);
+      if(!s) return;
+
+      // 轉入創作：把素材整理成原文，並帶入主題
+      state.settings.lastSeries ||= "幸福教養";
+      saveState(state);
+
+      current = "create";
+      render();
+
+      setTimeout(()=>{
+        document.getElementById("entryId").value = "";
+        document.getElementById("fromSourceId").value = s.id;
+        document.getElementById("topic").value = s.title || "（請補主題）";
+        document.getElementById("body").value = buildSourceText(s);
+        document.getElementById("notes").value = (s.keepLines ? `想保留原句：\n${s.keepLines}\n\n` : "") +
+                                                 (s.lesson ? `想陪孩子/大人學到：\n${s.lesson}` : "");
+        document.getElementById("series").value = state.settings.lastSeries || "幸福教養";
+        document.getElementById("format").value = "長影片";
+        document.getElementById("collabDir").value = "發片";
+        updateCollabPrompt();
+        toast("已轉入創作");
+      },0);
+    });
+  });
+
+  // create view series changes
   const seriesSel = document.getElementById("series");
   if(seriesSel){
     seriesSel.addEventListener("change", ()=>{
@@ -959,7 +1035,6 @@ function bindEvents(){
       render(); // 右側咒語包同步
     });
   }
-
   ["topic","body","notes","collabDir"].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.addEventListener("input", updateCollabPrompt);
@@ -974,6 +1049,9 @@ function bindEvents(){
     btnSaveDraft.addEventListener("click", ()=>{
       const payload = getEntryForm(); if(!payload) return;
       payload.status = "draft";
+      // attach source link if exists
+      const srcId = (document.getElementById("fromSourceId")?.value||"").trim();
+      if(srcId) payload.sourceId = srcId;
       upsertEntry(payload);
       toast("已存草稿");
       render();
@@ -984,6 +1062,8 @@ function bindEvents(){
     btnSaveFinal.addEventListener("click", ()=>{
       const payload = getEntryForm(); if(!payload) return;
       payload.status = "final";
+      const srcId = (document.getElementById("fromSourceId")?.value||"").trim();
+      if(srcId) payload.sourceId = srcId;
       upsertEntry(payload);
       toast("已存完稿");
       render();
@@ -992,7 +1072,7 @@ function bindEvents(){
   const btnReset = document.getElementById("btnReset");
   if(btnReset){
     btnReset.addEventListener("click", ()=>{
-      ["entryId","topic","body","notes"].forEach(id=>{
+      ["entryId","fromSourceId","topic","body","notes"].forEach(id=>{
         const el = document.getElementById(id);
         if(el) el.value = "";
       });
@@ -1001,26 +1081,11 @@ function bindEvents(){
     });
   }
 
-  const btnSaveHome = document.getElementById("btnSaveHome");
-  if(btnSaveHome){
-    btnSaveHome.addEventListener("click", ()=>{
-      state.settings.homepage = (document.getElementById("homepage").value||"").trim();
-      saveState(state); toast("已儲存"); updateCollabPrompt();
-    });
-  }
-  const btnSaveHome2 = document.getElementById("btnSaveHome2");
-  if(btnSaveHome2){
-    btnSaveHome2.addEventListener("click", ()=>{
-      state.settings.homepage = (document.getElementById("homepage2").value||"").trim();
-      saveState(state); toast("已儲存"); render();
-    });
-  }
-
-  /* 列表卡片 */
-  document.querySelectorAll("[data-action='open']").forEach(btn=>{
-    btn.addEventListener("click", ()=>openDialogForEntry(btn.dataset.id));
+  // list cards (entries)
+  document.querySelectorAll("[data-action='openEntry']").forEach(btn=>{
+    btn.addEventListener("click", ()=>openDialog("entry", btn.dataset.id));
   });
-  document.querySelectorAll("[data-action='edit']").forEach(btn=>{
+  document.querySelectorAll("[data-action='editEntry']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
       const e = state.entries.find(x=>x.id===id);
@@ -1028,6 +1093,7 @@ function bindEvents(){
       current="create"; render();
       setTimeout(()=>{
         document.getElementById("entryId").value = e.id;
+        document.getElementById("fromSourceId").value = e.sourceId||"";
         document.getElementById("format").value = e.format;
         document.getElementById("series").value = e.series;
         document.getElementById("topic").value = e.topic;
@@ -1039,7 +1105,7 @@ function bindEvents(){
       },0);
     });
   });
-  document.querySelectorAll("[data-action='toggle']").forEach(btn=>{
+  document.querySelectorAll("[data-action='toggleEntry']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
       const e = state.entries.find(x=>x.id===id);
@@ -1051,7 +1117,7 @@ function bindEvents(){
       render();
     });
   });
-  document.querySelectorAll("[data-action='del']").forEach(btn=>{
+  document.querySelectorAll("[data-action='delEntry']").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.dataset.id;
       if(!confirm("確定刪除？（無法復原）")) return;
@@ -1062,42 +1128,15 @@ function bindEvents(){
     });
   });
 
-  /* 篩選 */
+  // filters
   document.querySelectorAll("[data-action='applyFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const status = btn.dataset.status;
-      const prefix = btn.dataset.prefix;
-      applyFilter(status, prefix);
-    });
+    btn.addEventListener("click", ()=>applyFilter(btn.dataset.status, btn.dataset.prefix));
   });
   document.querySelectorAll("[data-action='clearFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const status = btn.dataset.status;
-      const prefix = btn.dataset.prefix;
-      clearFilter(status, prefix);
-    });
+    btn.addEventListener("click", ()=>clearFilter(btn.dataset.status, btn.dataset.prefix));
   });
 
-  /* Dialog */
-  const dlg = document.getElementById("dlg");
-  if(dlg){
-    const closeBtn = document.getElementById("dlgClose");
-    if(closeBtn) closeBtn.onclick = closeDlg;
-    const copyBtn = document.getElementById("dlgCopy");
-    if(copyBtn) copyBtn.onclick = ()=>{
-      const e = state.entries.find(x=>x.id===dlgEntryId);
-      copyText(e?.body||"");
-    };
-    const copyPromptBtn = document.getElementById("dlgCopyPrompt");
-    if(copyPromptBtn) copyPromptBtn.onclick = ()=>{
-      const e = state.entries.find(x=>x.id===dlgEntryId);
-      if(!e) return;
-      const prompt = baseCollabPrompt(e.series, e.collabDir||"書稿", {topic:e.topic, body:e.body, notes:e.notes||""});
-      copyText(prompt);
-    };
-  }
-
-  /* 打包 */
+  // pack
   const btnGenDesc = document.getElementById("btnGenDesc");
   if(btnGenDesc){
     btnGenDesc.addEventListener("click", ()=>{
@@ -1142,200 +1181,17 @@ function bindEvents(){
       copyText(`${head}${desc}\n\n${cta}`.trim());
     });
   }
-
   const btnCopyPackPrompt = document.getElementById("btnCopyPackPrompt");
   if(btnCopyPackPrompt) btnCopyPackPrompt.addEventListener("click", ()=>copyText(document.getElementById("packPrompt").value));
 
-  /* 母本：新增/刪除/選用 */
-  const btnAddBook = document.getElementById("btnAddBook");
-  if(btnAddBook){
-    btnAddBook.addEventListener("click", ()=>{
-      const title = (document.getElementById("bookTitle").value||"").trim();
-      if(!title) return alert("請先輸入書名（可暫定）");
-      state.bookProjects.unshift({
-        id: uid(), title,
-        core:(document.getElementById("bookCore").value||"").trim(),
-        audience:(document.getElementById("bookAudience").value||"").trim(),
-        status:(document.getElementById("bookStatus").value||"醞釀中"),
-        createdAt:nowISO(), updatedAt:nowISO()
-      });
-      saveState(state); toast("已新增書籍專案"); render();
+  // settings
+  const btnSaveHome2 = document.getElementById("btnSaveHome2");
+  if(btnSaveHome2){
+    btnSaveHome2.addEventListener("click", ()=>{
+      state.settings.homepage = (document.getElementById("homepage2").value||"").trim();
+      saveState(state); toast("已儲存"); render();
     });
   }
-  document.querySelectorAll("[data-action='delBook']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("刪除書籍專案？")) return;
-      state.bookProjects = state.bookProjects.filter(b=>b.id!==id);
-      if(state.settings.pickedBookId===id) state.settings.pickedBookId="";
-      saveState(state); toast("已刪除"); render();
-    });
-  });
-  document.querySelectorAll("[data-action='pickBook']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      state.settings.pickedBookId = btn.dataset.id;
-      saveState(state);
-      toast("已選用書籍");
-      refreshMotherLists();
-    });
-  });
-
-  const btnAddCourse = document.getElementById("btnAddCourse");
-  if(btnAddCourse){
-    btnAddCourse.addEventListener("click", ()=>{
-      const title = (document.getElementById("courseTitle").value||"").trim();
-      if(!title) return alert("請先輸入課程名稱");
-      state.courseProjects.unshift({
-        id: uid(), title,
-        promise:(document.getElementById("coursePromise").value||"").trim(),
-        audience:(document.getElementById("courseAudience").value||"").trim(),
-        type:(document.getElementById("courseType").value||"家長課"),
-        status:(document.getElementById("courseStatus").value||"醞釀中"),
-        createdAt:nowISO(), updatedAt:nowISO()
-      });
-      saveState(state); toast("已新增課程專案"); render();
-    });
-  }
-  document.querySelectorAll("[data-action='delCourse']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("刪除課程專案？")) return;
-      state.courseProjects = state.courseProjects.filter(c=>c.id!==id);
-      if(state.settings.pickedCourseId===id) state.settings.pickedCourseId="";
-      saveState(state); toast("已刪除"); render();
-    });
-  });
-  document.querySelectorAll("[data-action='pickCourse']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      state.settings.pickedCourseId = btn.dataset.id;
-      saveState(state);
-      toast("已選用課程");
-      refreshMotherLists();
-    });
-  });
-
-  /* 書稿段落：從完稿帶入 / 新增 / 匯出 / 刪除 / 複製 */
-  const btnFillBookFromFinal = document.getElementById("btnFillBookFromFinal");
-  if(btnFillBookFromFinal){
-    btnFillBookFromFinal.addEventListener("click", ()=>{
-      const id = document.getElementById("importFinalToBook").value;
-      if(!id) return;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      document.getElementById("bookParaTitle").value = e.topic;
-      document.getElementById("bookParaBody").value = e.body;
-      toast("已帶入完稿");
-    });
-  }
-  const btnAddBookPara = document.getElementById("btnAddBookPara");
-  if(btnAddBookPara){
-    btnAddBookPara.addEventListener("click", ()=>{
-      const bookId = pickedBook();
-      if(!bookId) return alert("請先在上方書籍專案按『選用』");
-      const chapter = (document.getElementById("bookChapter").value||"").trim();
-      const title = (document.getElementById("bookParaTitle").value||"").trim();
-      const body = (document.getElementById("bookParaBody").value||"").trim();
-      if(!body) return alert("請先填段落內容");
-      const sourceEntryId = (document.getElementById("importFinalToBook").value||"").trim() || "";
-      state.bookContent.unshift({
-        id: uid(), bookId, chapter, title, body, sourceEntryId,
-        createdAt:nowISO(), updatedAt:nowISO()
-      });
-      saveState(state); toast("已新增段落"); refreshMotherLists();
-      document.getElementById("bookParaBody").value = "";
-    });
-  }
-  document.querySelectorAll("[data-action='delBookPara']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("刪除段落？")) return;
-      state.bookContent = state.bookContent.filter(x=>x.id!==id);
-      saveState(state); toast("已刪除段落"); refreshMotherLists();
-    });
-  });
-  document.querySelectorAll("[data-action='copyBookPara']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const p = state.bookContent.find(x=>x.id===btn.dataset.id);
-      if(!p) return;
-      copyText(`${p.chapter||""}\n${p.title||""}\n\n${p.body||""}`.trim());
-    });
-  });
-  const btnExportBookText = document.getElementById("btnExportBookText");
-  if(btnExportBookText){
-    btnExportBookText.addEventListener("click", ()=>{
-      const bookId = pickedBook();
-      if(!bookId) return alert("請先選用一本書");
-      const text = exportBookText(bookId);
-      copyText(text);
-      toast("已複製書稿純文字");
-    });
-  }
-
-  /* 課程單元：從完稿帶入 / 新增 / 匯出 / 刪除 / 複製 */
-  const btnFillCourseFromFinal = document.getElementById("btnFillCourseFromFinal");
-  if(btnFillCourseFromFinal){
-    btnFillCourseFromFinal.addEventListener("click", ()=>{
-      const id = document.getElementById("importFinalToCourse").value;
-      if(!id) return;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      document.getElementById("courseUnitTitle").value = e.topic;
-      document.getElementById("unitStory").value = e.body;
-      toast("已帶入完稿（故事）");
-    });
-  }
-  const btnAddCourseUnit = document.getElementById("btnAddCourseUnit");
-  if(btnAddCourseUnit){
-    btnAddCourseUnit.addEventListener("click", ()=>{
-      const courseId = pickedCourse();
-      if(!courseId) return alert("請先在課程專案按『選用』");
-      const module = (document.getElementById("courseModule").value||"").trim();
-      const unitTitle = (document.getElementById("courseUnitTitle").value||"").trim();
-      const story = (document.getElementById("unitStory").value||"").trim();
-      const insight = (document.getElementById("unitInsight").value||"").trim();
-      const practice = (document.getElementById("unitPractice").value||"").trim();
-      const takeaway = (document.getElementById("unitTakeaway").value||"").trim();
-      if(!unitTitle) return alert("請先填單元標題");
-      if(!story) return alert("請先填故事（或從完稿帶入）");
-      const sourceEntryId = (document.getElementById("importFinalToCourse").value||"").trim() || "";
-      state.courseContent.unshift({
-        id: uid(), courseId, module, unitTitle, story, insight, practice, takeaway, sourceEntryId,
-        createdAt:nowISO(), updatedAt:nowISO()
-      });
-      saveState(state); toast("已新增單元"); refreshMotherLists();
-      document.getElementById("unitStory").value = "";
-      document.getElementById("unitInsight").value = "";
-      document.getElementById("unitPractice").value = "";
-      document.getElementById("unitTakeaway").value = "";
-    });
-  }
-  document.querySelectorAll("[data-action='delCourseUnit']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("刪除單元？")) return;
-      state.courseContent = state.courseContent.filter(x=>x.id!==id);
-      saveState(state); toast("已刪除單元"); refreshMotherLists();
-    });
-  });
-  document.querySelectorAll("[data-action='copyCourseUnit']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const u = state.courseContent.find(x=>x.id===btn.dataset.id);
-      if(!u) return;
-      copyText(`【${u.module||""}｜${u.unitTitle||""}】\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}`.trim());
-    });
-  });
-  const btnExportCourseText = document.getElementById("btnExportCourseText");
-  if(btnExportCourseText){
-    btnExportCourseText.addEventListener("click", ()=>{
-      const courseId = pickedCourse();
-      if(!courseId) return alert("請先選用一門課");
-      const text = exportCourseText(courseId);
-      copyText(text);
-      toast("已複製課程純文字");
-    });
-  }
-
-  /* 設定：匯出/匯入/清空 */
   const btnExport = document.getElementById("btnExport");
   if(btnExport){
     btnExport.addEventListener("click", ()=>{
@@ -1357,9 +1213,8 @@ function bindEvents(){
         const obj = JSON.parse(txt);
         if(!obj || typeof obj!=="object") throw new Error("bad");
         state = obj;
-        // 防呆：缺欄位補上
-        state.bookContent ||= [];
-        state.courseContent ||= [];
+        state.sources ||= [];
+        state.entries ||= [];
         state.settings ||= {homepage:"", lastSeries:"幸福教養"};
         saveState(state);
         toast("已匯入");
@@ -1379,54 +1234,6 @@ function bindEvents(){
       render();
     });
   }
-
-  /* 篩選 */
-  document.querySelectorAll("[data-action='applyFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>applyFilter(btn.dataset.status, btn.dataset.prefix));
-  });
-  document.querySelectorAll("[data-action='clearFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>clearFilter(btn.dataset.status, btn.dataset.prefix));
-  });
-}
-
-/* ===== 書/課匯出文字 ===== */
-function exportBookText(bookId){
-  const book = state.bookProjects.find(b=>b.id===bookId);
-  if(!book) return "";
-  const paras = state.bookContent.filter(p=>p.bookId===bookId);
-  let out = `【書名】${book.title}\n【狀態】${book.status}\n【核心】${book.core||""}\n【讀者】${book.audience||""}\n\n`;
-  const groups = {};
-  paras.forEach(p=>{
-    const ch = p.chapter || "（未分章）";
-    groups[ch] ||= [];
-    groups[ch].push(p);
-  });
-  Object.keys(groups).sort().forEach(ch=>{
-    out += `\n=== ${ch} ===\n`;
-    groups[ch].forEach(p=>{
-      out += `\n# ${p.title||"（未命名段落）"}\n${p.body||""}\n`;
-    });
-  });
-  return out.trim();
-}
-function exportCourseText(courseId){
-  const c = state.courseProjects.find(x=>x.id===courseId);
-  if(!c) return "";
-  const units = state.courseContent.filter(u=>u.courseId===courseId);
-  let out = `【課程】${c.title}\n【型態】${c.type}\n【狀態】${c.status}\n【承諾】${c.promise||""}\n【對象】${c.audience||""}\n\n`;
-  const groups = {};
-  units.forEach(u=>{
-    const m = u.module || "（未分模組）";
-    groups[m] ||= [];
-    groups[m].push(u);
-  });
-  Object.keys(groups).sort().forEach(m=>{
-    out += `\n=== ${m} ===\n`;
-    groups[m].forEach(u=>{
-      out += `\n# ${u.unitTitle||"（未命名單元）"}\n\n【故事】\n${u.story||""}\n\n【理解】\n${u.insight||""}\n\n【練習】\n${u.practice||""}\n\n【帶走】\n${u.takeaway||""}\n`;
-    });
-  });
-  return out.trim();
 }
 
 /* ===== Service Worker（先保留，等你要離線再補 sw.js） ===== */
@@ -1442,4 +1249,4 @@ if("serviceWorker" in navigator){
 }
 </script>
 </body>
-  </html>
+</html>
