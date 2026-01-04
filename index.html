@@ -2,1251 +2,2166 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0f3d2e" />
-  <title>天使笑長｜創作工作室（PWA v1.0）</title>
-  <link rel="manifest" href="manifest.json" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>天使笑長｜創作工作室（PWA）全功能版</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
 
   <style>
     :root{
-      --bg:#0b2f24; --bg2:#0f3d2e; --card:#ffffff; --muted:#e7efe9;
-      --text:#0b1b14; --sub:#51625a; --brand:#f0a04b; --danger:#c0392b; --ok:#1f7a52;
-      --shadow:0 10px 30px rgba(0,0,0,.18); --r:18px;
+      --bg:#0b3d2e;
+      --card:#0f4a37;
+      --card2:#11533d;
+      --txt:#eef7f1;
+      --muted:#cfe6db;
+      --accent:#f0a04b;
+      --danger:#ff6b6b;
+      --ok:#4cd964;
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 18px;
+      --ink: rgba(0,0,0,.22);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: radial-gradient(1200px 600px at 20% -10%, rgba(240,160,75,.25), transparent 60%),
-                  linear-gradient(180deg, var(--bg), #071e17 80%);
-      color:var(--muted);
+      font-family: system-ui, -apple-system, "Noto Sans TC", Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 900px at 30% -10%, rgba(240,160,75,.25), transparent 55%),
+        radial-gradient(1200px 900px at 110% 20%, rgba(76,217,100,.18), transparent 45%),
+        linear-gradient(180deg, #082f24, var(--bg));
+      color:var(--txt);
+      min-height:100vh;
+      padding:18px 12px 40px;
     }
-    header{position:sticky; top:0; z-index:10;
-      background: linear-gradient(180deg, rgba(11,47,36,.96), rgba(11,47,36,.75));
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+    .wrap{max-width:1100px;margin:0 auto}
+    header{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      margin-bottom:12px;flex-wrap:wrap;
     }
-    .wrap{max-width:1120px;margin:0 auto;padding:16px;}
-    .top{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
-    .brand{display:flex; align-items:center; gap:12px;}
-    .brand .logo{
-      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
-      background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);font-weight:900;color:#fff;
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      display:grid;place-items:center;
+      box-shadow: var(--shadow);
+      font-weight:900;
     }
-    .brand h1{font-size:16px;margin:0; letter-spacing:.3px}
-    .brand p{margin:2px 0 0; font-size:12px; color:rgba(231,239,233,.78)}
-    .pill{display:inline-flex; align-items:center; gap:8px;padding:10px 12px;border-radius:999px;
-      background: rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
-      color:rgba(231,239,233,.9);font-size:12px;
+    .brandTxt{display:flex;flex-direction:column;gap:2px}
+    .brandTxt h1{font-size:18px;margin:0;font-weight:950;letter-spacing:.5px}
+    .brandTxt .sub{font-size:12px;color:var(--muted);line-height:1.4}
+    .topBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+    button{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease;
+      font-weight:850;
     }
-    .pill b{color:#fff}
-    nav{display:flex; gap:8px; overflow:auto; padding:12px 0 4px;}
-    .tab{
-      border:1px solid rgba(255,255,255,.12);background: rgba(255,255,255,.06);
-      color:rgba(231,239,233,.88);padding:10px 12px;border-radius:999px;
-      cursor:pointer; user-select:none;white-space:nowrap;font-size:13px;transition: .15s ease;
+    button:active{transform: translateY(1px)}
+    button.primary{
+      background: linear-gradient(180deg, rgba(240,160,75,.95), rgba(240,160,75,.82));
+      border-color: rgba(0,0,0,.1);
+      color:#1b1b1b;
     }
-    .tab:hover{transform: translateY(-1px)}
-    .tab.active{background: rgba(240,160,75,.22);border-color: rgba(240,160,75,.45);color:#fff;}
-    main{padding:18px 0 34px}
-    .grid{display:grid; gap:14px}
-    @media (min-width:900px){ .grid.two{grid-template-columns: 1.12fr .88fr} }
+    button.ok{
+      background: rgba(76,217,100,.12);
+      border-color: rgba(76,217,100,.35);
+      color:#d9ffe4;
+    }
+    button.danger{
+      background: rgba(255,107,107,.12);
+      border-color: rgba(255,107,107,.35);
+      color:#ffd5d5;
+    }
+    button.ghost{background: transparent}
+    a{color:#ffd3a0}
+
     .card{
-      background: rgba(255,255,255,.95);color:var(--text);
-      border-radius: var(--r);box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,.18);padding:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
-    .card h2{margin:0 0 8px; font-size:16px}
-    .sub{color:var(--sub); font-size:12.5px; line-height:1.55}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .row > *{flex:1}
-    label{display:block; font-size:12px; color:var(--sub); margin:8px 0 6px}
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;
+      padding:10px 12px 0;
+    }
+    .tab{
+      padding:9px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      font-size:12px;
+      font-weight:950;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      background: rgba(240,160,75,.18);
+      border-color: rgba(240,160,75,.45);
+    }
+    .status{
+      display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+      padding:10px 14px 0;
+    }
+    .pill{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      color: var(--muted);
+    }
+    .bd{padding:14px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media(min-width:980px){ .grid{grid-template-columns: 1.2fr .8fr;} }
+
+    .hd{
+      padding:14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+    }
+    .title{margin:0;font-size:14px;font-weight:950;letter-spacing:.5px}
+    .hint{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:760px){
+      .row.two{grid-template-columns:1fr 1fr}
+      .row.three{grid-template-columns:1fr 1fr 1fr}
+    }
+    label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px}
     input, select, textarea{
-      width:100%; border-radius: 14px; border:1px solid rgba(0,0,0,.12);
-      padding:11px 12px; font-size:14px; outline:none; background: #fff;
+      width:100%;
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.15);
+      background: rgba(0,0,0,.18);
+      color:var(--txt);
+      outline:none;
     }
-    textarea{min-height:140px; resize:vertical; line-height:1.6}
-    .btnbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    button{border:0; cursor:pointer; padding:10px 12px; border-radius: 14px; font-weight:800; font-size:13px;}
-    .btn{background: var(--brand); color:#1f1204; box-shadow: 0 10px 18px rgba(240,160,75,.35);}
-    .btn.secondary{background: #ecf4ef; color:#173326; border:1px solid rgba(0,0,0,.08); box-shadow:none;}
-    .btn.danger{background: var(--danger); color:#fff}
-    .btn.ghost{background: transparent; color:#173326; border:1px dashed rgba(0,0,0,.25);}
-    .badge{display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px;
-      background: rgba(31,122,82,.10); color: var(--ok); font-weight:900; font-size:12px;
-    }
-    .badge.gray{background: rgba(0,0,0,.06); color:#3b4c44}
-    .badge.orange{background: rgba(240,160,75,.18); color:#6c3b04}
-    .hr{height:1px;background:rgba(0,0,0,.08);margin:14px 0}
-    .list{display:grid; gap:10px}
-    .item{border:1px solid rgba(0,0,0,.08); border-radius: 16px; padding:12px; background:#fff;}
-    .itemhead{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
-    .itemtitle{font-weight:900; font-size:14px; margin:0 0 2px}
-    .meta{font-size:12px; color:var(--sub)}
-    .tools{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .mini{padding:7px 10px; border-radius: 12px; background:#ecf4ef; border:1px solid rgba(0,0,0,.08);
-      font-weight:900; font-size:12px; color:#173326;
-    }
-    .mini.warn{background: rgba(240,160,75,.18); border-color: rgba(240,160,75,.25)}
-    .mini.danger{background: rgba(192,57,43,.12); border-color: rgba(192,57,43,.18); color:#7a1d14}
-    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px; background: rgba(0,0,0,.06); padding:2px 6px; border-radius: 8px; border:1px solid rgba(0,0,0,.06);
-    }
+    textarea{min-height:120px;resize:vertical;line-height:1.6}
+    .small{font-size:12px;color:var(--muted);line-height:1.55}
+    .kbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .divider{height:1px;background:rgba(255,255,255,.12);margin:12px 0}
+    .sectionSep{height:10px}
+    code.inline{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+
     .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background: rgba(0,0,0,.78); color:#fff; padding:10px 12px; border-radius: 999px;
-      font-size:13px; opacity:0; pointer-events:none; transition: .2s ease; z-index:999;
+      position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+      background: rgba(0,0,0,.78);
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px 12px;border-radius: 999px;
+      font-size:12px;color:#fff;
+      box-shadow: var(--shadow);
+      opacity:0; pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index:999;
     }
-    .toast.show{opacity:1}
-    .hint{border-left:4px solid rgba(240,160,75,.75); background: rgba(240,160,75,.10);
-      padding:10px 12px; border-radius: 14px; color:#1f1204; font-size:13px; line-height:1.6;
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px);}
+
+    /* list cards */
+    .list{display:grid;gap:10px}
+    .item{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+      padding:12px;
     }
-    .small{font-size:12px;color:var(--sub);line-height:1.55}
-    .split{display:flex; gap:10px; flex-wrap:wrap}
-    .split > *{flex:1}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
+    .itemTop{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .itemTitle{font-weight:950;font-size:13px;margin:0 0 4px}
+    .badges{display:flex;gap:6px;flex-wrap:wrap}
+    .badge{
+      font-size:11px;padding:3px 8px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--muted);
+      background: rgba(255,255,255,.04);
+    }
+    .itemBtns{display:flex;gap:8px;flex-wrap:wrap}
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:11px;
+      white-space:pre-wrap;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding:10px;
+    }
+
     dialog{
-      width:min(900px, 94vw);
-      border:0; border-radius: 18px; padding:0; box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      max-width:920px;width:92vw;
+      background:#082f24;color:var(--txt);
+      box-shadow:var(--shadow);
     }
-    dialog::backdrop{background: rgba(0,0,0,.45)}
-    .dlgHead{padding:14px 16px;background:#0f3d2e;color:#fff;border-radius: 18px 18px 0 0}
-    .dlgBody{padding:14px 16px;background:#fff;color:#0b1b14}
-    .dlgBody pre{white-space:pre-wrap; word-break:break-word; margin:0; line-height:1.7}
   </style>
 </head>
 
 <body>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="logo">幸</div>
-        <div>
-          <h1>天使笑長｜創作工作室（PWA v1.0）</h1>
-          <p>素材庫（生命故事）× 咒語包 × 協作提示 × 草稿/完稿 × 發片打包</p>
-        </div>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">幸</div>
+      <div class="brandTxt">
+        <h1>天使笑長｜創作工作室（PWA）全功能版</h1>
+        <div class="sub">素材庫 × 咒語包庫 × 創作/完稿 × 文宣庫 × 發片打包 × 雲端備份 × 搬家匯出</div>
       </div>
-      <div class="pill"><span>狀態：</span><b id="syncState">本機儲存</b><span class="kbd">localStorage</span></div>
     </div>
-    <nav id="nav"></nav>
-  </div>
-</header>
 
-<main class="wrap"><div id="view"></div></main>
-
-<div class="toast" id="toast">已複製</div>
-
-<dialog id="dlg">
-  <div class="dlgHead">
-    <div style="font-weight:900" id="dlgTitle">全文</div>
-    <div style="opacity:.85;font-size:12px" id="dlgMeta"></div>
-  </div>
-  <div class="dlgBody">
-    <div class="btnbar" style="margin-top:0">
-      <button class="btn secondary" id="dlgCopy">複製全文</button>
-      <button class="btn secondary" id="dlgCopyPrompt">複製協作提示</button>
-      <button class="btn ghost" id="dlgClose">關閉</button>
+    <div class="topBtns">
+      <button id="btnSaveAll" class="ok">保存（本機）</button>
+      <button id="btnCloud" class="primary">☁️ 一鍵雲端備份</button>
+      <button id="btnCloudCfg" class="ghost">⚙️ 雲端設定</button>
+      <button id="btnExport" class="primary">📦 匯出 JSON（搬家）</button>
+      <button id="btnImport" class="ok">📥 匯入 JSON</button>
+      <input id="fileImport" type="file" accept="application/json" hidden>
     </div>
-    <div class="hr"></div>
-    <pre id="dlgText"></pre>
+  </header>
+
+  <div class="card">
+    <div class="tabs" id="tabs"></div>
+
+    <div class="status">
+      <span class="pill" id="pillLocal">本機：未儲存</span>
+      <span class="pill" id="pillCloud">雲端：未設定</span>
+      <span class="pill" id="pillCounts">素材0｜完稿0｜文宣0｜打包0｜咒語0</span>
+      <span class="pill" id="pillLast">更新：—</span>
+      <span class="pill" id="pillLastCloud">上次雲端：—</span>
+    </div>
+
+    <div class="bd" id="view"></div>
   </div>
-</dialog>
+
+  <div class="toast" id="toast">完成</div>
+
+  <!-- Cloud settings dialog -->
+  <dialog id="dlgCloud">
+    <form method="dialog" style="margin:0">
+      <div class="hd" style="border-bottom:1px solid rgba(255,255,255,.12)">
+        <div>
+          <p class="title" style="margin:0">⚙️ 雲端設定（Google 表單備份）</p>
+          <p class="hint" style="margin:6px 0 0">
+            這裡採用「把整包資料 JSON」送到 Google 表單（寫進試算表）。<br>
+            你只要做一次：填 <b>formResponse URL</b> + <b>entry id（JSON欄位）</b> 即可。
+          </p>
+        </div>
+        <button value="cancel">關閉</button>
+      </div>
+
+      <div class="bd">
+        <div class="row">
+          <div>
+            <label>① formResponse URL（必填）</label>
+            <input id="cfgFormResponse" placeholder="例如：https://docs.google.com/forms/d/e/XXXX/formResponse">
+            <div class="small">
+              你的短網址（你之前給過）可用來找到表單：<br>
+              <code class="inline">https://forms.gle/FdNdqNSZ24v6GH7CA</code><br><br>
+              取得方式：表單編輯 → 右上「⋮」→ 取得預先填寫連結 → 連結裡會看到 entry.xxxxxx<br>
+              formResponse 通常是：<code class="inline">https://docs.google.com/forms/d/e/.../formResponse</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>② entry id（JSON 主欄位，必填）</label>
+            <input id="cfgEntryJson" placeholder="例如：entry.1234567890">
+            <div class="small">建議表單新增一題「長文字」：名稱可叫「備份JSON」。</div>
+          </div>
+          <div>
+            <label>（可選）entry id（備註/標題）</label>
+            <input id="cfgEntryNote" placeholder="例如：entry.2345678901（可留空）">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnSaveCloudCfg" class="primary" value="default">保存設定</button>
+          <button id="btnTestCloud" class="ok" value="default" type="button">送出測試</button>
+          <button id="btnResetCloudCfg" class="danger" value="default" type="button">清除雲端設定</button>
+        </div>
+
+        <div class="sectionSep"></div>
+
+        <label>測試/紀錄</label>
+        <div class="mono" id="cloudLog" style="min-height:120px"></div>
+      </div>
+    </form>
+  </dialog>
+
+</div>
 
 <script>
-/* =========================
-   v1.0：功能擴充（新增：素材庫）
-   ========================= */
-const APP = { version:"v1.0", storageKey:"angel_studio_v1" };
+/** =========================================================
+ * 天使笑長｜創作工作室（PWA）全功能單頁
+ * - 素材庫（生命故事）✅
+ * - 咒語包庫 ✅
+ * - 創作區（提示/產出）✅
+ * - 完稿庫 ✅
+ * - 文宣庫（FB/IG/LINE/官網提示）✅
+ * - 發片打包庫 ✅
+ * - 雲端備份（Google Form：送整包 JSON）✅
+ * - JSON 匯出/匯入（換手機最穩）✅
+ * - icon 192/512 生成 ✅
+ * - 移除安裝按鈕 ✅
+ * ========================================================= */
+
+const $ = (id)=>document.getElementById(id);
+const LS_KEY = "angel_studio_full_v1_data";
+const CLOUD_KEY = "angel_studio_full_v1_cloud_cfg";
+
+/* ---------- enums ---------- */
 const SERIES = ["幸福教養","心腦科學","心靈感悟","詩詞人生","幸福小腦袋","其他"];
-const FORMATS = ["長影片","短影片","Podcast"];
-const VIEWS = [
-  { id:"sources", label:"素材庫（生命故事）" }, // NEW
-  { id:"create", label:"創作影片" },
-  { id:"drafts", label:"文案草稿區" },
-  { id:"final",  label:"完稿區" },
-  { id:"pack",   label:"發片打包區" },
-  { id:"settings", label:"設定／備份" },
+const PURPOSE = ["書稿","長影片口說稿","短影片","Podcast","課程","發片打包","課程打包"];
+const PROMO_TYPE = ["試用活動介紹","工具推廣","社群貼文","開課宣傳","免費體驗邀請","官網/介紹頁","其他"];
+const PROMO_PLATFORM = ["FB（長文）","IG（精簡）","LINE（群組）","官網（完整）"];
+
+const TAB_ITEMS = [
+  {key:"materials", name:"素材庫（生命故事）"},
+  {key:"create", name:"創作區"},
+  {key:"finals", name:"完稿庫"},
+  {key:"promo", name:"文宣庫"},
+  {key:"publish", name:"發片打包"},
+  {key:"spells", name:"咒語包庫"},
+  {key:"backup", name:"設定/備份"},
 ];
 
-const SPELL = {
-  "幸福教養": {
-    tone: "輕鬆溫馨陪伴口吻｜不說教｜站在家長身邊",
-    sections: ["開場Hook","承諾","完整故事","心腦科學解析","好用工具（方法）","CTA"],
-    ctaKeywords: "把心練穩、天使笑長主頁、心理學、腦神經科學、理解和愛、陪伴、親子、一起成長、一起探討、分享、讓更多孩子家庭受惠、訂閱、不錯過更新、每週更新",
-    ctaTemplate: "如果你也在練習把心站穩，\n歡迎來到天使笑長的主頁。\n這裡有心理學、腦神經科學、心靈成長與幸福教養系列內容，\n陪你把心，一次一次放回中間。\n（每週更新）"
+/* ---------- state ---------- */
+const state = {
+  tab: "materials",
+  data: {
+    updatedAt: null,
+    lastCloudAt: null,
+
+    materials: [], // {id,title,scene,feel,insight,tool,series,createdAt,updatedAt}
+    spells: [],    // {id,title,category,content,createdAt,updatedAt}
+
+    create: { series:"幸福教養", purpose:"書稿", topic:"", body:"", output:"", prompt:"", linkMaterialId:"" },
+    finals: [],    // {id,series,purpose,topic,body,output,createdAt,updatedAt}
+    promoDraft: {
+      tool:"幸福教養｜零用錢練功房", series:"幸福教養", type:"試用活動介紹", platform:"FB（長文）",
+      title:"", body:"", tags:"#幸福教養 #零用錢練功房", links:"", cta:"留言：「理智隊長報到！」一起交流", prompt:""
+    },
+    promos: [],    // {id,tool,series,type,platform,title,body,tags,links,cta,createdAt,updatedAt}
+
+    publishDraft: { title:"", date:"", intro:"", hashtags:"#幸福教養 #天使笑長", toolLinks:"", notes:"" },
+    publishes: []  // {id,title,date,intro,hashtags,toolLinks,notes,createdAt,updatedAt}
   },
-  "心腦科學": {
-    tone: "親民幽默口吻｜用生活比喻說科學｜降專業門檻",
-    sections: ["開場Hook","承諾","正文（白話化，1000–2500字）","CTA"],
-    ctaKeywords: "理解、心穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
-    ctaTemplate: "如果你也喜歡用白話把腦科學說清楚，\n歡迎到天使笑長主頁逛逛。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你把理解變成穩定。（每週更新）"
+  cloud: {
+    formResponse:"",
+    entryJson:"",
+    entryNote:"",
   },
-  "詩詞人生": {
-    tone: "文雅哲學口吻｜沉穩留白｜慢慢讀",
-    sections: ["開場Hook","詩詞作者簡介","詩詞創作背景","詩詞全文／內容","心理學與腦神經延伸","生活問題運用（1000–1500字）","CTA"],
-    ctaKeywords: "心自在、穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
-    ctaTemplate: "如果你也喜歡用詩詞把心慢慢放鬆，\n歡迎到天使笑長主頁。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你活得更自在。（每週更新）"
-  },
-  "心靈感悟": {
-    tone: "哲思、發人深省口吻｜不急著下結論｜允許留白",
-    sections: ["靈感關鍵字（延伸成1000–1500字短文）","CTA"],
-    ctaKeywords: "心自在、穩定、天使笑長策劃心理學腦神經科學、心靈成長、幸福教養、每週更新",
-    ctaTemplate: "如果你也在練習不急著解釋、先把心放回中間，\n歡迎到天使笑長主頁。\n心理學×腦神經科學×心靈成長×幸福教養，\n陪你更穩、更自在。（每週更新）"
-  },
-  "幸福小腦袋": {
-    tone: "淺顯易懂｜輕鬆活潑口吻｜親子共讀友善",
-    sections: ["主題（延伸成1000–1500字短文）","給家長的小提醒","共讀提問／小練習","CTA"],
-    ctaKeywords: "提醒家長、陪伴共讀、天使笑長",
-    ctaTemplate: "提醒家長：陪孩子一起讀、一起練，\n比你講一百句更有用。\n— 天使笑長"
-  },
-  "其他": {
-    tone: "以你當下的語感為主｜保留真實現場",
-    sections: ["開場","正文","收束","CTA（可選）"],
-    ctaKeywords: "天使笑長主頁、理解、陪伴",
-    ctaTemplate: "想看更多內容，歡迎到天使笑長主頁。"
+  filters: {
+    materialsQuery:"",
+    finalsQuery:"",
+    promoQuery:"",
+    promoTool:"全部",
+    promoSeries:"全部",
+    promoType:"全部",
+    publishQuery:"",
+    spellsQuery:"",
+    spellsCat:"全部",
   }
 };
 
+/* ---------- utils ---------- */
 function nowISO(){ return new Date().toISOString(); }
-function uid(){ return Math.random().toString(16).slice(2)+"-"+Date.now().toString(16); }
-function fmtDate(iso){
-  const d = new Date(iso);
-  const pad = n => String(n).padStart(2,"0");
-  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function fmt(ts){
+  if(!ts) return "—";
+  const d=new Date(ts);
+  if(Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString("zh-Hant",{hour12:false});
 }
-function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function toast(msg="已完成"){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
+function uid(){ return Math.random().toString(16).slice(2)+"-"+Date.now().toString(16); }
+function toast(msg="完成"){
+  const t=$("toast"); t.textContent=msg;
   t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 1300);
+  setTimeout(()=>t.classList.remove("show"), 1400);
+}
+function escapeHtml(s){
+  return (s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
 async function copyText(text){
-  try{ await navigator.clipboard.writeText(text); toast("已複製"); }
-  catch(e){
-    const ta = document.createElement("textarea");
-    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
-    toast("已複製（備援）");
-  }
-}
-
-/* ===== 儲存 ===== */
-function loadState(){
   try{
-    const raw = localStorage.getItem(APP.storageKey);
-    if(!raw) return {
-      sources:[],           // NEW
-      entries:[],
-      settings:{homepage:"", lastSeries:"幸福教養"}
-    };
-    const s = JSON.parse(raw);
-    s.sources ||= [];
-    s.entries ||= [];
-    s.settings ||= {homepage:"", lastSeries:"幸福教養"};
-    return s;
+    await navigator.clipboard.writeText(text);
+    toast("已複製");
   }catch(e){
-    return { sources:[], entries:[], settings:{homepage:"", lastSeries:"幸福教養"} };
+    const ta=document.createElement("textarea");
+    ta.value=text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy");
+    ta.remove(); toast("已複製");
   }
 }
-function saveState(s){ localStorage.setItem(APP.storageKey, JSON.stringify(s)); }
-let state = loadState();
 
-/* ===== 導覽 ===== */
-let current = "sources";
-function renderNav(){
-  const nav = document.getElementById("nav");
-  nav.innerHTML = VIEWS.map(v => `<div class="tab ${v.id===current?'active':''}" data-id="${v.id}">${v.label}</div>`).join("");
-  nav.querySelectorAll(".tab").forEach(t=>{
-    t.addEventListener("click",()=>{ current=t.dataset.id; render(); });
+/* ---------- persistence ---------- */
+function loadAll(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const obj = JSON.parse(raw);
+      if(obj?.data){
+        // merge
+        state.data = {...state.data, ...obj.data};
+        state.data.create = {...state.data.create, ...(obj.data.create||{})};
+        state.data.promoDraft = {...state.data.promoDraft, ...(obj.data.promoDraft||{})};
+        state.data.publishDraft = {...state.data.publishDraft, ...(obj.data.publishDraft||{})};
+      }
+    }
+  }catch(e){}
+
+  try{
+    const raw = localStorage.getItem(CLOUD_KEY);
+    if(raw){
+      const cfg = JSON.parse(raw);
+      if(cfg) state.cloud = {...state.cloud, ...cfg};
+    }
+  }catch(e){}
+}
+function saveAll(){
+  state.data.updatedAt = nowISO();
+  localStorage.setItem(LS_KEY, JSON.stringify({data:state.data}, null, 2));
+  updatePills();
+  toast("已保存");
+}
+function updatePills(){
+  $("pillLocal").textContent = state.data.updatedAt ? `本機：已保存（${fmt(state.data.updatedAt)}）` : "本機：未儲存";
+  $("pillCloud").textContent = isCloudReady() ? "雲端：已設定 ✅" : "雲端：未設定";
+  $("pillCounts").textContent =
+    `素材${state.data.materials.length}｜完稿${state.data.finals.length}｜文宣${state.data.promos.length}｜打包${state.data.publishes.length}｜咒語${state.data.spells.length}`;
+  $("pillLast").textContent = `更新：${fmt(state.data.updatedAt)}`;
+  $("pillLastCloud").textContent = `上次雲端：${fmt(state.data.lastCloudAt)}`;
+}
+
+/* ---------- prompts (核心：依你 CTA 規則) ---------- */
+function ctaForSeries(series, purpose){
+  // 你先前規則：
+  // - 幸福教養：長片 CTA 主頁 +「每週五更新」
+  // - 詩詞人生：沒有長片；中/短/short CTA 主頁 +「每週一更新」
+  // - 其他：主頁 +「每週更新」(保守)
+  if(series==="幸福教養" && purpose==="長影片口說稿"){
+    return "CTA（導到主頁）：如果你也在練習把心站穩，歡迎來到天使笑長的主頁。這裡有心理學、腦神經科學、心靈成長與幸福教養系列影片，陪你把心一次一次放回中間。｜每週五更新";
+  }
+  if(series==="詩詞人生"){
+    // 詩詞人生不做長片；若仍選長片，就提醒不放 CTA
+    if(purpose==="長影片口說稿") return "（提醒：詩詞人生長片你偏好不放 CTA；若是中/短片才放主頁引流：每週一更新）";
+    return "CTA（導到主頁）：更多詩詞人生與生活練習，都在天使笑長主頁｜每週一更新";
+  }
+  return "CTA（導到主頁）：更多心理學、腦神經科學與幸福教養內容，都在天使笑長主頁｜每週更新";
+}
+
+function buildCreatePrompt(){
+  const c = state.data.create;
+  const base = `你是「天使笑長」的協作夥伴。請依照以下輸入，產出我需要的版本。品牌語感：把心站穩、活得自在；不說教、溫柔而篤定；要有畫面感；要可落地、可直接使用。`;
+
+  const blocks = {
+    "幸福教養": [
+      "口吻：輕鬆溫馨陪伴、不說教、帶畫面感。",
+      "結構：Hook → 承諾 → 完整故事/情境 → 心腦科學解析（前額葉/杏仁核/自控力）→ 好用工具（方法/話術/練習）→ CTA。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "心腦科學": [
+      "口吻：親民幽默、易懂、有比喻。",
+      "正文：將原文改寫為 1000–2500 字，清楚分段，給出可執行方法。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "詩詞人生": [
+      "口吻：文雅哲學、清亮但不艱澀。",
+      "結構：Hook → 作者簡介 → 創作背景 → 詩詞內容解析 → 心理學/腦神經延伸 → 生活運用（可落地）→ 1000–1500 字。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "心靈感悟": [
+      "口吻：哲思、發人深省、溫柔有力量。",
+      "把靈感/原文延伸成 1000–1500 字短文，最後給 3 個落地練習。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "幸福小腦袋": [
+      "口吻：淺顯易懂、輕鬆活潑，適合親子共讀。",
+      "把主題延伸成 800–1200 字故事＋家長提醒 3 點。",
+      "CTA：引導家長到主頁看完整系列與工具。"
+    ],
+    "其他": [
+      "口吻：依輸入調整。",
+      "輸出：先做可用版本，再給 3 種不同風格變體。"
+    ]
+  };
+
+  const purposeHint =
+    c.purpose==="書稿" ? "【你要產出：書稿版】必須加入心理學＋腦神經科學解析，並在其基礎上提出方法與工具（可練習、可教學）。" :
+    c.purpose==="課程" ? "【你要產出：課程版】請做：課程目標→單元流程→講義重點→練習→作業→工具（可做成PWA練習）。" :
+    c.purpose==="課程打包" ? "【你要產出：課程打包】請整理：模組/單元/講義/練習/作業/工具連結/需要的素材清單。" :
+    c.purpose==="發片打包" ? "【你要產出：發片打包】請整理：影片介紹（100字內）＋工具連結＋Hashtags＋預計發片日期建議＋封面文字建議（如需）。" :
+    c.purpose==="長影片口說稿" ? "【你要產出：長影片口說稿】請 ≥3000 字（若系列設定允許），含 Hook/承諾/正文/CTA（依規則）。" :
+    c.purpose==="短影片" ? "【你要產出：短影片】請給 3 秒 Hook＋主體 30–45 秒＋收尾 CTA（引流主頁）。" :
+    "【你要產出：Podcast】請給分段口條、停頓點、以及可口語化的轉場句。";
+
+  const prompt = [
+    base,
+    `【系列】${c.series}`,
+    `【用途】${c.purpose}`,
+    `【主題】${c.topic||"（未填）"}`,
+    `【原文/素材】\n${c.body||"（未貼）"}`,
+    "",
+    purposeHint,
+    "",
+    "【系列咒語包】",
+    ...(blocks[c.series] || blocks["其他"])
+  ].join("\n");
+
+  return prompt;
+}
+
+function buildPromoPrompt(){
+  const p = state.data.promoDraft;
+  const base = `你是「天使笑長」的行銷文案協作夥伴。請把我提供的素材寫成可直接發布的推廣文宣。語氣：溫暖、俐落、有畫面；不油；把價值講清楚。`;
+
+  const must = [
+    "必備元素：",
+    "1) 痛點提問（你家也有…？）",
+    "2) 一句話定位（這是什麼、幫誰、解決什麼）",
+    "3) 3–5 個亮點條列（可含腦科學/行為訓練/成就感）",
+    "4) 明確行動指令（點連結/加入主畫面/看說明）",
+    "5) 互動引導（留言句/分享/私訊）",
+  ].join("\n");
+
+  const variants = [
+    "請同一份內容提供以下版本：",
+    "A) FB 長文版：有故事、有鋪陳、有條列、有 CTA",
+    "B) IG 精簡版：短句、分行、Emoji 適量、重點 5 行內",
+    "C) LINE 群組版：更口語、更短、更直接",
+    "D) 官網介紹版：較完整（可含 FAQ 3 題）",
+  ].join("\n");
+
+  return [
+    base,
+    `【關聯工具/專案】${p.tool}`,
+    `【系列】${p.series}`,
+    `【文宣用途】${p.type}`,
+    `【目標平台（這次主版本）】${p.platform}`,
+    `【標題/主題】${p.title||"（未填）"}`,
+    `【連結】${p.links||"（未填）"}`,
+    `【Hashtags】${p.tags||"（未填）"}`,
+    `【互動/CTA】${p.cta||"（未填）"}`,
+    "",
+    "【素材/草稿】",
+    p.body||"（未貼）",
+    "",
+    must,
+    "",
+    variants,
+    "",
+    "輸出格式：先給主版本（對應目標平台），再給 A/B/C/D 四版。"
+  ].join("\n");
+}
+
+/* ---------- cloud backup (Google Form POST) ---------- */
+function isCloudReady(){
+  return !!(state.cloud.formResponse && state.cloud.entryJson);
+}
+function cloudLog(msg){
+  const el = $("cloudLog");
+  if(!el) return;
+  el.textContent = `[${new Date().toLocaleTimeString("zh-Hant",{hour12:false})}] ${msg}\n` + el.textContent;
+}
+
+async function postToGoogleForm(payload){
+  const formBody = new URLSearchParams(payload).toString();
+  await fetch(state.cloud.formResponse, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
+    body: formBody
   });
 }
 
-/* =========================
-   素材庫（生命故事）- NEW
-   ========================= */
-function buildSourceText(src){
-  // 讓素材進到「創作」時，呈現為一份乾淨的“原文素材”
-  const parts = [];
-  parts.push(`【故事標題】\n${src.title||""}`.trim());
-  if(src.scene) parts.push(`【生命場景】\n${src.scene}`);
-  if(src.dialogue) parts.push(`【現場對話／原句】\n${src.dialogue}`);
-  if(src.feelings) parts.push(`【我的感受／內在觀察】\n${src.feelings}`);
-  if(src.insight) parts.push(`【我的洞察】\n${src.insight}`);
-  if(src.keepLines) parts.push(`【想保留的原句／語感】\n${src.keepLines}`);
-  if(src.lesson) parts.push(`【我想陪孩子／大人學到什麼】\n${src.lesson}`);
-  if(src.notes) parts.push(`【補充】\n${src.notes}`);
-  return parts.join("\n\n").trim();
-}
-
-function sourcePrompt(src){
-  const homepage = (state.settings.homepage||"").trim();
-  const homeLine = homepage ? `\n主頁連結：${homepage}\n` : "\n";
-  return `我正在建立「素材庫（生命故事）」。
-請你幫我把下面這段素材，做成「可轉入口說稿／書稿／課程」的乾淨骨架，但先不要寫成口說稿成品。
-
-【你的任務】
-1) 幫我抓出：這個故事最關鍵的『一個瞬間』
-2) 幫我提煉：一句核心洞察（溫柔不說教）
-3) 幫我列出：三個可延伸方向
-   - 口說稿方向（陪伴式）
-   - 書稿方向（可反覆閱讀、留白、段落）
-   - 課程方向（要練的能力 + 30–60秒練習）
-4) 幫我保留我原句的語感（尤其是我說過的話）
-
-${homeLine}
-【素材標題】
-${src.title||""}
-
-【素材全文】
-${buildSourceText(src)}`.trim();
-}
-
-/* ===== 協作提示（口說稿/系列） ===== */
-function baseCollabPrompt(series, dir, entry){
-  const sp = SPELL[series] || SPELL["其他"];
-  const homepage = (state.settings.homepage||"").trim();
-  const homeLine = homepage ? `\n主頁連結：${homepage}` : "";
-  const dirMap = {
-    "書稿":"請把這段內容整理成《幸福教養》可入書的書稿段落（約 1500–2500 字），敘事要有畫面、節奏自然、洞察溫柔篤定。請保留我的原句與口氣。",
-    "課程":"請把這段內容轉化成一個課程單元：包含「一個故事 / 一個理解（白話心腦轉譯）/ 一個練習（30–60秒可做）/ 一句帶走的話」。",
-    "工具":"請從這段內容找出『最需要被扶住的瞬間』，設計一個 30–60 秒內完成的小工具（步驟清楚、可當場使用）。",
-    "發片":"請把這段內容整理成發片用的大綱：Hook/承諾/故事/理解/工具指路/CTA。不要逐字口說稿，只要結構與要點。"
-  };
-  return `請依「${series}」系列的文案咒語包協助我。
-語感：${sp.tone}
-必須保留生活現場與我的真實語氣（不說教）。${homeLine}
-
-【我希望你幫我做的事】
-${dirMap[dir]||dirMap["書稿"]}
-
-【系列咒語結構】
-- ${sp.sections.join("\n- ")}
-
-【CTA 關鍵字池】
-${sp.ctaKeywords}
-
-【主題】
-${entry.topic}
-
-【原文／素材】
-${entry.body}
-
-【補充】
-${entry.notes || "（無）"}`.trim();
-}
-
-function updateCollabPrompt(){
-  const series = document.getElementById("series")?.value || state.settings.lastSeries || "幸福教養";
-  const entry = {
-    topic:(document.getElementById("topic")?.value||"").trim(),
-    body:(document.getElementById("body")?.value||"").trim(),
-    notes:(document.getElementById("notes")?.value||"").trim(),
-  };
-  const dir = document.getElementById("collabDir")?.value || "書稿";
-  const box = document.getElementById("collabPrompt");
-  if(!box) return;
-  box.value = baseCollabPrompt(series, dir, entry);
-}
-
-/* ===== Entries ===== */
-function upsertEntry(payload){
-  payload.updatedAt = nowISO();
-  if(!payload.id){
-    payload.id = uid();
-    payload.createdAt = nowISO();
-    state.entries.unshift(payload);
-  }else{
-    const idx = state.entries.findIndex(x=>x.id===payload.id);
-    if(idx>=0) state.entries[idx] = {...state.entries[idx], ...payload};
-    else { payload.createdAt = nowISO(); state.entries.unshift(payload); }
+async function cloudBackup({test=false}={}){
+  if(!isCloudReady()){
+    toast("先設定雲端");
+    $("dlgCloud").showModal();
+    cloudLog("雲端尚未設定：請填 formResponse + entryJson。");
+    return;
   }
-  saveState(state);
+
+  // 先保存本機再送
+  saveAll();
+
+  const snapshot = JSON.stringify({
+    exportedAt: nowISO(),
+    data: state.data
+  }, null, 0);
+
+  const note = test
+    ? `【測試送出】${new Date().toLocaleString("zh-Hant",{hour12:false})}`
+    : `【正式備份】${new Date().toLocaleString("zh-Hant",{hour12:false})}`;
+
+  const payload = {};
+  payload[state.cloud.entryJson] = snapshot;
+  if(state.cloud.entryNote) payload[state.cloud.entryNote] = note;
+
+  try{
+    await postToGoogleForm(payload);
+    if(!test){
+      state.data.lastCloudAt = nowISO();
+      state.data.updatedAt = nowISO();
+      localStorage.setItem(LS_KEY, JSON.stringify({data:state.data}, null, 2));
+      updatePills();
+    }
+    toast(test ? "測試已送出" : "已雲端備份");
+    cloudLog(test
+      ? "測試送出完成（no-cors 無法讀回傳；請到試算表確認新增一列）。"
+      : "備份送出完成（no-cors）。");
+  }catch(e){
+    toast("送出失敗");
+    cloudLog("送出失敗：" + e.message);
+    alert("雲端送出失敗：\n" + e.message + "\n\n常見原因：\n- formResponse URL 不正確\n- entry id 不正確\n- 網路或瀏覽器限制");
+  }
 }
 
-function getEntryForm(){
-  const series = document.getElementById("series").value;
-  const format = document.getElementById("format").value;
-  const topic = (document.getElementById("topic").value||"").trim();
-  const body = (document.getElementById("body").value||"").trim();
-  const notes = (document.getElementById("notes").value||"").trim();
-  const collabDir = document.getElementById("collabDir").value;
-  const id = (document.getElementById("entryId").value||"").trim();
-  if(!topic) return alert("請先填「主題」"), null;
-  if(!body) return alert("請先填「全文／故事／正文」"), null;
-  return { id:id||"", series, format, topic, body, notes, collabDir };
+function saveCloudCfg(){
+  state.cloud.formResponse = $("cfgFormResponse").value.trim();
+  state.cloud.entryJson = $("cfgEntryJson").value.trim();
+  state.cloud.entryNote = $("cfgEntryNote").value.trim();
+  localStorage.setItem(CLOUD_KEY, JSON.stringify(state.cloud, null, 2));
+  updatePills();
+  toast("已保存設定");
+  cloudLog("已保存雲端設定。");
+}
+function resetCloudCfg(){
+  if(!confirm("確定清除雲端設定？清除後就不能一鍵備份，直到你再填一次。")) return;
+  state.cloud = {formResponse:"", entryJson:"", entryNote:""};
+  localStorage.removeItem(CLOUD_KEY);
+  $("cfgFormResponse").value = "";
+  $("cfgEntryJson").value = "";
+  $("cfgEntryNote").value = "";
+  updatePills();
+  toast("已清除");
+  cloudLog("已清除雲端設定。");
 }
 
-/* ===== Components ===== */
-function EntryCard(e){
-  const isFinal = e.status==="final";
-  const b = isFinal ? "badge" : "badge gray";
-  const tag = isFinal ? "完稿" : "草稿";
-  const dir = e.collabDir ? `<span class="badge orange">${escapeHtml(e.collabDir)}</span>` : "";
-  const snippet = (e.body||"").slice(0,120).replace(/\n/g," ");
+/* ---------- local export/import ---------- */
+function exportJSON(){
+  saveAll();
+  const blob = new Blob([JSON.stringify({data:state.data, cloud:state.cloud}, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `angel-studio-full-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("已匯出 JSON");
+}
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      if(obj?.data){
+        state.data = {...state.data, ...obj.data};
+      }
+      if(obj?.cloud){
+        state.cloud = {...state.cloud, ...obj.cloud};
+        localStorage.setItem(CLOUD_KEY, JSON.stringify(state.cloud, null, 2));
+      }
+      saveAll();
+      render();
+      toast("已匯入完成");
+    }catch(e){
+      alert("JSON 解析失敗：" + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- icon generator ---------- */
+function drawIcon(size){
+  const canvas=document.createElement("canvas");
+  canvas.width=canvas.height=size;
+  const ctx=canvas.getContext("2d");
+
+  const grad=ctx.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,"#0b3d2e");
+  grad.addColorStop(1,"#082f24");
+  ctx.fillStyle=grad; ctx.fillRect(0,0,size,size);
+
+  ctx.fillStyle="rgba(240,160,75,.35)";
+  ctx.beginPath(); ctx.arc(size*0.35,size*0.28,size*0.32,0,Math.PI*2); ctx.fill();
+
+  ctx.fillStyle="rgba(255,255,255,.92)";
+  ctx.beginPath();
+  ctx.moveTo(size*0.22,size*0.62);
+  ctx.quadraticCurveTo(size*0.35,size*0.36,size*0.56,size*0.38);
+  ctx.quadraticCurveTo(size*0.42,size*0.44,size*0.35,size*0.58);
+  ctx.quadraticCurveTo(size*0.55,size*0.52,size*0.74,size*0.40);
+  ctx.quadraticCurveTo(size*0.62,size*0.60,size*0.44,size*0.68);
+  ctx.quadraticCurveTo(size*0.33,size*0.73,size*0.22,size*0.62);
+  ctx.fill();
+
+  ctx.fillStyle="#f0a04b";
+  ctx.beginPath(); ctx.arc(size*0.72,size*0.28,size*0.06,0,Math.PI*2); ctx.fill();
+
+  ctx.fillStyle="rgba(255,255,255,.90)";
+  ctx.font = `900 ${Math.round(size*0.10)}px system-ui, -apple-system, "Noto Sans TC"`;
+  ctx.textAlign="center";
+  ctx.fillText("天使笑長", size*0.50, size*0.90);
+
+  return canvas;
+}
+function downloadCanvas(canvas, filename){
+  canvas.toBlob((blob)=>{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=filename;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+  },"image/png");
+}
+
+/* ---------- render tabs ---------- */
+function renderTabs(){
+  const tabs=$("tabs");
+  tabs.innerHTML="";
+  TAB_ITEMS.forEach(t=>{
+    const el=document.createElement("div");
+    el.className="tab"+(state.tab===t.key?" active":"");
+    el.textContent=t.name;
+    el.onclick=()=>{ state.tab=t.key; render(); renderTabs(); };
+    tabs.appendChild(el);
+  });
+}
+
+/* ---------- materials (素材庫) ---------- */
+function renderMaterials(){
+  const q=(state.filters.materialsQuery||"").trim().toLowerCase();
+  let items=state.data.materials.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.title} ${x.scene} ${x.feel} ${x.insight} ${x.tool} ${x.series}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  const draft = state._materialDraft || {
+    id:"",
+    title:"",
+    scene:"",
+    feel:"",
+    insight:"",
+    tool:"",
+    series:"幸福教養"
+  };
+
   return `
-    <div class="item">
-      <div class="itemhead">
-        <div>
-          <div class="itemtitle">${escapeHtml(e.topic)}</div>
-          <div class="meta">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${fmtDate(e.updatedAt||e.createdAt)}</div>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
-          <span class="${b}">${tag}</span>${dir}
-        </div>
-      </div>
-      <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${(e.body||"").length>120?"…":""}</div>
-      <div class="tools">
-        <button class="mini" data-action="openEntry" data-id="${e.id}">開啟全文</button>
-        <button class="mini" data-action="editEntry" data-id="${e.id}">編輯</button>
-        <button class="mini warn" data-action="toggleEntry" data-id="${e.id}">${isFinal?"轉草稿":"轉完稿"}</button>
-        <button class="mini danger" data-action="delEntry" data-id="${e.id}">刪除</button>
-      </div>
-    </div>`;
-}
-
-function SourceCard(s){
-  const snippet = buildSourceText(s).slice(0,120).replace(/\n/g," ");
-  return `
-    <div class="item">
-      <div class="itemhead">
-        <div>
-          <div class="itemtitle">${escapeHtml(s.title||"（未命名素材）")}</div>
-          <div class="meta">素材｜${fmtDate(s.updatedAt||s.createdAt)}</div>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
-          <span class="badge orange">生命故事</span>
-        </div>
-      </div>
-      <div class="small" style="margin-top:8px">${escapeHtml(snippet)}${buildSourceText(s).length>120?"…":""}</div>
-      <div class="tools">
-        <button class="mini" data-action="openSource" data-id="${s.id}">開啟全文</button>
-        <button class="mini" data-action="editSource" data-id="${s.id}">編輯</button>
-        <button class="mini warn" data-action="toCreate" data-id="${s.id}">轉入創作</button>
-        <button class="mini" data-action="copySourcePrompt" data-id="${s.id}">複製素材協作提示</button>
-        <button class="mini danger" data-action="delSource" data-id="${s.id}">刪除</button>
-      </div>
-    </div>`;
-}
-
-function buildSpellCard(series){
-  const sp = SPELL[series] || SPELL["其他"];
-  const secs = sp.sections.map(s=>`<li>${escapeHtml(s)}</li>`).join("");
-  return `
+  <div class="grid">
     <div class="card">
-      <h2>🪄 文案咒語包｜${escapeHtml(series)}</h2>
-      <div class="sub">${escapeHtml(sp.tone)}</div>
-      <div class="hr"></div>
-      <div class="split">
+      <div class="hd">
         <div>
-          <div class="small"><b>結構提醒（依系列不同）</b></div>
-          <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.7">${secs}</ul>
+          <p class="title">📚 素材庫（生命故事）</p>
+          <p class="hint">素材不是稿件，是「源頭」。先存真實場景，之後一鍵轉成創作素材。</p>
         </div>
-        <div>
-          <div class="small"><b>CTA 關鍵字池</b></div>
-          <div class="small" style="margin-top:8px">${escapeHtml(sp.ctaKeywords)}</div>
-          <div class="hr"></div>
-          <div class="hint"><b>小提醒：</b>先寫真實，再用咒語包把路照亮。</div>
+        <div class="kbar">
+          <button id="btnMatSave" class="ok">${draft.id ? "覆蓋保存" : "保存素材"}</button>
+          <button id="btnMatClear" class="ghost">清空表單</button>
         </div>
       </div>
-    </div>
-  `;
-}
 
-/* =========================
-   Views
-   ========================= */
-function SourcesView(){
-  return `
-  <div class="grid two">
-    <div class="card">
-      <h2>📚 素材庫（生命故事）</h2>
-      <div class="sub">素材不是稿件。它是「源頭」：先存真實，再決定要轉入口說稿／書稿／課程。</div>
-      <div class="hr"></div>
-
-      <input type="hidden" id="sourceId" value="" />
-
-      <label>素材標題（建議用一句話命名）</label>
-      <input id="srcTitle" placeholder="例：超市裡談零用錢價碼：孩子的『等一下』怎麼長出來" />
-
-      <label>生命場景（事情怎麼發生的）</label>
-      <textarea id="srcScene" placeholder="例：放學後去超市…我和哥哥談零用錢…"></textarea>
-
-      <label>現場對話／原句（保留你原話，很珍貴）</label>
-      <textarea id="srcDialogue" placeholder="例：『有錢煩惱，沒錢也煩惱…』"></textarea>
-
-      <label>我的感受／內在觀察（你怎麼看見自己/孩子）</label>
-      <textarea id="srcFeelings" placeholder="例：我看見他開始有煩惱…妹妹淡定…"></textarea>
-
-      <label>我的洞察（不必教，只要看見）</label>
-      <textarea id="srcInsight" placeholder="例：慾望需要學會和平共處…收入多少才夠用…"></textarea>
-
-      <label>想保留的原句／語感（必留）</label>
-      <textarea id="srcKeepLines" placeholder="例：『錢比人偉大！』『無欲則剛！』"></textarea>
-
-      <label>我想陪孩子／大人學到什麼（可空）</label>
-      <textarea id="srcLesson" placeholder="例：把『等一下』練出來；學會欲望與金錢的平衡…"></textarea>
-
-      <label>補充（可空）</label>
-      <textarea id="srcNotes" placeholder="例：要延伸成零用錢練功房工具／要放進書的哪一章…"></textarea>
-
-      <div class="btnbar">
-        <button class="btn" id="btnSaveSource">存素材</button>
-        <button class="btn secondary" id="btnSaveSourceNew">存素材並清空</button>
-        <button class="btn secondary" id="btnCopySourceText">複製素材全文</button>
-        <button class="btn ghost" id="btnResetSource">清空欄位</button>
-      </div>
-
-      <div class="hr"></div>
-      <div class="hint">
-        <b>用法：</b>先把生命現場丟進來 → 再按卡片上的「轉入創作」，
-        系統會自動把素材整理成一份乾淨原文，讓你用咒語包去產出不同系列的口說稿。
-      </div>
-    </div>
-
-    <div class="grid" style="gap:14px">
-      <div class="card">
-        <h2>🔎 素材檢索</h2>
-        <div class="sub">用標題關鍵字快速找你的故事。</div>
-        <div class="row">
+      <div class="bd">
+        <div class="row two">
           <div>
-            <label>關鍵字</label>
-            <input id="srcKw" placeholder="輸入關鍵字…" />
+            <label>素材標題（建議一句話命名）</label>
+            <input id="m_title" value="${escapeHtml(draft.title)}" placeholder="例如：超市裡談零用錢價碼：孩子的『等一下』">
           </div>
-          <div style="display:flex;align-items:flex-end">
-            <button class="btn secondary" id="btnFilterSource">套用</button>
+          <div>
+            <label>關聯系列</label>
+            <select id="m_series">
+              ${SERIES.map(s=>`<option ${s===draft.series?"selected":""}>${s}</option>`).join("")}
+            </select>
           </div>
         </div>
-        <div class="btnbar">
-          <button class="btn ghost" id="btnClearFilterSource">清除</button>
+
+        <div class="row two">
+          <div>
+            <label>生命場景（事情怎麼發生的）</label>
+            <textarea id="m_scene" placeholder="例如：放學後去超市…">${escapeHtml(draft.scene)}</textarea>
+          </div>
+          <div>
+            <label>當下感受（你/孩子的狀態）</label>
+            <textarea id="m_feel" placeholder="例如：我有點緊張、孩子想要但拉不住…">${escapeHtml(draft.feel)}</textarea>
+          </div>
         </div>
-        <div class="hr"></div>
-        <div class="list" id="sourceList">
-          ${state.sources.map(SourceCard).join("") || `<div class="sub">還沒有素材。先把你的故事存進來。</div>`}
+
+        <div class="row two">
+          <div>
+            <label>你想傳達的洞見（你學到什麼）</label>
+            <textarea id="m_insight" placeholder="例如：不是管住孩子，是陪他把剎車系統裝好…">${escapeHtml(draft.insight)}</textarea>
+          </div>
+          <div>
+            <label>關聯工具/作品（可選）</label>
+            <textarea id="m_tool" style="min-height:120px" placeholder="例如：零用錢練功房連結、某支影片、某個課程">${escapeHtml(draft.tool)}</textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnMatToCreate" class="primary">➡️ 一鍵帶入創作區（當正文素材）</button>
+          <button id="btnMatCopy" >複製此素材</button>
         </div>
       </div>
+    </div>
 
-      <div class="card">
-        <h2>🧡 主頁（可選）</h2>
-        <div class="sub">填了後「素材協作提示」與「口說稿協作提示」會自動帶入。</div>
-        <label>主頁連結</label>
-        <input id="homepage0" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
-        <div class="btnbar"><button class="btn secondary" id="btnSaveHome0">儲存主頁</button></div>
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 素材搜尋與管理</p>
+          <p class="hint">可搜尋標題/場景/感受/洞見/工具。點「編輯」即可回填到上方表單。</p>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="m_query" value="${escapeHtml(state.filters.materialsQuery||"")}" placeholder="例如：超市 / 零用錢 / 等一下">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            小技巧：你寫故事時先丟素材庫，之後再用創作區產出口說稿/書稿。
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="matList">
+          ${items.length===0 ? `<div class="small">目前沒有素材。先在左側新增一筆吧。</div>` : items.map(renderMaterialItem).join("")}
+        </div>
       </div>
     </div>
   </div>`;
 }
 
-function CreateView(){
-  const last = state.settings.lastSeries || "幸福教養";
+function renderMaterialItem(x){
+  const time = fmt(x.updatedAt||x.createdAt);
   return `
-  <div class="grid two">
-    <div class="grid" style="gap:14px">
-      <div class="card">
-        <h2>📝 創作影片｜原文輸入</h2>
-        <div class="sub">這裡放「可生成稿件的原文」。通常來自素材庫一鍵轉入。</div>
-        <input type="hidden" id="entryId" value="" />
-        <input type="hidden" id="fromSourceId" value="" />
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名素材)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnMatEdit">編輯</button>
+          <button class="btnMatUse primary">帶入創作</button>
+          <button class="btnMatDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.scene||"").slice(0, 360))}${(x.scene||"").length>360?"…":""}</div>
+    </div>
+  `;
+}
+
+/* ---------- create (創作區) ---------- */
+function renderCreate(){
+  const c=state.data.create;
+  c.prompt = buildCreatePrompt();
+  const linked = c.linkMaterialId ? state.data.materials.find(m=>m.id===c.linkMaterialId) : null;
+
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">✍️ 創作區（口說稿 / 書稿 / 課程 / 打包）</p>
+          <p class="hint">先貼原文/素材 → 複製咒語包 → 讓 AI 產出 → 再貼回來 → 可存成「完稿」。</p>
+          ${linked ? `<div class="small">已連結素材：<code class="inline">${escapeHtml(linked.title)}</code></div>` : ``}
+        </div>
+        <div class="kbar">
+          <button id="btnCreateCopyAll">複製全部</button>
+          <button id="btnCreateSaveFinal" class="ok">存成完稿</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row three">
+          <div>
+            <label>系列</label>
+            <select id="c_series">${SERIES.map(s=>`<option ${s===c.series?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>用途</label>
+            <select id="c_purpose">${PURPOSE.map(s=>`<option ${s===c.purpose?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>主題</label>
+            <input id="c_topic" value="${escapeHtml(c.topic)}" placeholder="例如：無欲則剛｜零用錢練功房">
+          </div>
+        </div>
+
+        <div class="sectionSep"></div>
 
         <div class="row">
           <div>
-            <label>系列名稱</label>
-            <select id="series">
-              ${SERIES.map(s=>`<option ${s===last?'selected':''}>${s}</option>`).join("")}
+            <label>原文/素材（故事全文、書稿段落、影片正文）</label>
+            <textarea id="c_body" placeholder="貼進來...">${escapeHtml(c.body)}</textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>🪄 協作提示（咒語包）</label>
+            <textarea id="c_prompt" readonly>${escapeHtml(c.prompt)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnCreateCopyPrompt">複製咒語包</button>
+              <button id="btnCreateSaveSpell" class="primary">收藏成咒語</button>
+            </div>
+          </div>
+
+          <div>
+            <label>🧩 產出區（AI 生成後貼回來）</label>
+            <textarea id="c_output" placeholder="把 AI 產出貼在這裡...">${escapeHtml(c.output)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnCreateCopyOut">複製產出</button>
+              <button id="btnCreateClearOut" class="danger">清空產出</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="small">
+          小提醒：若你要做「發片打包」，請到「發片打包」分頁建立一筆（之後可複用）。
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🧭 快捷</p>
+          <p class="hint">常用動線：素材庫 → 創作區 → 完稿庫 → 發片打包/文宣庫 → 雲端備份</p>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="kbar">
+          <button id="btnGoMaterials">回素材庫</button>
+          <button id="btnGoFinals">去完稿庫</button>
+          <button id="btnGoPromo">去文宣庫</button>
+          <button id="btnGoPublish">去發片打包</button>
+        </div>
+        <div class="divider"></div>
+        <div class="small">
+          ✅ 你現在畫面顯示「未啟用離線 localStorage」是正常的：代表資料目前存在手機本機。<br>
+          要避免換手機消失：請定期按 <code class="inline">📦 匯出 JSON</code>，或用 <code class="inline">☁️ 一鍵雲端備份</code>。
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------- finals (完稿庫) ---------- */
+function renderFinals(){
+  const q=(state.filters.finalsQuery||"").trim().toLowerCase();
+  let items=state.data.finals.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.series} ${x.purpose} ${x.topic} ${x.body} ${x.output}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">✅ 完稿庫</p>
+          <p class="hint">把創作區的「產出」存進來，之後要改稿、要打包、要做文宣，都可以回來找。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnFinalsCopyAll">複製目前頁面清單（摘要）</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="f_query" value="${escapeHtml(state.filters.finalsQuery||"")}" placeholder="例如：無欲則剛 / 零用錢 / 等一下">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            提醒：完稿不是素材；完稿是「可以用的成品」，適合回收再利用。
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="finalList">
+          ${items.length===0 ? `<div class="small">目前沒有完稿。到「創作區」按「存成完稿」即可。</div>` : items.map(renderFinalItem).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🧩 快速操作</p>
+          <p class="hint">點「帶回創作」→ 你就能在創作區繼續改或再生成新版本。</p>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="small">
+          ✅ 你要做「活動文宣」：從完稿抽亮點 → 去文宣庫生成 FB/IG/LINE/官網四版。<br>
+          ✅ 你要做「發片打包」：從完稿複製段落 → 去發片打包庫填一筆。<br>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderFinalItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.topic||"(未命名完稿)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">${escapeHtml(x.purpose||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnFinalUse primary">帶回創作</button>
+          <button class="btnFinalCopy">複製</button>
+          <button class="btnFinalDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.output||"").slice(0, 520))}${(x.output||"").length>520?"…":""}</div>
+    </div>
+  `;
+}
+
+/* ---------- promo (文宣庫) ---------- */
+function renderPromo(){
+  const p=state.data.promoDraft;
+  p.prompt = buildPromoPrompt();
+
+  const q=(state.filters.promoQuery||"").trim().toLowerCase();
+  const filterTool=state.filters.promoTool||"全部";
+  const filterSeries=state.filters.promoSeries||"全部";
+  const filterType=state.filters.promoType||"全部";
+
+  let items=state.data.promos.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(filterTool!=="全部") items=items.filter(x=>x.tool===filterTool);
+  if(filterSeries!=="全部") items=items.filter(x=>x.series===filterSeries);
+  if(filterType!=="全部") items=items.filter(x=>x.type===filterType);
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.tool} ${x.series} ${x.type} ${x.title} ${x.body} ${x.tags} ${x.links}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  const tools=Array.from(new Set(state.data.promos.map(x=>x.tool))).sort();
+
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">📣 文宣／推廣內容創作</p>
+          <p class="hint">建立可重用的宣傳資產：同一份素材一鍵變 FB/IG/LINE/官網四版。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnPromoSave" class="ok">保存到文宣庫</button>
+          <button id="btnPromoCopyAll">複製文宣（含咒語包）</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>關聯工具 / 專案</label>
+            <input id="p_tool" value="${escapeHtml(p.tool)}" placeholder="例如：幸福教養｜零用錢練功房">
+          </div>
+          <div>
+            <label>系列</label>
+            <select id="p_series">${SERIES.map(s=>`<option ${s===p.series?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+        </div>
+
+        <div class="row three">
+          <div>
+            <label>文宣用途</label>
+            <select id="p_type">${PROMO_TYPE.map(s=>`<option ${s===p.type?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>目標平台（主版本）</label>
+            <select id="p_platform">${PROMO_PLATFORM.map(s=>`<option ${s===p.platform?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>標題/主題</label>
+            <input id="p_title" value="${escapeHtml(p.title)}" placeholder="例如：零用錢練功房｜試用活動介紹文">
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>連結（可多行）</label>
+            <textarea id="p_links" style="min-height:90px" placeholder="貼工具連結、教學連結...">${escapeHtml(p.links)}</textarea>
+          </div>
+          <div>
+            <label>Hashtags（可多行）</label>
+            <textarea id="p_tags" style="min-height:90px" placeholder="#幸福教養 #零用錢練功房">${escapeHtml(p.tags)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>文宣內容（草稿/全文）</label>
+            <textarea id="p_body" placeholder="把你的文宣草稿貼進來...">${escapeHtml(p.body)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>互動/CTA（留言句、分享引導等）</label>
+            <input id="p_cta" value="${escapeHtml(p.cta)}" placeholder="例如：留言『理智隊長報到！』一起交流">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>🪄 文宣咒語包（提示）</label>
+            <textarea id="p_prompt" readonly>${escapeHtml(p.prompt)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnPromoCopyPrompt">複製文宣咒語包</button>
+              <button id="btnPromoSaveSpell" class="primary">收藏成咒語</button>
+            </div>
+          </div>
+
+          <div>
+            <label>快捷提醒</label>
+            <div class="small">
+              ✅ 文宣是「可重發資產」：每次只改 10% 就能再推一次。<br>
+              ✅ 建議：每次發文後，把該版本保存到文宣庫（方便回收）。<br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 文宣存放與搜尋</p>
+          <p class="hint">可依工具/系列/用途篩選，並關鍵字搜尋（主題、內文、標籤都搜得到）。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="p_query" value="${escapeHtml(state.filters.promoQuery||"")}" placeholder="例如：試用 / 免安裝 / 理智消費">
+          </div>
+          <div>
+            <label>工具（篩選）</label>
+            <select id="p_filterTool">
+              <option>全部</option>
+              ${tools.map(t=>`<option ${t===filterTool?"selected":""}>${escapeHtml(t)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div class="row three">
+          <div>
+            <label>系列</label>
+            <select id="p_filterSeries">
+              <option ${filterSeries==="全部"?"selected":""}>全部</option>
+              ${SERIES.map(s=>`<option ${s===filterSeries?"selected":""}>${s}</option>`).join("")}
             </select>
           </div>
           <div>
-            <label>片型</label>
-            <select id="format">${FORMATS.map(f=>`<option>${f}</option>`).join("")}</select>
+            <label>文宣用途</label>
+            <select id="p_filterType">
+              <option ${filterType==="全部"?"selected":""}>全部</option>
+              ${PROMO_TYPE.map(s=>`<option ${s===filterType?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap">
+            <button id="btnPromoClear" class="ghost">清空篩選</button>
           </div>
         </div>
 
-        <label>主題</label>
-        <input id="topic" placeholder="例：無欲則剛：孩子學會『等一下』，選擇力就開始長出來" />
+        <div class="divider"></div>
 
-        <label>全文／故事／正文（從素材轉入的原文）</label>
-        <textarea id="body" placeholder="把你走過的『生命現場』貼進來就好。"></textarea>
-
-        <label>補充（可選）</label>
-        <textarea id="notes" placeholder="例如：要保留的原句／你希望加強的角度…"></textarea>
-
-        <div class="hr"></div>
-
-        <label>協作方向（你要我幫你走到哪）</label>
-        <select id="collabDir">
-          <option>書稿</option><option>課程</option><option>工具</option><option>發片</option>
-        </select>
-
-        <label>一鍵協作提示（複製貼給我）</label>
-        <textarea id="collabPrompt" class="mono" style="min-height:190px"></textarea>
-
-        <div class="btnbar">
-          <button class="btn secondary" id="btnCopyPrompt">複製協作提示</button>
-          <button class="btn" id="btnSaveDraft">先存草稿</button>
-          <button class="btn" id="btnSaveFinal">存為完稿</button>
-          <button class="btn ghost" id="btnReset">清空輸入</button>
+        <div class="list" id="promoList">
+          ${items.length===0 ? `<div class="small">目前沒有符合的文宣。你可以先「保存到文宣庫」。</div>` : items.map(renderPromoItem).join("")}
         </div>
-
-        <div class="hr"></div>
-        <div class="small">
-          <b>小提醒：</b>你若是從素材庫轉入，這裡會保留「素材來源」，以後做書/課程時能追溯。
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>📌 快速回顧</h2>
-        <div class="sub">素材：${state.sources.length}　｜　草稿：${state.entries.filter(e=>e.status==="draft").length}　｜　完稿：${state.entries.filter(e=>e.status==="final").length}</div>
-        <div class="hr"></div>
-        <div class="list">
-          ${state.entries.slice(0,3).map(EntryCard).join("") || `<div class="sub">還沒有稿件內容。你可以先從素材庫轉入。</div>`}
-        </div>
-      </div>
-    </div>
-
-    <div class="grid" style="gap:14px">
-      ${buildSpellCard(last)}
-      <div class="card">
-        <h2>🪶 協作提醒</h2>
-        <div class="sub">你負責「真實」，我負責「結構與轉化」。不用一次完成，只要先留下生命現場。</div>
-        <div class="hr"></div>
-        <div class="hint"><b>更順的流程：</b>先存素材 → 再轉入創作 → 再用系列咒語包出稿。</div>
       </div>
     </div>
   </div>`;
 }
 
-function FilterBar(idPrefix, status){
+function renderPromoItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
   return `
-    <div class="row">
-      <div>
-        <label>系列篩選</label>
-        <select id="${idPrefix}Series"><option value="">全部</option>${SERIES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("")}</select>
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名文宣)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.tool||"")}</span>
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">${escapeHtml(x.type||"")}</span>
+            <span class="badge">${escapeHtml(x.platform||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnPromoEdit">編輯</button>
+          <button class="btnPromoCopy">複製</button>
+          <button class="btnPromoDel danger">刪除</button>
+        </div>
       </div>
-      <div>
-        <label>主題關鍵字</label>
-        <input id="${idPrefix}Kw" placeholder="輸入關鍵字…" />
-      </div>
-    </div>
-    <div class="btnbar">
-      <button class="btn secondary" data-action="applyFilter" data-status="${status}" data-prefix="${idPrefix}">套用篩選</button>
-      <button class="btn ghost" data-action="clearFilter" data-status="${status}" data-prefix="${idPrefix}">清除</button>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.body||"").slice(0, 520))}${(x.body||"").length>520?"…":""}</div>
     </div>
   `;
 }
 
-function ListView(status){
-  const title = status==="draft" ? "🌱 文案草稿區" : "🌳 完稿區";
-  const list = state.entries.filter(e=>e.status===status);
-  const prefix = status==="draft" ? "d" : "f";
+/* ---------- publish (發片打包) ---------- */
+function renderPublish(){
+  const d=state.data.publishDraft;
+  const q=(state.filters.publishQuery||"").trim().toLowerCase();
+  let items=state.data.publishes.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items=items.filter(x=>{
+      const blob = `${x.title} ${x.intro} ${x.hashtags} ${x.toolLinks} ${x.notes} ${x.date}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
   return `
+  <div class="grid">
     <div class="card">
-      <h2>${title}</h2>
-      <div class="sub">依系列分類＋主題檢索｜可開啟全文、複製全文、複製協作提示</div>
-      <div class="hr"></div>
-      ${FilterBar(prefix, status)}
-      <div class="hr"></div>
-      <div class="list" id="${prefix}List">
-        ${list.map(EntryCard).join("") || `<div class="sub">目前沒有內容。</div>`}
+      <div class="hd">
+        <div>
+          <p class="title">📦 發片打包庫</p>
+          <p class="hint">一支影片一筆：標題/介紹/hashtags/工具連結/上片日。之後要再推同一支很省力。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnPubSave" class="ok">保存打包</button>
+          <button id="btnPubCopy">複製這筆打包</button>
+          <button id="btnPubClear" class="ghost">清空表單</button>
+        </div>
       </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>影片標題</label>
+            <input id="pb_title" value="${escapeHtml(d.title)}" placeholder="例如：無欲則剛｜孩子學會等一下，一輩子選擇力就開始長出來">
+          </div>
+          <div>
+            <label>預計發片日（可空）</label>
+            <input id="pb_date" value="${escapeHtml(d.date)}" placeholder="例如：2026-01-10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>影片介紹（建議 100 字內，可多行）</label>
+            <textarea id="pb_intro" style="min-height:90px" placeholder="貼你的 100 字介紹...">${escapeHtml(d.intro)}</textarea>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>Hashtags</label>
+            <textarea id="pb_tags" style="min-height:90px">${escapeHtml(d.hashtags)}</textarea>
+          </div>
+          <div>
+            <label>工具/連結（可多行）</label>
+            <textarea id="pb_links" style="min-height:90px" placeholder="工具連結、教學連結、表單...">${escapeHtml(d.toolLinks)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>備註（封面字/留言引導/置頂留言）</label>
+            <textarea id="pb_notes" style="min-height:90px">${escapeHtml(d.notes)}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 搜尋與管理</p>
+          <p class="hint">搜尋標題/介紹/hashtags/連結/備註。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="pb_query" value="${escapeHtml(state.filters.publishQuery||"")}" placeholder="例如：零用錢 / 每週五更新 / 理智隊長">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            建議：每支片一上線就存一筆，半年後你會很感謝自己。
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="pubList">
+          ${items.length===0 ? `<div class="small">目前沒有打包內容。</div>` : items.map(renderPublishItem).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderPublishItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名打包)")}</div>
+          <div class="badges">
+            <span class="badge">日期：${escapeHtml(x.date||"—")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnPubLoad">載入</button>
+          <button class="btnPubCopy">複製</button>
+          <button class="btnPubDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.intro||"").slice(0, 360))}${(x.intro||"").length>360?"…":""}</div>
     </div>
   `;
 }
 
-/* ===== 打包 ===== */
-function generateDescription(e, kind="video"){
-  const homepage = (state.settings.homepage||"").trim();
-  const home = homepage ? `\n\n👉 主頁：${homepage}` : "";
-  const tags = ["#幸福教養","#心理學","#腦神經科學","#心靈成長","#親子"].join(" ");
-  const base = `【${e.topic}】\n\n（在這裡放你的影片摘要／重點）\n`;
-  if(kind==="podcast"){
-    return `${base}\n【Podcast 版本】\n用更慢的節奏，把理解放進心裡。\n\n${tags}${home}`.trim();
+/* ---------- spells (咒語包庫) ---------- */
+function renderSpells(){
+  const q=(state.filters.spellsQuery||"").trim().toLowerCase();
+  const cat=state.filters.spellsCat||"全部";
+
+  let items=state.data.spells.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(cat!=="全部") items=items.filter(x=>x.category===cat);
+  if(q){
+    items=items.filter(x=>{
+      const blob = `${x.title} ${x.category} ${x.content}`.toLowerCase();
+      return blob.includes(q);
+    });
   }
-  return `${base}\n${tags}${home}`.trim();
-}
-function getSeriesCTA(series){
-  const sp = SPELL[series] || SPELL["其他"];
-  const homepage = (state.settings.homepage||"").trim();
-  let cta = sp.ctaTemplate || "";
-  if(homepage) cta += `\n\n主頁：${homepage}`;
-  return cta.trim();
-}
-function PackView(){
-  const finals = state.entries.filter(e=>e.status==="final");
-  const has = finals.length>0;
-  return `
-    <div class="grid two">
-      <div class="card">
-        <h2>📦 發片打包區</h2>
-        <div class="sub">完稿 → 工具連結／介紹文／CTA 一鍵套用／排程</div>
-        <div class="hr"></div>
 
-        <label>選擇一篇完稿</label>
-        <select id="packPick" ${has?"":"disabled"}>
-          ${has ? finals.map(e=>`<option value="${e.id}">${escapeHtml(e.series)}｜${escapeHtml(e.format)}｜${escapeHtml(e.topic)}</option>`).join("")
-                : `<option>目前沒有完稿</option>`}
-        </select>
+  const categories=Array.from(new Set(state.data.spells.map(x=>x.category))).filter(Boolean).sort();
+
+  const draft=state._spellDraft || {id:"", title:"", category:"創作", content:""};
+
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🧙 咒語包庫（提示收藏）</p>
+          <p class="hint">把常用提示存起來：創作提示、文宣提示、課程提示、固定 CTA 模板…都可以。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnSpellSave" class="ok">${draft.id ? "覆蓋保存" : "保存咒語"}</button>
+          <button id="btnSpellClear" class="ghost">清空表單</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>咒語標題</label>
+            <input id="s_title" value="${escapeHtml(draft.title)}" placeholder="例如：幸福教養長片｜標準結構提示">
+          </div>
+          <div>
+            <label>分類</label>
+            <input id="s_cat" value="${escapeHtml(draft.category)}" placeholder="例如：創作 / 文宣 / 課程 / CTA">
+          </div>
+        </div>
 
         <div class="row">
-          <div><label>工具連結（可選）</label><input id="toolLink" placeholder="例如：PWA 工具連結 / Google 表單…" /></div>
-          <div><label>預計發片日期（可選）</label><input id="scheduleDate" type="date" /></div>
+          <div>
+            <label>咒語內容</label>
+            <textarea id="s_content" placeholder="貼你的提示內容...">${escapeHtml(draft.content)}</textarea>
+          </div>
         </div>
 
-        <label>影片介紹</label>
-        <textarea id="packDesc" placeholder="按『生成介紹文』自動產出初稿。"></textarea>
+        <div class="divider"></div>
 
-        <label>CTA（依系列不同，一鍵套用）</label>
-        <textarea id="packCTA" placeholder="按『套用系列 CTA』自動填入。"></textarea>
-
-        <div class="btnbar">
-          <button class="btn" id="btnGenDesc" ${has?"":"disabled"}>生成介紹文</button>
-          <button class="btn secondary" id="btnGenPodDesc" ${has?"":"disabled"}>生成 Podcast 介紹</button>
-          <button class="btn secondary" id="btnApplyCTA" ${has?"":"disabled"}>套用系列 CTA</button>
-          <button class="btn secondary" id="btnCopyPackAll" ${has?"":"disabled"}>複製（介紹＋CTA）</button>
+        <div class="kbar">
+          <button id="btnSpellCopy">複製此咒語</button>
+          <button id="btnSpellToCreate" class="primary">➡️ 貼到創作區提示欄（手動用）</button>
         </div>
+      </div>
+    </div>
 
-        <div class="hr"></div>
-        <div class="small">
-          <b>其他你可再加：</b><br/>
-          1) 首圖風格提示（16:9 水彩 / 寫實電影感）<br/>
-          2) Shorts 拆條清單（3–5 條）<br/>
-          3) 置頂留言（1 句）<br/>
-          4) 片尾引流（主頁 / 工具 / 相關長片）
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 搜尋與管理</p>
+          <p class="hint">可依分類篩選、關鍵字搜尋。</p>
         </div>
       </div>
 
-      <div class="card">
-        <h2>🪄 打包協作提示</h2>
-        <div class="sub">想把介紹文/置頂留言/Shorts 拆條也交給我，直接複製：</div>
-        <div class="hr"></div>
-        <textarea class="mono" id="packPrompt" style="min-height:260px">請依我選定的完稿內容，幫我產出：
-1) 影片介紹
-2) 置頂留言（1 句）
-3) Shorts 拆條提案 3 則（標題＋一句 hook）
-口吻請維持該系列的文案咒語包語感，溫柔不說教。</textarea>
-        <div class="btnbar">
-          <button class="btn secondary" id="btnCopyPackPrompt">複製打包協作提示</button>
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="s_query" value="${escapeHtml(state.filters.spellsQuery||"")}" placeholder="例如：Hook / 3000字 / 每週五更新">
+          </div>
+          <div>
+            <label>分類（篩選）</label>
+            <select id="s_filterCat">
+              <option>全部</option>
+              ${categories.map(c=>`<option ${c===cat?"selected":""}>${escapeHtml(c)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="spellList">
+          ${items.length===0 ? `<div class="small">目前沒有咒語。你可以從創作區/文宣庫一鍵收藏。</div>` : items.map(renderSpellItem).join("")}
         </div>
       </div>
+    </div>
+  </div>`;
+}
+
+function renderSpellItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名咒語)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.category||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnSpellEdit">編輯</button>
+          <button class="btnSpellCopy">複製</button>
+          <button class="btnSpellDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.content||"").slice(0, 520))}${(x.content||"").length>520?"…":""}</div>
     </div>
   `;
 }
 
-/* ===== Settings ===== */
-function SettingsView(){
+/* ---------- backup (設定/備份) ---------- */
+function renderBackup(){
   return `
-    <div class="grid two">
-      <div class="card">
-        <h2>⚙️ 設定</h2>
-        <div class="sub">資料存在本機（localStorage）。建議定期匯出備份。</div>
-        <div class="hr"></div>
-        <label>主頁連結（可選）</label>
-        <input id="homepage2" placeholder="https://..." value="${escapeHtml(state.settings.homepage||"")}" />
-        <div class="btnbar"><button class="btn secondary" id="btnSaveHome2">儲存</button></div>
-
-        <div class="hr"></div>
-        <div class="row">
-          <div><label>匯出備份（JSON）</label><button class="btn" id="btnExport">匯出</button></div>
-          <div><label>匯入備份（JSON）</label><input type="file" id="fileImport" accept="application/json" /></div>
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🛡️ 設定/備份（換手機最穩）</p>
+          <p class="hint">建議習慣：每週一次或每次大改版 → 匯出 JSON；平常寫完 → 一鍵雲端備份。</p>
         </div>
-
-        <div class="hr"></div>
-        <button class="btn danger" id="btnWipe">清空所有資料</button>
-        <div class="small" style="margin-top:8px">⚠️ 清空前請先匯出備份。</div>
       </div>
 
-      <div class="card">
-        <h2>📌 目前流程（你會更不混亂）</h2>
-        <div class="small">
-          1) <b>素材庫</b>：先存生命現場（源頭）<br/>
-          2) 轉入 <b>創作影片</b>：選系列→用咒語包出稿<br/>
-          3) 存成 <b>草稿/完稿</b><br/>
-          4) 進 <b>打包區</b>：產介紹/CTA<br/><br/>
-          <b>下一輪我會接上：</b>素材 → 書稿段落／課程單元（真正分產線）
+      <div class="bd">
+        <div class="kbar">
+          <button id="btnBackupCloudCfg" class="primary">⚙️ 打開雲端設定</button>
+          <button id="btnBackupTestCloud" class="ok">送出雲端測試</button>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnGen192">生成並下載 icon-192.png</button>
+          <button id="btnGen512">生成並下載 icon-512.png</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="small" style="line-height:1.7">
+          ✅ Android：Chrome → 右上「⋮」→ <b>加到主畫面</b><br>
+          ✅ iPhone：Safari → 分享 → <b>加入主畫面</b><br><br>
+          （此版已依你的要求：<b>不顯示安裝按鈕</b>，避免干擾。）
+        </div>
+
+        <div class="divider"></div>
+
+        <label>資料概況（快照）</label>
+        <div class="mono" id="snapshot" style="min-height:140px"></div>
       </div>
     </div>
-  `;
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">📌 系統狀態</p>
+          <p class="hint">Service Worker 註冊狀態與簡易紀錄。</p>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="mono" id="sysLog" style="min-height:180px"></div>
+      </div>
+    </div>
+  </div>`;
 }
 
-/* ===== Render ===== */
+/* ---------- main render ---------- */
 function render(){
-  renderNav();
-  const view = document.getElementById("view");
-  if(current==="sources") view.innerHTML = SourcesView();
-  if(current==="create") view.innerHTML = CreateView();
-  if(current==="drafts") view.innerHTML = ListView("draft");
-  if(current==="final") view.innerHTML = ListView("final");
-  if(current==="pack") view.innerHTML = PackView();
-  if(current==="settings") view.innerHTML = SettingsView();
+  const v=$("view");
+  if(state.tab==="materials") v.innerHTML = renderMaterials();
+  if(state.tab==="create") v.innerHTML = renderCreate();
+  if(state.tab==="finals") v.innerHTML = renderFinals();
+  if(state.tab==="promo") v.innerHTML = renderPromo();
+  if(state.tab==="publish") v.innerHTML = renderPublish();
+  if(state.tab==="spells") v.innerHTML = renderSpells();
+  if(state.tab==="backup") v.innerHTML = renderBackup();
+
   bindEvents();
-  if(document.getElementById("collabPrompt")) updateCollabPrompt();
-}
-render();
+  updatePills();
 
-/* ===== Dialog 全文（共用：entry/source） ===== */
-let dlgMode = null; // "entry" | "source"
-let dlgId = null;
-function openDialog(mode, id){
-  dlgMode = mode; dlgId = id;
-  let title = "", meta = "", text = "", prompt = "";
-
-  if(mode==="entry"){
-    const e = state.entries.find(x=>x.id===id);
-    if(!e) return;
-    title = e.topic;
-    meta = `${e.series}｜${e.format}｜${fmtDate(e.updatedAt||e.createdAt)}`;
-    text = e.body || "";
-    prompt = baseCollabPrompt(e.series, e.collabDir||"書稿", {topic:e.topic, body:e.body, notes:e.notes||""});
-  }else{
-    const s = state.sources.find(x=>x.id===id);
-    if(!s) return;
-    title = s.title || "（未命名素材）";
-    meta = `素材｜${fmtDate(s.updatedAt||s.createdAt)}`;
-    text = buildSourceText(s);
-    prompt = sourcePrompt(s);
+  // backup snapshot
+  const snap=$("snapshot");
+  if(snap){
+    snap.textContent = JSON.stringify({
+      updatedAt: state.data.updatedAt,
+      lastCloudAt: state.data.lastCloudAt,
+      counts: {
+        materials: state.data.materials.length,
+        finals: state.data.finals.length,
+        promos: state.data.promos.length,
+        publishes: state.data.publishes.length,
+        spells: state.data.spells.length
+      }
+    }, null, 2);
   }
-
-  document.getElementById("dlgTitle").textContent = title;
-  document.getElementById("dlgMeta").textContent = meta;
-  document.getElementById("dlgText").textContent = text;
-  document.getElementById("dlgCopyPrompt").dataset.prompt = prompt;
-  document.getElementById("dlg").showModal();
-}
-function closeDlg(){ document.getElementById("dlg").close(); dlgMode=null; dlgId=null; }
-
-/* ===== Filter ===== */
-function applyFilter(status, prefix){
-  const series = (document.getElementById(prefix+"Series")?.value||"").trim();
-  const kw = (document.getElementById(prefix+"Kw")?.value||"").trim().toLowerCase();
-  let items = state.entries.filter(e=>e.status===status);
-  if(series) items = items.filter(e=>e.series===series);
-  if(kw) items = items.filter(e=>
-    (e.topic||"").toLowerCase().includes(kw) ||
-    (e.body||"").toLowerCase().includes(kw)
-  );
-  document.getElementById(prefix+"List").innerHTML = items.map(EntryCard).join("") || `<div class="sub">沒有符合的內容。</div>`;
-  bindEvents();
-}
-function clearFilter(status, prefix){
-  const s = document.getElementById(prefix+"Series");
-  const k = document.getElementById(prefix+"Kw");
-  if(s) s.value = "";
-  if(k) k.value = "";
-  applyFilter(status, prefix);
 }
 
-/* =========================
-   Events
-   ========================= */
+/* ---------- bind events per tab ---------- */
 function bindEvents(){
-  // dialog
-  const closeBtn = document.getElementById("dlgClose");
-  if(closeBtn) closeBtn.onclick = closeDlg;
+  // Header buttons
+  $("btnSaveAll").onclick = saveAll;
 
-  const copyBtn = document.getElementById("dlgCopy");
-  if(copyBtn) copyBtn.onclick = ()=>copyText(document.getElementById("dlgText").textContent||"");
+  $("btnExport").onclick = exportJSON;
+  $("btnImport").onclick = ()=> $("fileImport").click();
+  $("fileImport").onchange = (e)=>{
+    const f=e.target.files?.[0];
+    if(f) importJSON(f);
+    e.target.value="";
+  };
 
-  const copyPromptBtn = document.getElementById("dlgCopyPrompt");
-  if(copyPromptBtn) copyPromptBtn.onclick = ()=>copyText(copyPromptBtn.dataset.prompt||"");
+  $("btnCloud").onclick = ()=> cloudBackup();
+  $("btnCloudCfg").onclick = ()=>{
+    $("dlgCloud").showModal();
+    // bind cfg fields
+    $("cfgFormResponse").value = state.cloud.formResponse || "";
+    $("cfgEntryJson").value = state.cloud.entryJson || "";
+    $("cfgEntryNote").value = state.cloud.entryNote || "";
+    $("cloudLog").textContent = "";
+    cloudLog("開啟雲端設定。");
+  };
 
-  // sources page
-  const btnSaveHome0 = document.getElementById("btnSaveHome0");
-  if(btnSaveHome0){
-    btnSaveHome0.addEventListener("click", ()=>{
-      state.settings.homepage = (document.getElementById("homepage0").value||"").trim();
-      saveState(state); toast("已儲存");
-    });
+  // Cloud dialog buttons
+  if($("btnSaveCloudCfg")){
+    $("btnSaveCloudCfg").onclick = (e)=>{ e.preventDefault(); saveCloudCfg(); };
+    $("btnTestCloud").onclick = async (e)=>{ e.preventDefault(); saveCloudCfg(); cloudLog("開始送出測試…"); await cloudBackup({test:true}); };
+    $("btnResetCloudCfg").onclick = (e)=>{ e.preventDefault(); resetCloudCfg(); };
   }
 
-  const btnSaveSource = document.getElementById("btnSaveSource");
-  if(btnSaveSource){
-    btnSaveSource.addEventListener("click", ()=>{
-      const id = (document.getElementById("sourceId").value||"").trim();
-      const src = {
-        id: id || uid(),
-        title:(document.getElementById("srcTitle").value||"").trim(),
-        scene:(document.getElementById("srcScene").value||"").trim(),
-        dialogue:(document.getElementById("srcDialogue").value||"").trim(),
-        feelings:(document.getElementById("srcFeelings").value||"").trim(),
-        insight:(document.getElementById("srcInsight").value||"").trim(),
-        keepLines:(document.getElementById("srcKeepLines").value||"").trim(),
-        lesson:(document.getElementById("srcLesson").value||"").trim(),
-        notes:(document.getElementById("srcNotes").value||"").trim(),
-        updatedAt: nowISO(),
+  // Tab: materials
+  if(state.tab==="materials"){
+    $("m_query").oninput = (e)=>{ state.filters.materialsQuery=e.target.value; render(); };
+
+    $("btnMatClear").onclick = ()=>{
+      state._materialDraft = {id:"",title:"",scene:"",feel:"",insight:"",tool:"",series:"幸福教養"};
+      render(); toast("已清空");
+    };
+
+    $("btnMatCopy").onclick = ()=>{
+      const text = [
+        `【標題】${$("m_title").value}`,
+        `【系列】${$("m_series").value}`,
+        "",
+        "【生命場景】",
+        $("m_scene").value,
+        "",
+        "【感受】",
+        $("m_feel").value,
+        "",
+        "【洞見】",
+        $("m_insight").value,
+        "",
+        "【關聯工具】",
+        $("m_tool").value,
+      ].join("\n");
+      copyText(text);
+    };
+
+    $("btnMatToCreate").onclick = ()=>{
+      const title=$("m_title").value.trim();
+      const series=$("m_series").value;
+      const body = [
+        `【素材標題】${title||"(未填)"}`,
+        `【生命場景】\n${$("m_scene").value||""}`,
+        `\n【感受】\n${$("m_feel").value||""}`,
+        `\n【洞見】\n${$("m_insight").value||""}`,
+        `\n【關聯工具】\n${$("m_tool").value||""}`,
+      ].join("\n");
+
+      state.data.create.series = series;
+      state.data.create.topic = title || state.data.create.topic;
+      state.data.create.body = body;
+      // 綁定素材 id（若存在）
+      if(state._materialDraft?.id) state.data.create.linkMaterialId = state._materialDraft.id;
+
+      state.tab="create"; saveAll(); renderTabs(); render();
+      toast("已帶入創作區");
+    };
+
+    $("btnMatSave").onclick = ()=>{
+      const draft = state._materialDraft || {id:""};
+      const obj = {
+        id: draft.id || uid(),
+        title: $("m_title").value.trim(),
+        series: $("m_series").value,
+        scene: $("m_scene").value,
+        feel: $("m_feel").value,
+        insight: $("m_insight").value,
+        tool: $("m_tool").value,
+        createdAt: draft.id ? (draft.createdAt || nowISO()) : nowISO(),
+        updatedAt: nowISO()
       };
-      if(!src.title && !src.scene && !src.dialogue) return alert("至少填「標題/場景/對話」其中一項，才像一筆素材。");
-      const idx = state.sources.findIndex(x=>x.id===src.id);
-      if(idx>=0){
-        state.sources[idx] = {...state.sources[idx], ...src};
+
+      if(draft.id){
+        state.data.materials = state.data.materials.map(x=> x.id===draft.id ? {...x, ...obj} : x);
       }else{
-        src.createdAt = nowISO();
-        state.sources.unshift(src);
+        state.data.materials.push(obj);
       }
-      saveState(state);
-      toast("已存素材");
+
+      state._materialDraft = {...obj};
+      saveAll();
       render();
-    });
-  }
+      toast(draft.id ? "已覆蓋保存" : "已保存素材");
+    };
 
-  const btnSaveSourceNew = document.getElementById("btnSaveSourceNew");
-  if(btnSaveSourceNew){
-    btnSaveSourceNew.addEventListener("click", ()=>{
-      document.getElementById("btnSaveSource").click();
-      setTimeout(()=>{
-        const sid = document.getElementById("sourceId");
-        if(sid) sid.value = "";
-        ["srcTitle","srcScene","srcDialogue","srcFeelings","srcInsight","srcKeepLines","srcLesson","srcNotes"].forEach(id=>{
-          const el = document.getElementById(id); if(el) el.value="";
-        });
-        toast("已存並清空");
-      },0);
-    });
-  }
+    // list actions
+    const list=$("matList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.materials.find(x=>x.id===id);
+        if(!item) return;
 
-  const btnCopySourceText = document.getElementById("btnCopySourceText");
-  if(btnCopySourceText){
-    btnCopySourceText.addEventListener("click", ()=>{
-      const src = {
-        title:(document.getElementById("srcTitle").value||"").trim(),
-        scene:(document.getElementById("srcScene").value||"").trim(),
-        dialogue:(document.getElementById("srcDialogue").value||"").trim(),
-        feelings:(document.getElementById("srcFeelings").value||"").trim(),
-        insight:(document.getElementById("srcInsight").value||"").trim(),
-        keepLines:(document.getElementById("srcKeepLines").value||"").trim(),
-        lesson:(document.getElementById("srcLesson").value||"").trim(),
-        notes:(document.getElementById("srcNotes").value||"").trim(),
-      };
-      copyText(buildSourceText(src));
-    });
-  }
-
-  const btnResetSource = document.getElementById("btnResetSource");
-  if(btnResetSource){
-    btnResetSource.addEventListener("click", ()=>{
-      const sid = document.getElementById("sourceId");
-      if(sid) sid.value = "";
-      ["srcTitle","srcScene","srcDialogue","srcFeelings","srcInsight","srcKeepLines","srcLesson","srcNotes"].forEach(id=>{
-        const el = document.getElementById(id); if(el) el.value="";
+        el.querySelector(".btnMatEdit").onclick = ()=>{
+          state._materialDraft = {...item};
+          render(); toast("已載入可編輯");
+        };
+        el.querySelector(".btnMatUse").onclick = ()=>{
+          state._materialDraft = {...item};
+          // reuse to-create logic
+          $("btnMatToCreate").click();
+        };
+        el.querySelector(".btnMatDel").onclick = ()=>{
+          if(!confirm("刪除這筆素材？")) return;
+          state.data.materials = state.data.materials.filter(x=>x.id!==id);
+          if(state.data.create.linkMaterialId===id) state.data.create.linkMaterialId="";
+          saveAll(); render(); toast("已刪除");
+        };
       });
-      toast("已清空");
-    });
-  }
-
-  const btnFilterSource = document.getElementById("btnFilterSource");
-  if(btnFilterSource){
-    btnFilterSource.addEventListener("click", ()=>{
-      const kw = (document.getElementById("srcKw").value||"").trim().toLowerCase();
-      let items = state.sources.slice();
-      if(kw){
-        items = items.filter(s=>{
-          const text = (s.title||"")+" "+buildSourceText(s);
-          return text.toLowerCase().includes(kw);
-        });
-      }
-      const list = document.getElementById("sourceList");
-      list.innerHTML = items.map(SourceCard).join("") || `<div class="sub">沒有符合的素材。</div>`;
-      bindEvents();
-    });
-  }
-  const btnClearFilterSource = document.getElementById("btnClearFilterSource");
-  if(btnClearFilterSource){
-    btnClearFilterSource.addEventListener("click", ()=>{
-      const kw = document.getElementById("srcKw"); if(kw) kw.value="";
-      render();
-      toast("已清除篩選");
-    });
-  }
-
-  // source card actions
-  document.querySelectorAll("[data-action='openSource']").forEach(btn=>{
-    btn.addEventListener("click", ()=>openDialog("source", btn.dataset.id));
-  });
-  document.querySelectorAll("[data-action='editSource']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const s = state.sources.find(x=>x.id===btn.dataset.id);
-      if(!s) return;
-      current = "sources"; render();
-      setTimeout(()=>{
-        document.getElementById("sourceId").value = s.id;
-        document.getElementById("srcTitle").value = s.title||"";
-        document.getElementById("srcScene").value = s.scene||"";
-        document.getElementById("srcDialogue").value = s.dialogue||"";
-        document.getElementById("srcFeelings").value = s.feelings||"";
-        document.getElementById("srcInsight").value = s.insight||"";
-        document.getElementById("srcKeepLines").value = s.keepLines||"";
-        document.getElementById("srcLesson").value = s.lesson||"";
-        document.getElementById("srcNotes").value = s.notes||"";
-        toast("已載入素材");
-      },0);
-    });
-  });
-  document.querySelectorAll("[data-action='delSource']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("刪除素材？（無法復原）")) return;
-      state.sources = state.sources.filter(x=>x.id!==id);
-      saveState(state);
-      toast("已刪除素材");
-      render();
-    });
-  });
-  document.querySelectorAll("[data-action='copySourcePrompt']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const s = state.sources.find(x=>x.id===btn.dataset.id);
-      if(!s) return;
-      copyText(sourcePrompt(s));
-    });
-  });
-  document.querySelectorAll("[data-action='toCreate']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const s = state.sources.find(x=>x.id===btn.dataset.id);
-      if(!s) return;
-
-      // 轉入創作：把素材整理成原文，並帶入主題
-      state.settings.lastSeries ||= "幸福教養";
-      saveState(state);
-
-      current = "create";
-      render();
-
-      setTimeout(()=>{
-        document.getElementById("entryId").value = "";
-        document.getElementById("fromSourceId").value = s.id;
-        document.getElementById("topic").value = s.title || "（請補主題）";
-        document.getElementById("body").value = buildSourceText(s);
-        document.getElementById("notes").value = (s.keepLines ? `想保留原句：\n${s.keepLines}\n\n` : "") +
-                                                 (s.lesson ? `想陪孩子/大人學到：\n${s.lesson}` : "");
-        document.getElementById("series").value = state.settings.lastSeries || "幸福教養";
-        document.getElementById("format").value = "長影片";
-        document.getElementById("collabDir").value = "發片";
-        updateCollabPrompt();
-        toast("已轉入創作");
-      },0);
-    });
-  });
-
-  // create view series changes
-  const seriesSel = document.getElementById("series");
-  if(seriesSel){
-    seriesSel.addEventListener("change", ()=>{
-      state.settings.lastSeries = seriesSel.value;
-      saveState(state);
-      render(); // 右側咒語包同步
-    });
-  }
-  ["topic","body","notes","collabDir"].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.addEventListener("input", updateCollabPrompt);
-    if(id==="collabDir" && el) el.addEventListener("change", updateCollabPrompt);
-  });
-
-  const btnCopyPrompt = document.getElementById("btnCopyPrompt");
-  if(btnCopyPrompt) btnCopyPrompt.addEventListener("click", ()=>copyText(document.getElementById("collabPrompt").value));
-
-  const btnSaveDraft = document.getElementById("btnSaveDraft");
-  if(btnSaveDraft){
-    btnSaveDraft.addEventListener("click", ()=>{
-      const payload = getEntryForm(); if(!payload) return;
-      payload.status = "draft";
-      // attach source link if exists
-      const srcId = (document.getElementById("fromSourceId")?.value||"").trim();
-      if(srcId) payload.sourceId = srcId;
-      upsertEntry(payload);
-      toast("已存草稿");
-      render();
-    });
-  }
-  const btnSaveFinal = document.getElementById("btnSaveFinal");
-  if(btnSaveFinal){
-    btnSaveFinal.addEventListener("click", ()=>{
-      const payload = getEntryForm(); if(!payload) return;
-      payload.status = "final";
-      const srcId = (document.getElementById("fromSourceId")?.value||"").trim();
-      if(srcId) payload.sourceId = srcId;
-      upsertEntry(payload);
-      toast("已存完稿");
-      render();
-    });
-  }
-  const btnReset = document.getElementById("btnReset");
-  if(btnReset){
-    btnReset.addEventListener("click", ()=>{
-      ["entryId","fromSourceId","topic","body","notes"].forEach(id=>{
-        const el = document.getElementById(id);
-        if(el) el.value = "";
-      });
-      toast("已清空（不影響已存內容）");
-      updateCollabPrompt();
-    });
-  }
-
-  // list cards (entries)
-  document.querySelectorAll("[data-action='openEntry']").forEach(btn=>{
-    btn.addEventListener("click", ()=>openDialog("entry", btn.dataset.id));
-  });
-  document.querySelectorAll("[data-action='editEntry']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      current="create"; render();
-      setTimeout(()=>{
-        document.getElementById("entryId").value = e.id;
-        document.getElementById("fromSourceId").value = e.sourceId||"";
-        document.getElementById("format").value = e.format;
-        document.getElementById("series").value = e.series;
-        document.getElementById("topic").value = e.topic;
-        document.getElementById("body").value = e.body;
-        document.getElementById("notes").value = e.notes || "";
-        document.getElementById("collabDir").value = e.collabDir || "書稿";
-        updateCollabPrompt();
-        toast("已載入到創作頁");
-      },0);
-    });
-  });
-  document.querySelectorAll("[data-action='toggleEntry']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      e.status = (e.status==="draft") ? "final" : "draft";
-      e.updatedAt = nowISO();
-      saveState(state);
-      toast("已更新狀態");
-      render();
-    });
-  });
-  document.querySelectorAll("[data-action='delEntry']").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.dataset.id;
-      if(!confirm("確定刪除？（無法復原）")) return;
-      state.entries = state.entries.filter(x=>x.id!==id);
-      saveState(state);
-      toast("已刪除");
-      render();
-    });
-  });
-
-  // filters
-  document.querySelectorAll("[data-action='applyFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>applyFilter(btn.dataset.status, btn.dataset.prefix));
-  });
-  document.querySelectorAll("[data-action='clearFilter']").forEach(btn=>{
-    btn.addEventListener("click", ()=>clearFilter(btn.dataset.status, btn.dataset.prefix));
-  });
-
-  // pack
-  const btnGenDesc = document.getElementById("btnGenDesc");
-  if(btnGenDesc){
-    btnGenDesc.addEventListener("click", ()=>{
-      const id = document.getElementById("packPick").value;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      document.getElementById("packDesc").value = generateDescription(e, "video");
-      toast("已生成介紹文");
-    });
-  }
-  const btnGenPodDesc = document.getElementById("btnGenPodDesc");
-  if(btnGenPodDesc){
-    btnGenPodDesc.addEventListener("click", ()=>{
-      const id = document.getElementById("packPick").value;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      document.getElementById("packDesc").value = generateDescription(e, "podcast");
-      toast("已生成 Podcast 介紹");
-    });
-  }
-  const btnApplyCTA = document.getElementById("btnApplyCTA");
-  if(btnApplyCTA){
-    btnApplyCTA.addEventListener("click", ()=>{
-      const id = document.getElementById("packPick").value;
-      const e = state.entries.find(x=>x.id===id);
-      if(!e) return;
-      document.getElementById("packCTA").value = getSeriesCTA(e.series);
-      toast("已套用系列 CTA");
-    });
-  }
-  const btnCopyPackAll = document.getElementById("btnCopyPackAll");
-  if(btnCopyPackAll){
-    btnCopyPackAll.addEventListener("click", ()=>{
-      const tool = (document.getElementById("toolLink").value||"").trim();
-      const dt = (document.getElementById("scheduleDate").value||"").trim();
-      const desc = (document.getElementById("packDesc").value||"").trim();
-      const cta = (document.getElementById("packCTA").value||"").trim();
-      const extra = [];
-      if(tool) extra.push(`工具連結：${tool}`);
-      if(dt) extra.push(`預計發片：${dt}`);
-      const head = extra.length?`【打包資訊】\n${extra.join("\n")}\n\n`:"";
-      copyText(`${head}${desc}\n\n${cta}`.trim());
-    });
-  }
-  const btnCopyPackPrompt = document.getElementById("btnCopyPackPrompt");
-  if(btnCopyPackPrompt) btnCopyPackPrompt.addEventListener("click", ()=>copyText(document.getElementById("packPrompt").value));
-
-  // settings
-  const btnSaveHome2 = document.getElementById("btnSaveHome2");
-  if(btnSaveHome2){
-    btnSaveHome2.addEventListener("click", ()=>{
-      state.settings.homepage = (document.getElementById("homepage2").value||"").trim();
-      saveState(state); toast("已儲存"); render();
-    });
-  }
-  const btnExport = document.getElementById("btnExport");
-  if(btnExport){
-    btnExport.addEventListener("click", ()=>{
-      const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `angel-studio-backup-${APP.version}.json`;
-      a.click();
-      toast("已匯出備份");
-    });
-  }
-  const fileImport = document.getElementById("fileImport");
-  if(fileImport){
-    fileImport.addEventListener("change", async ()=>{
-      const f = fileImport.files && fileImport.files[0];
-      if(!f) return;
-      const txt = await f.text();
-      try{
-        const obj = JSON.parse(txt);
-        if(!obj || typeof obj!=="object") throw new Error("bad");
-        state = obj;
-        state.sources ||= [];
-        state.entries ||= [];
-        state.settings ||= {homepage:"", lastSeries:"幸福教養"};
-        saveState(state);
-        toast("已匯入");
-        render();
-      }catch(e){
-        alert("匯入失敗：請確認檔案格式。");
-      }
-    });
-  }
-  const btnWipe = document.getElementById("btnWipe");
-  if(btnWipe){
-    btnWipe.addEventListener("click", ()=>{
-      if(!confirm("確定清空所有資料？（無法復原，請先匯出備份）")) return;
-      localStorage.removeItem(APP.storageKey);
-      state = loadState();
-      toast("已清空");
-      render();
-    });
-  }
-}
-
-/* ===== Service Worker（先保留，等你要離線再補 sw.js） ===== */
-if("serviceWorker" in navigator){
-  window.addEventListener("load", async ()=>{
-    try{
-      await navigator.serviceWorker.register("sw.js");
-      document.getElementById("syncState").textContent = "可離線使用";
-    }catch(e){
-      document.getElementById("syncState").textContent = "未啟用離線";
     }
-  });
+  }
+
+  // Tab: create
+  if(state.tab==="create"){
+    const c=state.data.create;
+
+    $("c_series").onchange = (e)=>{ c.series=e.target.value; c.prompt=buildCreatePrompt(); saveAll(); render(); };
+    $("c_purpose").onchange = (e)=>{ c.purpose=e.target.value; c.prompt=buildCreatePrompt(); saveAll(); render(); };
+    $("c_topic").oninput = (e)=>{ c.topic=e.target.value; c.prompt=buildCreatePrompt(); };
+    $("c_body").oninput = (e)=>{ c.body=e.target.value; c.prompt=buildCreatePrompt(); };
+    $("c_output").oninput = (e)=>{ c.output=e.target.value; };
+
+    $("btnCreateCopyPrompt").onclick = ()=> copyText(buildCreatePrompt());
+    $("btnCreateCopyOut").onclick = ()=> copyText(c.output||"");
+
+    $("btnCreateClearOut").onclick = ()=>{
+      if(confirm("清空產出區？")){ c.output=""; saveAll(); render(); }
+    };
+
+    $("btnCreateCopyAll").onclick = ()=>{
+      const txt = [
+        `【系列】${c.series}`,
+        `【用途】${c.purpose}`,
+        `【主題】${c.topic}`,
+        "",
+        "【原文/素材】",
+        c.body,
+        "",
+        "【協作提示】",
+        buildCreatePrompt(),
+        "",
+        "【產出】",
+        c.output,
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnCreateSaveFinal").onclick = ()=>{
+      const item = {
+        id: uid(),
+        series: c.series,
+        purpose: c.purpose,
+        topic: c.topic || "(未填主題)",
+        body: c.body || "",
+        output: c.output || "",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.finals.push(item);
+      saveAll();
+      toast("已存成完稿");
+      state.tab="finals"; renderTabs(); render();
+    };
+
+    $("btnCreateSaveSpell").onclick = ()=>{
+      const s = {
+        id: uid(),
+        title: `${c.series}｜${c.purpose}｜協作提示`,
+        category: "創作",
+        content: buildCreatePrompt(),
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.spells.push(s);
+      saveAll();
+      toast("已收藏咒語");
+    };
+
+    $("btnGoMaterials").onclick = ()=>{ state.tab="materials"; renderTabs(); render(); };
+    $("btnGoFinals").onclick = ()=>{ state.tab="finals"; renderTabs(); render(); };
+    $("btnGoPromo").onclick = ()=>{ state.tab="promo"; renderTabs(); render(); };
+    $("btnGoPublish").onclick = ()=>{ state.tab="publish"; renderTabs(); render(); };
+  }
+
+  // Tab: finals
+  if(state.tab==="finals"){
+    $("f_query").oninput = (e)=>{ state.filters.finalsQuery=e.target.value; render(); };
+
+    $("btnFinalsCopyAll").onclick = ()=>{
+      const txt = state.data.finals.map(x=>`- ${x.topic}｜${x.series}｜${x.purpose}｜${fmt(x.updatedAt||x.createdAt)}`).join("\n");
+      copyText(txt || "(目前沒有完稿)");
+    };
+
+    const list=$("finalList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.finals.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnFinalCopy").onclick = ()=>{
+          const txt = [
+            `【主題】${item.topic}`,
+            `【系列】${item.series}`,
+            `【用途】${item.purpose}`,
+            "",
+            "【原文】",
+            item.body,
+            "",
+            "【完稿】",
+            item.output
+          ].join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnFinalUse").onclick = ()=>{
+          state.data.create.series=item.series;
+          state.data.create.purpose=item.purpose;
+          state.data.create.topic=item.topic;
+          state.data.create.body=item.body;
+          state.data.create.output=item.output;
+          state.data.create.linkMaterialId="";
+          saveAll();
+          state.tab="create"; renderTabs(); render();
+          toast("已帶回創作區");
+        };
+
+        el.querySelector(".btnFinalDel").onclick = ()=>{
+          if(!confirm("刪除這筆完稿？")) return;
+          state.data.finals = state.data.finals.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: promo
+  if(state.tab==="promo"){
+    const p=state.data.promoDraft;
+
+    $("p_tool").oninput=(e)=>{ p.tool=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_series").onchange=(e)=>{ p.series=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_type").onchange=(e)=>{ p.type=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_platform").onchange=(e)=>{ p.platform=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_title").oninput=(e)=>{ p.title=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_links").oninput=(e)=>{ p.links=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_tags").oninput=(e)=>{ p.tags=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_body").oninput=(e)=>{ p.body=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_cta").oninput=(e)=>{ p.cta=e.target.value; p.prompt=buildPromoPrompt(); };
+
+    $("btnPromoCopyPrompt").onclick=()=>copyText(buildPromoPrompt());
+
+    $("btnPromoSave").onclick=()=>{
+      const title=(p.title||"").trim() || `${p.tool}｜${p.type}`;
+      const item={
+        id: uid(),
+        tool: (p.tool||"").trim()||"（未填工具）",
+        series: p.series,
+        type: p.type,
+        platform: p.platform,
+        title,
+        body: p.body||"",
+        links: p.links||"",
+        tags: p.tags||"",
+        cta: p.cta||"",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.promos.push(item);
+      saveAll(); render(); toast("已保存到文宣庫");
+    };
+
+    $("btnPromoCopyAll").onclick=()=>{
+      const txt=[
+        `【工具/專案】${p.tool}`,
+        `【系列】${p.series}`,
+        `【用途】${p.type}`,
+        `【平台】${p.platform}`,
+        `【標題】${p.title}`,
+        "",
+        "【連結】",
+        p.links,
+        "",
+        "【Hashtags】",
+        p.tags,
+        "",
+        "【文宣內容】",
+        p.body,
+        "",
+        "【互動/CTA】",
+        p.cta,
+        "",
+        "【文宣咒語包】",
+        buildPromoPrompt()
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnPromoSaveSpell").onclick=()=>{
+      const s={
+        id: uid(),
+        title: `${p.series}｜文宣提示（FB/IG/LINE/官網）`,
+        category:"文宣",
+        content: buildPromoPrompt(),
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.spells.push(s);
+      saveAll(); toast("已收藏咒語");
+    };
+
+    $("p_query").oninput=(e)=>{ state.filters.promoQuery=e.target.value; render(); };
+    $("p_filterTool").onchange=(e)=>{ state.filters.promoTool=e.target.value; render(); };
+    $("p_filterSeries").onchange=(e)=>{ state.filters.promoSeries=e.target.value; render(); };
+    $("p_filterType").onchange=(e)=>{ state.filters.promoType=e.target.value; render(); };
+    $("btnPromoClear").onclick=()=>{
+      state.filters.promoQuery="";
+      state.filters.promoTool="全部";
+      state.filters.promoSeries="全部";
+      state.filters.promoType="全部";
+      render();
+    };
+
+    const list=$("promoList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.promos.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnPromoCopy").onclick=()=>{
+          const txt=[
+            `【標題】${item.title}`,
+            `【工具/專案】${item.tool}`,
+            `【系列】${item.series}`,
+            `【用途】${item.type}`,
+            `【平台】${item.platform}`,
+            "",
+            "【文宣內容】",
+            item.body,
+            "",
+            "【連結】",
+            item.links,
+            "",
+            "【Hashtags】",
+            item.tags,
+            "",
+            "【互動/CTA】",
+            item.cta
+          ].join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnPromoEdit").onclick=()=>{
+          state.data.promoDraft = {
+            tool:item.tool, series:item.series, type:item.type, platform:item.platform,
+            title:item.title, body:item.body, tags:item.tags, links:item.links, cta:item.cta, prompt:""
+          };
+          saveAll(); render(); toast("已載入草稿可編輯");
+        };
+
+        el.querySelector(".btnPromoDel").onclick=()=>{
+          if(!confirm("刪除這筆文宣？")) return;
+          state.data.promos = state.data.promos.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: publish
+  if(state.tab==="publish"){
+    const d=state.data.publishDraft;
+
+    $("pb_title").oninput=(e)=>{ d.title=e.target.value; };
+    $("pb_date").oninput=(e)=>{ d.date=e.target.value; };
+    $("pb_intro").oninput=(e)=>{ d.intro=e.target.value; };
+    $("pb_tags").oninput=(e)=>{ d.hashtags=e.target.value; };
+    $("pb_links").oninput=(e)=>{ d.toolLinks=e.target.value; };
+    $("pb_notes").oninput=(e)=>{ d.notes=e.target.value; };
+
+    $("btnPubClear").onclick=()=>{
+      state.data.publishDraft={title:"",date:"",intro:"",hashtags:"#幸福教養 #天使笑長",toolLinks:"",notes:""};
+      saveAll(); render(); toast("已清空");
+    };
+
+    $("btnPubCopy").onclick=()=>{
+      const txt=[
+        `【標題】${d.title}`,
+        `【日期】${d.date}`,
+        "",
+        "【介紹】",
+        d.intro,
+        "",
+        "【Hashtags】",
+        d.hashtags,
+        "",
+        "【工具/連結】",
+        d.toolLinks,
+        "",
+        "【備註】",
+        d.notes
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnPubSave").onclick=()=>{
+      const item={
+        id: uid(),
+        title: d.title||"(未填標題)",
+        date: d.date||"",
+        intro: d.intro||"",
+        hashtags: d.hashtags||"",
+        toolLinks: d.toolLinks||"",
+        notes: d.notes||"",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.publishes.push(item);
+      saveAll(); render(); toast("已保存打包");
+    };
+
+    $("pb_query").oninput=(e)=>{ state.filters.publishQuery=e.target.value; render(); };
+
+    const list=$("pubList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.publishes.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnPubCopy").onclick=()=>{
+          const txt=[
+            `【標題】${item.title}`,
+            `【日期】${item.date}`,
+            "",
+            "【介紹】",
+            item.intro,
+            "",
+            "【Hashtags】",
+            item.hashtags,
+            "",
+            "【工具/連結】",
+            item.toolLinks,
+            "",
+            "【備註】",
+            item.notes
+          ].join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnPubLoad").onclick=()=>{
+          state.data.publishDraft={title:item.title,date:item.date,intro:item.intro,hashtags:item.hashtags,toolLinks:item.toolLinks,notes:item.notes};
+          saveAll(); render(); toast("已載入到表單");
+        };
+
+        el.querySelector(".btnPubDel").onclick=()=>{
+          if(!confirm("刪除這筆打包？")) return;
+          state.data.publishes = state.data.publishes.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: spells
+  if(state.tab==="spells"){
+    $("s_query").oninput=(e)=>{ state.filters.spellsQuery=e.target.value; render(); };
+    $("s_filterCat").onchange=(e)=>{ state.filters.spellsCat=e.target.value; render(); };
+
+    $("btnSpellClear").onclick=()=>{
+      state._spellDraft={id:"",title:"",category:"創作",content:""};
+      render(); toast("已清空");
+    };
+
+    $("btnSpellCopy").onclick=()=>{
+      const txt=$("s_content").value||"";
+      copyText(txt);
+    };
+
+    $("btnSpellToCreate").onclick=()=>{
+      state.tab="create";
+      renderTabs(); render();
+      toast("已切到創作區（可手動貼入使用）");
+    };
+
+    $("btnSpellSave").onclick=()=>{
+      const draft=state._spellDraft || {id:""};
+      const obj={
+        id: draft.id || uid(),
+        title: $("s_title").value.trim() || "(未命名咒語)",
+        category: $("s_cat").value.trim() || "其他",
+        content: $("s_content").value || "",
+        createdAt: draft.id ? (draft.createdAt||nowISO()) : nowISO(),
+        updatedAt: nowISO()
+      };
+
+      if(draft.id){
+        state.data.spells = state.data.spells.map(x=> x.id===draft.id ? {...x, ...obj} : x);
+      }else{
+        state.data.spells.push(obj);
+      }
+      state._spellDraft = {...obj};
+      saveAll(); render(); toast(draft.id ? "已覆蓋保存" : "已保存咒語");
+    };
+
+    const list=$("spellList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.spells.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnSpellCopy").onclick=()=> copyText(item.content||"");
+        el.querySelector(".btnSpellEdit").onclick=()=>{
+          state._spellDraft={...item};
+          render(); toast("已載入可編輯");
+        };
+        el.querySelector(".btnSpellDel").onclick=()=>{
+          if(!confirm("刪除這則咒語？")) return;
+          state.data.spells = state.data.spells.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: backup
+  if(state.tab==="backup"){
+    $("btnBackupCloudCfg").onclick=()=> $("btnCloudCfg").click();
+    $("btnBackupTestCloud").onclick=async ()=>{ $("btnCloudCfg").click(); saveCloudCfg(); await cloudBackup({test:true}); };
+
+    $("btnGen192").onclick=()=>{ downloadCanvas(drawIcon(192),"icon-192.png"); toast("已下載 icon-192.png"); };
+    $("btnGen512").onclick=()=>{ downloadCanvas(drawIcon(512),"icon-512.png"); toast("已下載 icon-512.png"); };
+
+    const sys=$("sysLog");
+    if(sys){
+      sys.textContent =
+        `ServiceWorker: ${("serviceWorker" in navigator) ? "supported" : "not supported"}\n` +
+        `CloudReady: ${isCloudReady()}\n` +
+        `LastLocal: ${fmt(state.data.updatedAt)}\n` +
+        `LastCloud: ${fmt(state.data.lastCloudAt)}\n`;
+    }
+  }
 }
+
+/* ---------- init ---------- */
+function init(){
+  loadAll();
+  renderTabs();
+  render();
+  updatePills();
+
+  // register service worker
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", async ()=>{
+      try{
+        await navigator.serviceWorker.register("sw.js");
+        // silent
+      }catch(e){
+        // silent
+      }
+    });
+  }
+}
+
+// global tab click (initial)
+renderTabs();
+init();
 </script>
+
 </body>
-</html>
+  </html>
