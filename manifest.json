@@ -1,13 +1,25 @@
 {
-  "name": "天使笑長｜創作工作室",
+  "name": "天使笑長｜創作工作室（PWA）",
   "short_name": "創作工作室",
+  "description": "幸福教養 × 心腦科學 × 文宣與課程的全功能創作工作室",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b3d2e",
   "theme_color": "#0b3d2e",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
