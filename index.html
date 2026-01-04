@@ -3,1789 +3,2327 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>天使笑長｜創作工作室（全功能版）</title>
   <meta name="theme-color" content="#0b3d2e" />
+  <title>天使笑長｜創作工作室（PWA）全功能版</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
+
   <style>
     :root{
-      --bg:#083326;
-      --bg2:#0b3d2e;
+      --bg:#0b3d2e;
       --card:#0f4a37;
-      --card2:#11513d;
-      --text:#eaf6f0;
-      --muted:#bfe3d5;
-      --line:rgba(255,255,255,.12);
-      --btn:#f0a04b;
-      --btn2:#ffd6a1;
+      --card2:#11533d;
+      --txt:#eef7f1;
+      --muted:#cfe6db;
+      --accent:#f0a04b;
       --danger:#ff6b6b;
-      --ok:#7CFFB2;
-      --shadow:0 10px 30px rgba(0,0,0,.25);
-      --radius:18px;
-      --radius2:22px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif;
+      --ok:#4cd964;
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 18px;
+      --ink: rgba(0,0,0,.22);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 20% 0%, rgba(240,160,75,.18), transparent 60%),
-                  radial-gradient(800px 600px at 90% 10%, rgba(255,214,161,.12), transparent 55%),
-                  linear-gradient(180deg, var(--bg), #06261c 80%);
+      font-family: system-ui, -apple-system, "Noto Sans TC", Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 900px at 30% -10%, rgba(240,160,75,.25), transparent 55%),
+        radial-gradient(1200px 900px at 110% 20%, rgba(76,217,100,.18), transparent 45%),
+        linear-gradient(180deg, #082f24, var(--bg));
+      color:var(--txt);
       min-height:100vh;
+      padding:18px 12px 40px;
     }
-    a{color:var(--btn2)}
+    .wrap{max-width:1100px;margin:0 auto}
     header{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(6,38,28,.65);
-      border-bottom:1px solid var(--line);
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      margin-bottom:12px;flex-wrap:wrap;
     }
-    .wrap{max-width:1100px; margin:0 auto; padding:14px 14px;}
-    .top{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .brand{
-      display:flex; align-items:flex-start; gap:10px;
-    }
+    .brand{display:flex;align-items:center;gap:10px}
     .logo{
-      width:44px;height:44px;border-radius:14px;
-      background: linear-gradient(135deg, rgba(240,160,75,.95), rgba(255,214,161,.75));
+      width:40px;height:40px;border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      display:grid;place-items:center;
       box-shadow: var(--shadow);
-      flex:0 0 auto;
+      font-weight:900;
     }
-    .brand h1{
-      font-size:16px; margin:0; letter-spacing:.5px;
-    }
-    .brand .sub{font-size:12px;color:var(--muted); margin-top:2px}
-    .pills{
-      display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end;
-    }
-    .pill{
-      font-size:12px; padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      background: rgba(255,255,255,.04);
-    }
-    nav{
-      display:flex; gap:8px; flex-wrap:wrap;
-      padding:0 14px 12px;
-      max-width:1100px; margin:0 auto;
-    }
-    .tab{
-      appearance:none; border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color:var(--muted);
-      padding:10px 12px;
-      border-radius:999px;
-      cursor:pointer;
-      font-size:13px;
-      transition:.15s ease;
-    }
-    .tab:hover{transform: translateY(-1px); background: rgba(255,255,255,.06);}
-    .tab.active{
-      background: rgba(240,160,75,.14);
-      border-color: rgba(240,160,75,.55);
-      color: var(--text);
-    }
+    .brandTxt{display:flex;flex-direction:column;gap:2px}
+    .brandTxt h1{font-size:18px;margin:0;font-weight:950;letter-spacing:.5px}
+    .brandTxt .sub{font-size:12px;color:var(--muted);line-height:1.4}
+    .topBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
-    main{max-width:1100px; margin:0 auto; padding:18px 14px 60px;}
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
+    button{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease;
+      font-weight:850;
     }
-    @media (max-width: 920px){
-      .grid{grid-template-columns: 1fr;}
+    button:active{transform: translateY(1px)}
+    button.primary{
+      background: linear-gradient(180deg, rgba(240,160,75,.95), rgba(240,160,75,.82));
+      border-color: rgba(0,0,0,.1);
+      color:#1b1b1b;
     }
+    button.ok{
+      background: rgba(76,217,100,.12);
+      border-color: rgba(76,217,100,.35);
+      color:#d9ffe4;
+    }
+    button.danger{
+      background: rgba(255,107,107,.12);
+      border-color: rgba(255,107,107,.35);
+      color:#ffd5d5;
+    }
+    button.ghost{background: transparent}
+    button.smallBtn{padding:7px 10px; font-size:12px; border-radius:10px}
+    a{color:#ffd3a0}
+
     .card{
-      border:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(15,74,55,.92), rgba(9,54,40,.92));
-      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .card .hd{
-      padding:14px 14px 10px;
-      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
-      border-bottom:1px solid var(--line);
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;
+      padding:10px 12px 0;
     }
-    .card .hd h2{
-      font-size:14px; margin:0;
-    }
-    .card .hd .hint{
-      font-size:12px;color:var(--muted);
-      margin-top:4px;
-      line-height:1.4;
-    }
-    .card .bd{padding:14px;}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-    .row2{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;}
-    .sp{justify-content:space-between}
-    .field{display:flex; flex-direction:column; gap:6px; margin-bottom:12px; flex:1;}
-    label{font-size:12px; color:var(--muted);}
-    input, select, textarea{
-      width:100%;
-      background: rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      color: var(--text);
-      border-radius: 14px;
-      padding:10px 12px;
-      outline:none;
-      font-size:14px;
-    }
-    textarea{min-height:160px; resize:vertical; line-height:1.55;}
-    .btns{display:flex; gap:10px; flex-wrap:wrap;}
-    button.btn{
-      appearance:none;
-      border:1px solid rgba(240,160,75,.55);
-      background: rgba(240,160,75,.14);
-      color: var(--text);
-      padding:10px 12px;
+    .tab{
+      padding:9px 10px;
       border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      font-size:12px;
+      font-weight:950;
       cursor:pointer;
-      font-size:13px;
-      transition:.15s ease;
+      user-select:none;
     }
-    button.btn:hover{transform:translateY(-1px); background: rgba(240,160,75,.18);}
-    button.btn.ghost{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
+    .tab.active{
+      background: rgba(240,160,75,.18);
+      border-color: rgba(240,160,75,.45);
+    }
+    .status{
+      display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+      padding:10px 14px 0;
+    }
+    .pill{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius: 999px;
+      border:1px solid var(--border);
       color: var(--muted);
     }
-    button.btn.danger{
-      border-color: rgba(255,107,107,.55);
-      background: rgba(255,107,107,.12);
+    .bd{padding:14px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media(min-width:980px){ .grid{grid-template-columns: 1.2fr .8fr;} }
+
+    .hd{
+      padding:14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
     }
-    button.btn.ok{
-      border-color: rgba(124,255,178,.45);
-      background: rgba(124,255,178,.10);
+    .title{margin:0;font-size:14px;font-weight:950;letter-spacing:.5px}
+    .hint{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:760px){
+      .row.two{grid-template-columns:1fr 1fr}
+      .row.three{grid-template-columns:1fr 1fr 1fr}
     }
-    .list{
-      display:flex; flex-direction:column; gap:10px;
+    label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px}
+    input, select, textarea{
+      width:100%;
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.15);
+      background: rgba(0,0,0,.18);
+      color:var(--txt);
+      outline:none;
     }
+    textarea{min-height:120px;resize:vertical;line-height:1.6}
+    .small{font-size:12px;color:var(--muted);line-height:1.55}
+    .kbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .divider{height:1px;background:rgba(255,255,255,.12);margin:12px 0}
+    .sectionSep{height:10px}
+    code.inline{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+
+    .toast{
+      position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+      background: rgba(0,0,0,.78);
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px 12px;border-radius: 999px;
+      font-size:12px;color:#fff;
+      box-shadow: var(--shadow);
+      opacity:0; pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index:999;
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px);}
+
+    .list{display:grid;gap:10px}
     .item{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
       padding:12px;
     }
-    .item .t{
-      font-size:13px; margin:0 0 6px;
-      display:flex; gap:8px; align-items:center; justify-content:space-between;
+    .itemTop{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      align-items:flex-start;
     }
-    .item .meta{
-      font-size:12px; color: var(--muted); line-height:1.4;
-      margin-bottom:8px;
-      white-space:pre-wrap;
-    }
-    .item .actions{display:flex; gap:8px; flex-wrap:wrap;}
-    .small{font-size:12px;color:var(--muted); line-height:1.5}
-    .mono{font-family:var(--mono); font-size:12px; white-space:pre-wrap}
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,.65);
-      border:1px solid rgba(255,255,255,.12);
-      color:#fff;
-      padding:10px 14px;
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-      opacity:0;
-      pointer-events:none;
-      transition:.18s ease;
-      font-size:13px;
-      z-index: 999;
-    }
-    .toast.show{opacity:1; transform: translateX(-50%) translateY(-2px);}
-    details{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:10px 12px;
-      background: rgba(255,255,255,.03);
-    }
-    summary{cursor:pointer; font-size:13px; color:var(--text);}
-    .kbd{
-      font-family:var(--mono);
-      background: rgba(255,255,255,.06);
-      border:1px solid var(--line);
-      padding:2px 6px;
-      border-radius:8px;
-      font-size:12px;
+    .itemTitle{font-weight:950;font-size:13px;margin:0 0 4px}
+    .badges{display:flex;gap:6px;flex-wrap:wrap}
+    .badge{
+      font-size:11px;padding:3px 8px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
       color:var(--muted);
+      background: rgba(255,255,255,.04);
     }
-    .mutedline{
-      border-top:1px dashed rgba(255,255,255,.12);
-      margin:12px 0;
+    .itemBtns{display:flex;gap:8px;flex-wrap:wrap}
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:11px;
+      white-space:pre-wrap;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding:10px;
+    }
+    .noteCard{
+      border:1px dashed rgba(240,160,75,.35);
+      background: rgba(240,160,75,.08);
+      padding:10px;
+      border-radius:14px;
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.6;
+    }
+
+    dialog{
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      max-width:920px;width:92vw;
+      background:#082f24;color:var(--txt);
+      box-shadow:var(--shadow);
     }
   </style>
 </head>
 
 <body>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>天使笑長｜創作工作室（全功能版）</h1>
-          <div class="sub">素材庫 × 文宣庫 × 發片打包 × 咒語分流 × 一鍵轉打包（localStorage 離線資料）</div>
-        </div>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">幸</div>
+      <div class="brandTxt">
+        <h1>天使笑長｜創作工作室（PWA）全功能版</h1>
+        <div class="sub">素材庫 × 咒語包庫（含分流）× 創作/完稿 × 文宣庫 × 發片打包 × 雲端備份 × 搬家匯出</div>
       </div>
-      <div class="pills" id="pills"></div>
     </div>
+
+    <div class="topBtns">
+      <button id="btnSaveAll" class="ok">保存（本機）</button>
+      <button id="btnCloud" class="primary">☁️ 一鍵雲端備份</button>
+      <button id="btnCloudCfg" class="ghost">⚙️ 雲端設定</button>
+      <button id="btnExport" class="primary">📦 匯出 JSON（搬家）</button>
+      <button id="btnImport" class="ok">📥 匯入 JSON</button>
+      <input id="fileImport" type="file" accept="application/json" hidden>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="tabs" id="tabs"></div>
+
+    <div class="status">
+      <span class="pill" id="pillLocal">本機：未儲存</span>
+      <span class="pill" id="pillCloud">雲端：未設定</span>
+      <span class="pill" id="pillCounts">素材0｜完稿0｜文宣0｜打包0｜咒語0</span>
+      <span class="pill" id="pillLast">更新：—</span>
+      <span class="pill" id="pillLastCloud">上次雲端：—</span>
+    </div>
+
+    <div class="bd" id="view"></div>
   </div>
 
-  <nav id="tabs">
-    <button class="tab" data-tab="create">創作區</button>
-    <button class="tab" data-tab="materials">素材庫</button>
-    <button class="tab" data-tab="promos">文宣庫</button>
-    <button class="tab" data-tab="publish">發片打包</button>
-    <button class="tab" data-tab="spells">咒語庫（分流）</button>
-    <button class="tab" data-tab="backup">備份</button>
-    <button class="tab" data-tab="help">使用說明</button>
-  </nav>
-</header>
+  <div class="toast" id="toast">完成</div>
 
-<main id="app"></main>
+  <!-- Cloud settings dialog -->
+  <dialog id="dlgCloud">
+    <form method="dialog" style="margin:0">
+      <div class="hd" style="border-bottom:1px solid rgba(255,255,255,.12)">
+        <div>
+          <p class="title" style="margin:0">⚙️ 雲端設定（Google 表單備份）</p>
+          <p class="hint" style="margin:6px 0 0">
+            這裡採用「把整包資料 JSON」送到 Google 表單（寫進試算表）。<br>
+            你只要做一次：填 <b>formResponse URL</b> + <b>entry id（JSON欄位）</b> 即可。
+          </p>
+        </div>
+        <button value="cancel">關閉</button>
+      </div>
 
-<div class="toast" id="toast">完成</div>
+      <div class="bd">
+        <div class="row">
+          <div>
+            <label>① formResponse URL（必填）</label>
+            <input id="cfgFormResponse" placeholder="例如：https://docs.google.com/forms/d/e/XXXX/formResponse">
+            <div class="small">
+              你之前的短網址（可用來找到表單）：<br>
+              <code class="inline">https://forms.gle/FdNdqNSZ24v6GH7CA</code><br><br>
+              取得方式：表單編輯 → 右上「⋮」→ 取得預先填寫連結 → 連結裡會看到 entry.xxxxxx<br>
+              formResponse 通常是：<code class="inline">https://docs.google.com/forms/d/e/.../formResponse</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>② entry id（JSON 主欄位，必填）</label>
+            <input id="cfgEntryJson" placeholder="例如：entry.1234567890">
+            <div class="small">建議表單新增一題「長文字」：名稱可叫「備份JSON」。</div>
+          </div>
+          <div>
+            <label>（可選）entry id（備註/標題）</label>
+            <input id="cfgEntryNote" placeholder="例如：entry.2345678901（可留空）">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnSaveCloudCfg" class="primary" value="default">保存設定</button>
+          <button id="btnTestCloud" class="ok" value="default" type="button">送出測試</button>
+          <button id="btnResetCloudCfg" class="danger" value="default" type="button">清除雲端設定</button>
+        </div>
+
+        <div class="sectionSep"></div>
+
+        <label>測試/紀錄</label>
+        <div class="mono" id="cloudLog" style="min-height:120px"></div>
+      </div>
+    </form>
+  </dialog>
+
+</div>
 
 <script>
-/* =========================
-   天使笑長｜創作工作室（全功能版）
-   - 單檔 index.html（資料存 localStorage）
-   - 咒語庫分流：系列 / 類別 / 片型 / 風格
-   - 一鍵把完稿轉成發片打包：自動填標題/100字介紹/hashtags/工具連結
-   ========================= */
+/** =========================================================
+ * 天使笑長｜創作工作室（PWA）全功能單頁（保留原架構 + 新增咒語分流 + 完稿一鍵打包）
+ *
+ * ✅ 素材庫（生命故事）
+ * ✅ 創作區（文稿分流：書稿/長片口說稿/短影片/Podcast/課程/發片打包/課程打包）
+ * ✅ 完稿庫
+ * ✅ 文宣庫（FB/IG/LINE/官網）
+ * ✅ 發片打包庫
+ * ✅ 咒語包庫（提示收藏）＋【新增】咒語分流（同用途不同強度/模板）
+ * ✅ 雲端備份（Google Form：送整包 JSON）
+ * ✅ JSON 匯出/匯入（換手機最穩）
+ * ✅ icon 192/512 生成
+ * ✅ 移除安裝按鈕
+ *
+ * 【新增重點】
+ * 1) 咒語分流：創作區多一個「咒語分流」選擇（標準/故事加強/腦科學加強/工具加強/精簡版）
+ * 2) 完稿 → 發片打包：完稿庫每筆多一顆「一鍵打包」：
+ *    - 自動填：標題（topic）/ 100字介紹（從完稿抽摘要）/ hashtags（依系列）/ 工具連結（自動抓網址）
+ * ========================================================= */
 
-const LS_KEY = "angel_studio_full_v1";
-const nowISO = ()=> new Date().toISOString();
-const uid = ()=> Math.random().toString(16).slice(2)+Date.now().toString(16);
+const $ = (id)=>document.getElementById(id);
+const LS_KEY = "angel_studio_full_v1_data";
+const CLOUD_KEY = "angel_studio_full_v1_cloud_cfg";
 
-const DEFAULTS = {
-  settings:{
-    brandName:"天使笑長",
-    defaultSeries:"幸福教養",
-    defaultPlatform:"YouTube",
-    defaultHashtags:"#幸福教養 #天使笑長",
-    defaultToolLinks:"（貼上你的 PWA 連結 / 表單連結 / 主頁連結）",
-    introLimit: 100,
-  },
-  materials:[],
-  promos:[],
-  publishes:[],
-  spells:[
-    // 預塞幾個常用分流範例，方便你直接用
-    {
-      id: uid(),
-      title:"水彩插畫｜車內安全感對話（16:9 無文字）",
+/* ---------- enums ---------- */
+const SERIES = ["幸福教養","心腦科學","心靈感悟","詩詞人生","幸福小腦袋","其他"];
+const PURPOSE = ["書稿","長影片口說稿","短影片","Podcast","課程","發片打包","課程打包"];
+const PROMO_TYPE = ["試用活動介紹","工具推廣","社群貼文","開課宣傳","免費體驗邀請","官網/介紹頁","其他"];
+const PROMO_PLATFORM = ["FB（長文）","IG（精簡）","LINE（群組）","官網（完整）"];
+
+// ✅【新增】咒語分流（創作區用）
+const SPELL_ROUTE = [
+  "標準版（結構完整）",
+  "故事加強（故事更完整更有畫面）",
+  "腦科學加強（前額葉/杏仁核/自控力更細）",
+  "工具加強（話術/步驟/練習更可落地）",
+  "精簡版（短一點、重點更俐落）"
+];
+
+const TAB_ITEMS = [
+  {key:"materials", name:"素材庫（生命故事）"},
+  {key:"create", name:"創作區（文稿分流）"},
+  {key:"finals", name:"完稿庫"},
+  {key:"promo", name:"文宣庫"},
+  {key:"publish", name:"發片打包"},
+  {key:"spells", name:"咒語包庫"},
+  {key:"backup", name:"設定/備份"},
+];
+
+/* ---------- state ---------- */
+const state = {
+  tab: "materials",
+  data: {
+    updatedAt: null,
+    lastCloudAt: null,
+
+    materials: [], // {id,title,scene,feel,insight,tool,series,createdAt,updatedAt}
+    spells: [],    // {id,title,category,content,meta?,createdAt,updatedAt}
+
+    create: {
       series:"幸福教養",
-      kind:"插畫咒語",
-      style:"水彩插畫",
-      category:"車內對話",
-      content:
-`A watercolor illustration of a mother driving a car, seen from the back seat perspective. The mother sits calmly at the wheel, posture steady and attentive. In the front passenger seat, an older child is slightly turned toward her, speaking gently. The atmosphere is safe and intimate with warm natural light. The road ahead is softly blurred, suggesting movement without urgency. No dramatic expressions. Cinematic composition, 16:9, no text, no letters, no symbols.`
+      purpose:"書稿",
+      // ✅新增：咒語分流
+      spellRoute: SPELL_ROUTE[0],
+      topic:"",
+      body:"",
+      output:"",
+      prompt:"",
+      linkMaterialId:""
     },
-    {
-      id: uid(),
-      title:"口說稿｜3 秒 Hook＋溫柔篤定收尾 CTA（幸福教養長片）",
+
+    finals: [],    // {id,series,purpose,spellRoute?,topic,body,output,createdAt,updatedAt}
+
+    promoDraft: {
+      tool:"幸福教養｜零用錢練功房",
       series:"幸福教養",
-      kind:"文案咒語",
-      style:"口說稿",
-      category:"長影片",
-      content:
-`請用「把心站穩、活得自在、不說教、溫柔而篤定」的品牌語感，寫一支幸福教養長影片口說稿。必含：3 秒 Hook／承諾／正文／CTA（導到主頁，含「每週五更新」）。字數 ≥ 3000。`
-    }
-  ],
-  // 創作區草稿（你在創作區打一半不會丟）
-  draft:{
-    title:"",
-    series:"幸福教養",
-    type:"長影片口說稿",
-    platform:"YouTube",
-    tool:"幸福教養｜零用錢練功房",
-    links:"",
-    hashtags:"#幸福教養 #天使笑長",
-    prompt:"",
-    content:""
-  },
-  // 發片打包草稿
-  publishDraft:{
-    title:"",
-    date:"",
-    intro:"",
-    hashtags:"#幸福教養 #天使笑長",
-    toolLinks:"",
-    notes:""
-  }
-};
+      type:"試用活動介紹",
+      platform:"FB（長文）",
+      title:"",
+      body:"",
+      tags:"#幸福教養 #零用錢練功房",
+      links:"",
+      cta:"留言：「理智隊長報到！」一起交流",
+      prompt:""
+    },
+    promos: [],    // {id,tool,series,type,platform,title,body,tags,links,cta,createdAt,updatedAt}
 
-let state = {
-  tab:"create",
-  filters:{
-    materialQuery:"",
+    publishDraft: { title:"", date:"", intro:"", hashtags:"#幸福教養 #天使笑長", toolLinks:"", notes:"" },
+    publishes: []  // {id,title,date,intro,hashtags,toolLinks,notes,createdAt,updatedAt}
+  },
+
+  cloud: {
+    formResponse:"",
+    entryJson:"",
+    entryNote:"",
+  },
+
+  filters: {
+    materialsQuery:"",
+    finalsQuery:"",
     promoQuery:"",
+    promoTool:"全部",
+    promoSeries:"全部",
+    promoType:"全部",
     publishQuery:"",
-    // spells 分流
     spellsQuery:"",
-    spellsSeries:"全部",
-    spellsKind:"全部",
-    spellsStyle:"全部",
-    spellsCategory:"全部",
-  },
-  data: null,
-  // spells 編輯暫存
-  spellDraft: {id:"", title:"", series:"幸福教養", kind:"插畫咒語", style:"水彩插畫", category:"", content:""}
+    spellsCat:"全部",
+  }
 };
 
-function toast(msg){
-  const el = document.getElementById("toast");
-  el.textContent = msg || "完成";
-  el.classList.add("show");
-  setTimeout(()=> el.classList.remove("show"), 1400);
+/* ---------- utils ---------- */
+function nowISO(){ return new Date().toISOString(); }
+function fmt(ts){
+  if(!ts) return "—";
+  const d=new Date(ts);
+  if(Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString("zh-Hant",{hour12:false});
 }
-
-function loadAll(){
-  try{
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw){
-      state.data = structuredClone(DEFAULTS);
-      saveAll();
-      return;
-    }
-    const obj = JSON.parse(raw);
-    // 合併 defaults（避免舊版缺欄位）
-    state.data = mergeDeep(structuredClone(DEFAULTS), obj);
-  }catch(e){
-    state.data = structuredClone(DEFAULTS);
-  }
+function uid(){ return Math.random().toString(16).slice(2)+"-"+Date.now().toString(16); }
+function toast(msg="完成"){
+  const t=$("toast"); t.textContent=msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1400);
 }
-
-function saveAll(){
-  localStorage.setItem(LS_KEY, JSON.stringify(state.data));
-  renderPills();
+function escapeHtml(s){
+  return (s??"").toString().replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
-
-function mergeDeep(target, source){
-  if(typeof target !== "object" || target===null) return source;
-  if(typeof source !== "object" || source===null) return target;
-  for(const k of Object.keys(source)){
-    if(Array.isArray(source[k])) target[k]=source[k];
-    else if(typeof source[k]==="object" && source[k]!==null) target[k]=mergeDeep(target[k] ?? {}, source[k]);
-    else target[k]=source[k];
-  }
-  return target;
-}
-
-function $(id){ return document.getElementById(id); }
-
 async function copyText(text){
   try{
     await navigator.clipboard.writeText(text);
     toast("已複製");
   }catch(e){
-    // fallback
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position="fixed";
-    ta.style.opacity="0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    toast("已複製");
+    const ta=document.createElement("textarea");
+    ta.value=text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy");
+    ta.remove(); toast("已複製");
   }
 }
 
-function short100(text){
-  const lim = state.data.settings.introLimit || 100;
+// 抽網址（自動填工具連結用）
+function extractUrls(text){
+  const s = (text||"");
+  const m = s.match(/https?:\/\/[^\s)>\]]+/g) || [];
+  // 去重
+  return Array.from(new Set(m));
+}
+function clamp100(text){
   const s = (text||"").replace(/\s+/g," ").trim();
   if(!s) return "";
-  return s.length <= lim ? s : s.slice(0, lim) + "…";
+  return s.length <= 100 ? s : (s.slice(0, 100) + "…");
+}
+function stripToIntro(output){
+  // 從完稿抽「可當介紹」的前段：去掉過長空白、避免把整篇貼上
+  return clamp100(output);
+}
+function hashtagsForSeries(series){
+  if(series==="幸福教養") return "#幸福教養 #天使笑長 #不打不罵不氣 #親子溝通 #情緒教養";
+  if(series==="心腦科學") return "#心腦科學 #情緒管理 #自控力 #前額葉 #天使笑長";
+  if(series==="心靈感悟") return "#心靈感悟 #把心站穩 #活得自在 #天使笑長";
+  if(series==="詩詞人生") return "#詩詞人生 #詩詞欣賞 #生活練習 #天使笑長";
+  if(series==="幸福小腦袋") return "#幸福小腦袋 #親子共讀 #情緒小故事 #天使笑長";
+  return "#天使笑長";
 }
 
-function inferTitleFromContent(){
-  const d = state.data.draft;
-  if((d.title||"").trim()) return d.title.trim();
-  const content = (d.content||"").trim();
-  if(!content) return "";
-  // 取第一行或第一句
-  const firstLine = content.split(/\n+/)[0].trim();
-  if(firstLine.length >= 2 && firstLine.length <= 40) return firstLine;
-  const m = content.match(/(.+?[。！？!?])/);
-  if(m) return m[1].replace(/[。！？!?]/g,"").trim().slice(0, 40);
-  return content.slice(0, 20);
-}
-
-function renderPills(){
-  const pills = $("pills");
-  if(!pills) return;
-  const m = state.data.materials.length;
-  const p = state.data.promos.length;
-  const pb = state.data.publishes.length;
-  const s = state.data.spells.length;
-
-  pills.innerHTML = `
-    <span class="pill">素材：${m}</span>
-    <span class="pill">文宣：${p}</span>
-    <span class="pill">打包：${pb}</span>
-    <span class="pill">咒語：${s}</span>
-  `;
-}
-
-function setTab(name){
-  state.tab = name;
-  renderTabs();
-  render();
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-
-function renderTabs(){
-  document.querySelectorAll(".tab").forEach(b=>{
-    const on = b.dataset.tab === state.tab;
-    b.classList.toggle("active", on);
-    b.onclick = ()=> setTab(b.dataset.tab);
-  });
-}
-
-function esc(s){
-  return (s||"").replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-}
-
-function matchesQuery(obj, q, keys){
-  if(!q) return true;
-  const needle = q.toLowerCase();
-  return keys.some(k => ((obj[k]||"")+"").toLowerCase().includes(needle));
-}
-
-function uniq(arr){ return Array.from(new Set(arr)); }
-
-function buildSpellsFacet(){
-  const all = state.data.spells || [];
-  return {
-    series: ["全部", ...uniq(all.map(x=>x.series||"未分類")).sort()],
-    kind: ["全部", ...uniq(all.map(x=>x.kind||"未分類")).sort()],
-    style: ["全部", ...uniq(all.map(x=>x.style||"未分類")).sort()],
-    category: ["全部", ...uniq(all.map(x=>x.category||"未分類")).sort()],
-  };
-}
-
-/* =========================
-   一鍵：把完稿轉成發片打包
-   - 自動填：標題 / 100字介紹 / hashtags / 工具連結
-   - 轉完自動切到「發片打包」分頁
-   ========================= */
-function oneClickToPublishPack(){
-  const d = state.data.draft;
-  const pd = state.data.publishDraft;
-  const title = inferTitleFromContent() || d.title || "";
-  const intro = short100(d.content || d.prompt || "");
-  const tags = (d.hashtags||"").trim() || state.data.settings.defaultHashtags || "";
-  const toolLinks = (d.links||"").trim() || state.data.settings.defaultToolLinks || "";
-
-  state.data.publishDraft = {
-    ...pd,
-    title: title,
-    intro: intro,
-    hashtags: tags,
-    toolLinks: toolLinks,
-    notes: `【系列】${d.series||""}\n【片型】${d.type||""}\n【工具/專案】${d.tool||""}\n【平台】${d.platform||""}`
-  };
-
-  saveAll();
-  toast("已轉入發片打包");
-  setTab("publish");
-}
-
-/* =========================
-   Render
-   ========================= */
-function render(){
-  const app = $("app");
-  if(!app) return;
-
-  if(state.tab==="create"){
-    app.innerHTML = renderCreate();
-    bindCreate();
-    return;
-  }
-  if(state.tab==="materials"){
-    app.innerHTML = renderMaterials();
-    bindMaterials();
-    return;
-  }
-  if(state.tab==="promos"){
-    app.innerHTML = renderPromos();
-    bindPromos();
-    return;
-  }
-  if(state.tab==="publish"){
-    app.innerHTML = renderPublish();
-    bindPublish();
-    return;
-  }
-  if(state.tab==="spells"){
-    app.innerHTML = renderSpells();
-    bindSpells();
-    return;
-  }
-  if(state.tab==="backup"){
-    app.innerHTML = renderBackup();
-    bindBackup();
-    return;
-  }
-  if(state.tab==="help"){
-    app.innerHTML = renderHelp();
-    bindHelp();
-    return;
-  }
-}
-
-function renderCreate(){
-  const d = state.data.draft;
-  const facets = buildSpellsFacet();
-  return `
-  <div class="grid">
-    <section class="card">
-      <div class="hd">
-        <div>
-          <h2>創作區｜草稿與完稿</h2>
-          <div class="hint">你可以在這裡寫口說稿、描述、貼咒語、整理連結；一鍵轉成發片打包。</div>
-        </div>
-        <div class="btns">
-          <button class="btn ok" id="btnToPack">一鍵轉成發片打包</button>
-          <button class="btn ghost" id="btnSaveDraft">保存</button>
-          <button class="btn ghost" id="btnCopyAll">複製整包</button>
-        </div>
-      </div>
-
-      <div class="bd">
-        <div class="row2">
-          <div class="field" style="flex:1.2">
-            <label>標題（可空，系統會從完稿第一行自動推）</label>
-            <input id="c_title" value="${esc(d.title)}" placeholder="例如：無欲則剛：等一下的選擇力" />
-          </div>
-          <div class="field" style="flex:.8">
-            <label>系列</label>
-            <select id="c_series">
-              ${["幸福教養","詩詞人生","幸福關係","幸福小腦袋","其他"].map(x=>`<option ${d.series===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-        </div>
-
-        <div class="row2">
-          <div class="field">
-            <label>片型</label>
-            <select id="c_type">
-              ${["長影片口說稿","短影片口說稿","Shorts 文案","貼文長文","直播提綱","其他"].map(x=>`<option ${d.type===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>平台</label>
-            <select id="c_platform">
-              ${["YouTube","FB","IG","Threads","LINE","其他"].map(x=>`<option ${d.platform===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>工具/專案名稱</label>
-            <input id="c_tool" value="${esc(d.tool)}" placeholder="例如：幸福教養｜零用錢練功房" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>工具/連結（主頁 / PWA / 表單…）</label>
-          <textarea id="c_links" style="min-height:90px" placeholder="貼上連結">${esc(d.links)}</textarea>
-        </div>
-
-        <div class="field">
-          <label>Hashtags</label>
-          <input id="c_tags" value="${esc(d.hashtags)}" placeholder="#幸福教養 #天使笑長" />
-        </div>
-
-        <div class="row2">
-          <div class="field" style="flex:1">
-            <label>Prompt / 咒語（可從右邊咒語庫快速插入）</label>
-            <textarea id="c_prompt" placeholder="貼上插畫咒語 / 口說稿指令…">${esc(d.prompt)}</textarea>
-          </div>
-          <div class="field" style="flex:1">
-            <label>完稿內容（可長文）</label>
-            <textarea id="c_content" placeholder="貼上你完成的口說稿 / 貼文…">${esc(d.content)}</textarea>
-          </div>
-        </div>
-
-        <div class="mutedline"></div>
-
-        <details>
-          <summary>快速插入咒語（分流篩選）</summary>
-          <div class="row2" style="margin-top:10px">
-            <div class="field">
-              <label>系列</label>
-              <select id="quick_spell_series">${facets.series.map(x=>`<option>${x}</option>`).join("")}</select>
-            </div>
-            <div class="field">
-              <label>種類</label>
-              <select id="quick_spell_kind">${facets.kind.map(x=>`<option>${x}</option>`).join("")}</select>
-            </div>
-            <div class="field">
-              <label>風格</label>
-              <select id="quick_spell_style">${facets.style.map(x=>`<option>${x}</option>`).join("")}</select>
-            </div>
-            <div class="field">
-              <label>類別</label>
-              <select id="quick_spell_cat">${facets.category.map(x=>`<option>${x}</option>`).join("")}</select>
-            </div>
-          </div>
-          <div class="field">
-            <label>搜尋</label>
-            <input id="quick_spell_q" placeholder="關鍵字（標題/內容）" />
-          </div>
-          <div class="small">點「插入到 Prompt」會把咒語加到 Prompt 末端（不覆蓋原本內容）。</div>
-          <div id="quickSpellList" class="list" style="margin-top:10px"></div>
-        </details>
-
-      </div>
-    </section>
-
-    <aside class="card">
-      <div class="hd">
-        <div>
-          <h2>設定（本機）</h2>
-          <div class="hint">預設 hashtags / 工具連結 / 100 字限制</div>
-        </div>
-        <div class="btns">
-          <button class="btn ghost" id="btnSaveSettings">保存設定</button>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="field">
-          <label>預設 Hashtags</label>
-          <input id="s_defTags" value="${esc(state.data.settings.defaultHashtags)}" />
-        </div>
-        <div class="field">
-          <label>預設 工具/連結</label>
-          <textarea id="s_defLinks" style="min-height:90px">${esc(state.data.settings.defaultToolLinks)}</textarea>
-        </div>
-        <div class="field">
-          <label>100 字介紹字數上限（預設 100）</label>
-          <input id="s_introLimit" type="number" min="30" max="200" value="${state.data.settings.introLimit||100}" />
-        </div>
-
-        <div class="mutedline"></div>
-
-        <div class="small mono">快捷鍵：<span class="kbd">Ctrl</span>+<span class="kbd">S</span> 保存（瀏覽器若攔截可改按「保存」按鈕）</div>
-      </div>
-    </aside>
-  </div>
-  `;
-}
-
-function bindCreate(){
-  const d = state.data.draft;
-
-  const sync = ()=>{
-    d.title = $("c_title").value;
-    d.series = $("c_series").value;
-    d.type = $("c_type").value;
-    d.platform = $("c_platform").value;
-    d.tool = $("c_tool").value;
-    d.links = $("c_links").value;
-    d.hashtags = $("c_tags").value;
-    d.prompt = $("c_prompt").value;
-    d.content = $("c_content").value;
-  };
-
-  ["c_title","c_series","c_type","c_platform","c_tool","c_links","c_tags","c_prompt","c_content"].forEach(id=>{
-    const el=$(id);
-    if(!el) return;
-    el.addEventListener("input", ()=>{ sync(); });
-    el.addEventListener("change", ()=>{ sync(); });
-  });
-
-  $("btnSaveDraft").onclick=()=>{
-    sync();
-    saveAll();
-    toast("已保存草稿");
-  };
-
-  $("btnCopyAll").onclick=()=>{
-    sync();
-    const txt = [
-      `【標題】${d.title||""}`,
-      `【系列】${d.series||""}`,
-      `【片型】${d.type||""}`,
-      `【平台】${d.platform||""}`,
-      `【工具/專案】${d.tool||""}`,
-      "",
-      "【工具/連結】",
-      d.links||"",
-      "",
-      "【Hashtags】",
-      d.hashtags||"",
-      "",
-      "【Prompt】",
-      d.prompt||"",
-      "",
-      "【完稿】",
-      d.content||""
-    ].join("\n");
-    copyText(txt);
-  };
-
-  $("btnToPack").onclick=()=>{
-    sync();
-    saveAll();
-    oneClickToPublishPack();
-  };
-
-  $("btnSaveSettings").onclick=()=>{
-    state.data.settings.defaultHashtags = $("s_defTags").value.trim();
-    state.data.settings.defaultToolLinks = $("s_defLinks").value;
-    state.data.settings.introLimit = Math.max(30, Math.min(200, parseInt($("s_introLimit").value||"100",10)));
-    saveAll();
-    toast("已保存設定");
-  };
-
-  // quick spells list
-  const facets = buildSpellsFacet();
-  const qEls = {
-    series: $("quick_spell_series"),
-    kind: $("quick_spell_kind"),
-    style: $("quick_spell_style"),
-    cat: $("quick_spell_cat"),
-    q: $("quick_spell_q"),
-    list: $("quickSpellList")
-  };
-
-  function filterQuick(){
-    const s = qEls.series.value, k=qEls.kind.value, st=qEls.style.value, c=qEls.cat.value;
-    const q = (qEls.q.value||"").trim();
-    const arr = (state.data.spells||[]).filter(x=>{
-      if(s!=="全部" && (x.series||"未分類")!==s) return false;
-      if(k!=="全部" && (x.kind||"未分類")!==k) return false;
-      if(st!=="全部" && (x.style||"未分類")!==st) return false;
-      if(c!=="全部" && (x.category||"未分類")!==c) return false;
-      if(q && !matchesQuery(x, q, ["title","content","category","style","kind","series"])) return false;
-      return true;
-    }).slice().reverse();
-
-    if(arr.length===0){
-      qEls.list.innerHTML = `<div class="small">沒有符合的咒語。</div>`;
-      return;
+/* ---------- persistence ---------- */
+function loadAll(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const obj = JSON.parse(raw);
+      if(obj?.data){
+        state.data = {...state.data, ...obj.data};
+        state.data.create = {...state.data.create, ...(obj.data.create||{})};
+        state.data.promoDraft = {...state.data.promoDraft, ...(obj.data.promoDraft||{})};
+        state.data.publishDraft = {...state.data.publishDraft, ...(obj.data.publishDraft||{})};
+      }
     }
+  }catch(e){}
 
-    qEls.list.innerHTML = arr.slice(0,12).map(x=>`
-      <div class="item">
-        <div class="t">
-          <strong>${esc(x.title||"(未命名)")}</strong>
-          <span class="pill">${esc(x.series||"")}</span>
-        </div>
-        <div class="meta">${esc([x.kind,x.style,x.category].filter(Boolean).join("｜"))}</div>
-        <div class="actions">
-          <button class="btn ghost" data-act="copy" data-id="${x.id}">複製</button>
-          <button class="btn ok" data-act="insert" data-id="${x.id}">插入到 Prompt</button>
-        </div>
-      </div>
-    `).join("");
+  try{
+    const raw = localStorage.getItem(CLOUD_KEY);
+    if(raw){
+      const cfg = JSON.parse(raw);
+      if(cfg) state.cloud = {...state.cloud, ...cfg};
+    }
+  }catch(e){}
+}
+function saveAll(){
+  state.data.updatedAt = nowISO();
+  localStorage.setItem(LS_KEY, JSON.stringify({data:state.data}, null, 2));
+  updatePills();
+  toast("已保存");
+}
+function updatePills(){
+  $("pillLocal").textContent = state.data.updatedAt ? `本機：已保存（${fmt(state.data.updatedAt)}）` : "本機：未儲存";
+  $("pillCloud").textContent = isCloudReady() ? "雲端：已設定 ✅" : "雲端：未設定";
+  $("pillCounts").textContent =
+    `素材${state.data.materials.length}｜完稿${state.data.finals.length}｜文宣${state.data.promos.length}｜打包${state.data.publishes.length}｜咒語${state.data.spells.length}`;
+  $("pillLast").textContent = `更新：${fmt(state.data.updatedAt)}`;
+  $("pillLastCloud").textContent = `上次雲端：${fmt(state.data.lastCloudAt)}`;
+}
 
-    qEls.list.querySelectorAll("button").forEach(b=>{
-      b.onclick=()=>{
-        const id=b.dataset.id;
-        const act=b.dataset.act;
-        const item = state.data.spells.find(z=>z.id===id);
-        if(!item) return;
-        if(act==="copy") return copyText(item.content||"");
-        if(act==="insert"){
-          const cur = $("c_prompt").value || "";
-          const next = (cur.trim()? (cur.trim()+"\n\n") : "") + (item.content||"");
-          $("c_prompt").value = next;
-          d.prompt = next;
-          saveAll();
-          toast("已插入 Prompt");
-        }
-      };
+/* ---------- prompts (核心：保留文稿分流 + 新增咒語分流) ---------- */
+function ctaForSeries(series, purpose){
+  // 你先前規則：
+  // - 幸福教養：長片 CTA 主頁 +「每週五更新」
+  // - 詩詞人生：不做長片；中/短/short CTA 主頁 +「每週一更新」
+  // - 其他：主頁 +「每週更新」
+  if(series==="幸福教養" && purpose==="長影片口說稿"){
+    return "CTA（導到主頁）：如果你也在練習把心站穩，歡迎來到天使笑長的主頁。這裡有心理學、腦神經科學、心靈成長與幸福教養系列影片，陪你把心一次一次放回中間。｜每週五更新";
+  }
+  if(series==="詩詞人生"){
+    if(purpose==="長影片口說稿") return "（提醒：詩詞人生長片你偏好不放 CTA；若是中/短片才放主頁引流：每週一更新）";
+    return "CTA（導到主頁）：更多詩詞人生與生活練習，都在天使笑長主頁｜每週一更新";
+  }
+  return "CTA（導到主頁）：更多心理學、腦神經科學與幸福教養內容，都在天使笑長主頁｜每週更新";
+}
+
+function routeHint(route){
+  // ✅新增：同用途不同「咒語分流」強度
+  if(route===SPELL_ROUTE[1]){ // 故事加強
+    return [
+      "【咒語分流：故事加強】",
+      "- 請把故事寫到「可以拍」：人物/場景/對話/轉折/情緒變化要完整。",
+      "- 每個關鍵瞬間加 1 句內心旁白（家長的心聲/孩子的需求）。",
+      "- 對話要自然、生活感，不要說教。"
+    ].join("\n");
+  }
+  if(route===SPELL_ROUTE[2]){ // 腦科學加強
+    return [
+      "【咒語分流：腦科學加強】",
+      "- 以「杏仁核拉警報 / 前額葉接手 / 迷走神經降速」做清楚解釋。",
+      "- 把『等一下』對應到：延遲滿足、工作記憶、抑制控制、情緒命名。",
+      "- 每段腦科學後面都要接一個『家長可以怎麼做』。"
+    ].join("\n");
+  }
+  if(route===SPELL_ROUTE[3]){ // 工具加強
+    return [
+      "【咒語分流：工具加強】",
+      "- 把方法寫成：觸發 → 30秒踩煞車 → 判斷 → 選擇 → 追蹤。",
+      "- 給 5 句可直接說出口的話（含：共感/界線/選擇/收尾）。",
+      "- 最後提供 7 天練習表（每天 1 句/1 步驟）。"
+    ].join("\n");
+  }
+  if(route===SPELL_ROUTE[4]){ // 精簡版
+    return [
+      "【咒語分流：精簡版】",
+      "- 請把內容壓到重點：段落更短、條列更多。",
+      "- 只留最關鍵的 3 個觀念 + 1 個工具 + 1 段 CTA。",
+    ].join("\n");
+  }
+  return [
+    "【咒語分流：標準版】",
+    "- 結構完整、故事清楚、腦科學點到位、工具可落地。"
+  ].join("\n");
+}
+
+function buildCreatePrompt(){
+  const c = state.data.create;
+
+  const base = `你是「天使笑長」的協作夥伴。請依照以下輸入，產出我需要的版本。品牌語感：把心站穩、活得自在；不說教、溫柔而篤定；要有畫面感；要可落地、可直接使用。`;
+
+  const blocks = {
+    "幸福教養": [
+      "口吻：輕鬆溫馨陪伴、不說教、帶畫面感。",
+      "結構：Hook → 承諾 → 完整故事/情境 → 心腦科學解析（前額葉/杏仁核/自控力）→ 好用工具（方法/話術/練習）→ CTA。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "心腦科學": [
+      "口吻：親民幽默、易懂、有比喻。",
+      "正文：將原文改寫為 1000–2500 字，清楚分段，給出可執行方法。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "詩詞人生": [
+      "口吻：文雅哲學、清亮但不艱澀。",
+      "結構：Hook → 作者簡介 → 創作背景 → 詩詞內容解析 → 心理學/腦神經延伸 → 生活運用（可落地）→ 1000–1500 字。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "心靈感悟": [
+      "口吻：哲思、發人深省、溫柔有力量。",
+      "把靈感/原文延伸成 1000–1500 字短文，最後給 3 個落地練習。",
+      ctaForSeries(c.series, c.purpose)
+    ],
+    "幸福小腦袋": [
+      "口吻：淺顯易懂、輕鬆活潑，適合親子共讀。",
+      "把主題延伸成 800–1200 字故事＋家長提醒 3 點。",
+      "CTA：引導家長到主頁看完整系列與工具。"
+    ],
+    "其他": [
+      "口吻：依輸入調整。",
+      "輸出：先做可用版本，再給 3 種不同風格變體。"
+    ]
+  };
+
+  // ✅保留「用途分流」原邏輯
+  const purposeHint =
+    c.purpose==="書稿" ? "【你要產出：書稿版】必須加入心理學＋腦神經科學解析，並在其基礎上提出方法與工具（可練習、可教學）。" :
+    c.purpose==="課程" ? "【你要產出：課程版】請做：課程目標→單元流程→講義重點→練習→作業→工具（可做成PWA練習）。" :
+    c.purpose==="課程打包" ? "【你要產出：課程打包】請整理：模組/單元/講義/練習/作業/工具連結/需要的素材清單。" :
+    c.purpose==="發片打包" ? "【你要產出：發片打包】請整理：影片介紹（100字內）＋工具連結＋Hashtags＋預計發片日期建議＋封面文字建議（如需）。" :
+    c.purpose==="長影片口說稿" ? "【你要產出：長影片口說稿】請 ≥3000 字（若系列設定允許），含 Hook/承諾/正文/CTA（依規則）。" :
+    c.purpose==="短影片" ? "【你要產出：短影片】請給 3 秒 Hook＋主體 30–45 秒＋收尾 CTA（引流主頁）。" :
+    "【你要產出：Podcast】請給分段口條、停頓點、以及可口語化的轉場句。";
+
+  // ✅新增：咒語分流（route）
+  const routeBlock = routeHint(c.spellRoute);
+
+  const prompt = [
+    base,
+    `【系列】${c.series}`,
+    `【用途】${c.purpose}`,
+    `【咒語分流】${c.spellRoute}`,
+    `【主題】${c.topic||"（未填）"}`,
+    `【原文/素材】\n${c.body||"（未貼）"}`,
+    "",
+    purposeHint,
+    "",
+    routeBlock,
+    "",
+    "【系列咒語包】",
+    ...(blocks[c.series] || blocks["其他"])
+  ].join("\n");
+
+  return prompt;
+}
+
+function buildPromoPrompt(){
+  const p = state.data.promoDraft;
+  const base = `你是「天使笑長」的行銷文案協作夥伴。請把我提供的素材寫成可直接發布的推廣文宣。語氣：溫暖、俐落、有畫面；不油；把價值講清楚。`;
+
+  const must = [
+    "必備元素：",
+    "1) 痛點提問（你家也有…？）",
+    "2) 一句話定位（這是什麼、幫誰、解決什麼）",
+    "3) 3–5 個亮點條列（可含腦科學/行為訓練/成就感）",
+    "4) 明確行動指令（點連結/加入主畫面/看說明）",
+    "5) 互動引導（留言句/分享/私訊）",
+  ].join("\n");
+
+  const variants = [
+    "請同一份內容提供以下版本：",
+    "A) FB 長文版：有故事、有鋪陳、有條列、有 CTA",
+    "B) IG 精簡版：短句、分行、Emoji 適量、重點 5 行內",
+    "C) LINE 群組版：更口語、更短、更直接",
+    "D) 官網介紹版：較完整（可含 FAQ 3 題）",
+  ].join("\n");
+
+  return [
+    base,
+    `【關聯工具/專案】${p.tool}`,
+    `【系列】${p.series}`,
+    `【文宣用途】${p.type}`,
+    `【目標平台（這次主版本）】${p.platform}`,
+    `【標題/主題】${p.title||"（未填）"}`,
+    `【連結】${p.links||"（未填）"}`,
+    `【Hashtags】${p.tags||"（未填）"}`,
+    `【互動/CTA】${p.cta||"（未填）"}`,
+    "",
+    "【素材/草稿】",
+    p.body||"（未貼）",
+    "",
+    must,
+    "",
+    variants,
+    "",
+    "輸出格式：先給主版本（對應目標平台），再給 A/B/C/D 四版。"
+  ].join("\n");
+}
+
+/* ---------- cloud backup (Google Form POST) ---------- */
+function isCloudReady(){
+  return !!(state.cloud.formResponse && state.cloud.entryJson);
+}
+function cloudLog(msg){
+  const el = $("cloudLog");
+  if(!el) return;
+  el.textContent = `[${new Date().toLocaleTimeString("zh-Hant",{hour12:false})}] ${msg}\n` + el.textContent;
+}
+async function postToGoogleForm(payload){
+  const formBody = new URLSearchParams(payload).toString();
+  await fetch(state.cloud.formResponse, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
+    body: formBody
+  });
+}
+async function cloudBackup({test=false}={}){
+  if(!isCloudReady()){
+    toast("先設定雲端");
+    $("dlgCloud").showModal();
+    cloudLog("雲端尚未設定：請填 formResponse + entryJson。");
+    return;
+  }
+  saveAll();
+
+  const snapshot = JSON.stringify({
+    exportedAt: nowISO(),
+    data: state.data
+  }, null, 0);
+
+  const note = test
+    ? `【測試送出】${new Date().toLocaleString("zh-Hant",{hour12:false})}`
+    : `【正式備份】${new Date().toLocaleString("zh-Hant",{hour12:false})}`;
+
+  const payload = {};
+  payload[state.cloud.entryJson] = snapshot;
+  if(state.cloud.entryNote) payload[state.cloud.entryNote] = note;
+
+  try{
+    await postToGoogleForm(payload);
+    if(!test){
+      state.data.lastCloudAt = nowISO();
+      state.data.updatedAt = nowISO();
+      localStorage.setItem(LS_KEY, JSON.stringify({data:state.data}, null, 2));
+      updatePills();
+    }
+    toast(test ? "測試已送出" : "已雲端備份");
+    cloudLog(test
+      ? "測試送出完成（no-cors 無法讀回傳；請到試算表確認新增一列）。"
+      : "備份送出完成（no-cors）。");
+  }catch(e){
+    toast("送出失敗");
+    cloudLog("送出失敗：" + e.message);
+    alert("雲端送出失敗：\n" + e.message + "\n\n常見原因：\n- formResponse URL 不正確\n- entry id 不正確\n- 網路或瀏覽器限制");
+  }
+}
+function saveCloudCfg(){
+  state.cloud.formResponse = $("cfgFormResponse").value.trim();
+  state.cloud.entryJson = $("cfgEntryJson").value.trim();
+  state.cloud.entryNote = $("cfgEntryNote").value.trim();
+  localStorage.setItem(CLOUD_KEY, JSON.stringify(state.cloud, null, 2));
+  updatePills();
+  toast("已保存設定");
+  cloudLog("已保存雲端設定。");
+}
+function resetCloudCfg(){
+  if(!confirm("確定清除雲端設定？清除後就不能一鍵備份，直到你再填一次。")) return;
+  state.cloud = {formResponse:"", entryJson:"", entryNote:""};
+  localStorage.removeItem(CLOUD_KEY);
+  $("cfgFormResponse").value = "";
+  $("cfgEntryJson").value = "";
+  $("cfgEntryNote").value = "";
+  updatePills();
+  toast("已清除");
+  cloudLog("已清除雲端設定。");
+}
+
+/* ---------- local export/import ---------- */
+function exportJSON(){
+  saveAll();
+  const blob = new Blob([JSON.stringify({data:state.data, cloud:state.cloud}, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `angel-studio-full-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("已匯出 JSON");
+}
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      if(obj?.data){
+        state.data = {...state.data, ...obj.data};
+        state.data.create = {...state.data.create, ...(obj.data.create||{})};
+        state.data.promoDraft = {...state.data.promoDraft, ...(obj.data.promoDraft||{})};
+        state.data.publishDraft = {...state.data.publishDraft, ...(obj.data.publishDraft||{})};
+      }
+      if(obj?.cloud){
+        state.cloud = {...state.cloud, ...obj.cloud};
+        localStorage.setItem(CLOUD_KEY, JSON.stringify(state.cloud, null, 2));
+      }
+      saveAll();
+      render();
+      toast("已匯入完成");
+    }catch(e){
+      alert("JSON 解析失敗：" + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- icon generator ---------- */
+function drawIcon(size){
+  const canvas=document.createElement("canvas");
+  canvas.width=canvas.height=size;
+  const ctx=canvas.getContext("2d");
+
+  const grad=ctx.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,"#0b3d2e");
+  grad.addColorStop(1,"#082f24");
+  ctx.fillStyle=grad; ctx.fillRect(0,0,size,size);
+
+  ctx.fillStyle="rgba(240,160,75,.35)";
+  ctx.beginPath(); ctx.arc(size*0.35,size*0.28,size*0.32,0,Math.PI*2); ctx.fill();
+
+  ctx.fillStyle="rgba(255,255,255,.92)";
+  ctx.beginPath();
+  ctx.moveTo(size*0.22,size*0.62);
+  ctx.quadraticCurveTo(size*0.35,size*0.36,size*0.56,size*0.38);
+  ctx.quadraticCurveTo(size*0.42,size*0.44,size*0.35,size*0.58);
+  ctx.quadraticCurveTo(size*0.55,size*0.52,size*0.74,size*0.40);
+  ctx.quadraticCurveTo(size*0.62,size*0.60,size*0.44,size*0.68);
+  ctx.quadraticCurveTo(size*0.33,size*0.73,size*0.22,size*0.62);
+  ctx.fill();
+
+  ctx.fillStyle="#f0a04b";
+  ctx.beginPath(); ctx.arc(size*0.72,size*0.28,size*0.06,0,Math.PI*2); ctx.fill();
+
+  ctx.fillStyle="rgba(255,255,255,.90)";
+  ctx.font = `900 ${Math.round(size*0.10)}px system-ui, -apple-system, "Noto Sans TC"`;
+  ctx.textAlign="center";
+  ctx.fillText("天使笑長", size*0.50, size*0.90);
+
+  return canvas;
+}
+function downloadCanvas(canvas, filename){
+  canvas.toBlob((blob)=>{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=filename;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+  },"image/png");
+}
+
+/* ---------- render tabs ---------- */
+function renderTabs(){
+  const tabs=$("tabs");
+  tabs.innerHTML="";
+  TAB_ITEMS.forEach(t=>{
+    const el=document.createElement("div");
+    el.className="tab"+(state.tab===t.key?" active":"");
+    el.textContent=t.name;
+    el.onclick=()=>{ state.tab=t.key; render(); renderTabs(); };
+    tabs.appendChild(el);
+  });
+}
+
+/* ---------- materials (素材庫) ---------- */
+function renderMaterials(){
+  const q=(state.filters.materialsQuery||"").trim().toLowerCase();
+  let items=state.data.materials.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.title} ${x.scene} ${x.feel} ${x.insight} ${x.tool} ${x.series}`.toLowerCase();
+      return blob.includes(q);
     });
   }
 
-  ["change","input"].forEach(evt=>{
-    qEls.series.addEventListener(evt, filterQuick);
-    qEls.kind.addEventListener(evt, filterQuick);
-    qEls.style.addEventListener(evt, filterQuick);
-    qEls.cat.addEventListener(evt, filterQuick);
-    qEls.q.addEventListener(evt, filterQuick);
-  });
-  filterQuick();
-
-  // Ctrl+S quick save
-  window.onkeydown = (e)=>{
-    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="s"){
-      e.preventDefault();
-      sync();
-      saveAll();
-      toast("已保存");
-    }
+  const draft = state._materialDraft || {
+    id:"",
+    title:"",
+    scene:"",
+    feel:"",
+    insight:"",
+    tool:"",
+    series:"幸福教養"
   };
-}
-
-/* =========================
-   Materials
-   ========================= */
-function renderMaterials(){
-  const q = state.filters.materialQuery.trim();
-  const arr = (state.data.materials||[]).filter(x=>matchesQuery(x, q, ["title","type","note","links","tags"])).slice().reverse();
 
   return `
   <div class="grid">
-    <section class="card">
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>素材庫</h2>
-          <div class="hint">存放：素材名稱、用途、連結、備註。可複製/載入到創作區。</div>
+          <p class="title">📚 素材庫（生命故事）</p>
+          <p class="hint">素材不是稿件，是「源頭」。先存真實場景，之後一鍵轉成創作素材。</p>
         </div>
-        <div class="btns">
-          <button class="btn ghost" id="m_clear">清空輸入</button>
-          <button class="btn ok" id="m_save">保存素材</button>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="field">
-          <label>素材名稱</label>
-          <input id="m_title" placeholder="例如：零用錢練功房｜說明頁" />
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label>用途/類型</label>
-            <input id="m_type" placeholder="例如：PWA／說明頁／表單" />
-          </div>
-          <div class="field">
-            <label>Tags</label>
-            <input id="m_tags" placeholder="#幸福教養 #工具" />
-          </div>
-        </div>
-        <div class="field">
-          <label>連結</label>
-          <textarea id="m_links" style="min-height:90px" placeholder="貼上網址…"></textarea>
-        </div>
-        <div class="field">
-          <label>備註</label>
-          <textarea id="m_note" style="min-height:90px" placeholder="例如：要放在影片描述最上面…"></textarea>
+        <div class="kbar">
+          <button id="btnMatSave" class="ok">${draft.id ? "覆蓋保存" : "保存素材"}</button>
+          <button id="btnMatClear" class="ghost">清空表單</button>
         </div>
       </div>
-    </section>
 
-    <aside class="card">
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>素材標題（建議一句話命名）</label>
+            <input id="m_title" value="${escapeHtml(draft.title)}" placeholder="例如：超市裡談零用錢價碼：孩子的『等一下』">
+          </div>
+          <div>
+            <label>關聯系列</label>
+            <select id="m_series">
+              ${SERIES.map(s=>`<option ${s===draft.series?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>生命場景（事情怎麼發生的）</label>
+            <textarea id="m_scene" placeholder="例如：放學後去超市…">${escapeHtml(draft.scene)}</textarea>
+          </div>
+          <div>
+            <label>當下感受（你/孩子的狀態）</label>
+            <textarea id="m_feel" placeholder="例如：我有點緊張、孩子想要但拉不住…">${escapeHtml(draft.feel)}</textarea>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>你想傳達的洞見（你學到什麼）</label>
+            <textarea id="m_insight" placeholder="例如：不是管住孩子，是陪他把剎車系統裝好…">${escapeHtml(draft.insight)}</textarea>
+          </div>
+          <div>
+            <label>關聯工具/作品（可選）</label>
+            <textarea id="m_tool" style="min-height:120px" placeholder="例如：零用錢練功房連結、某支影片、某個課程">${escapeHtml(draft.tool)}</textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnMatToCreate" class="primary">➡️ 一鍵帶入創作區（當正文素材）</button>
+          <button id="btnMatCopy" >複製此素材</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>素材清單</h2>
-          <div class="hint">搜尋、複製、載入到創作區</div>
+          <p class="title">🗂 素材搜尋與管理</p>
+          <p class="hint">可搜尋標題/場景/感受/洞見/工具。點「編輯」即可回填到上方表單。</p>
         </div>
       </div>
       <div class="bd">
-        <div class="field">
-          <label>搜尋</label>
-          <input id="m_q" value="${esc(state.filters.materialQuery)}" placeholder="關鍵字" />
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="m_query" value="${escapeHtml(state.filters.materialsQuery||"")}" placeholder="例如：超市 / 零用錢 / 等一下">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            小技巧：你寫故事時先丟素材庫，之後再用創作區產出口說稿/書稿。
+          </div>
         </div>
-        <div class="list" id="m_list">
-          ${arr.length? arr.map(x=>`
-            <div class="item" data-id="${x.id}">
-              <div class="t">
-                <strong>${esc(x.title||"(未命名)")}</strong>
-                <span class="pill">${esc(x.type||"")}</span>
-              </div>
-              <div class="meta">${esc((x.tags||"")+"")}</div>
-              <div class="actions">
-                <button class="btn ghost btnMCopy">複製</button>
-                <button class="btn ok btnMLoad">載入到創作區(連結)</button>
-                <button class="btn danger btnMDel">刪除</button>
-              </div>
-            </div>
-          `).join("") : `<div class="small">尚無素材或沒有符合搜尋。</div>`}
+
+        <div class="divider"></div>
+
+        <div class="list" id="matList">
+          ${items.length===0 ? `<div class="small">目前沒有素材。先在左側新增一筆吧。</div>` : items.map(renderMaterialItem).join("")}
         </div>
       </div>
-    </aside>
-  </div>
+    </div>
+  </div>`;
+}
+function renderMaterialItem(x){
+  const time = fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名素材)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnMatEdit">編輯</button>
+          <button class="btnMatUse primary">帶入創作</button>
+          <button class="btnMatDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.scene||"").slice(0, 360))}${(x.scene||"").length>360?"…":""}</div>
+    </div>
   `;
 }
 
-function bindMaterials(){
-  $("m_q").oninput=(e)=>{ state.filters.materialQuery=e.target.value; render(); };
-
-  $("m_clear").onclick=()=>{
-    ["m_title","m_type","m_tags","m_links","m_note"].forEach(id=>$(id).value="");
-    toast("已清空");
-  };
-
-  $("m_save").onclick=()=>{
-    const item = {
-      id: uid(),
-      title: $("m_title").value.trim() || "(未命名素材)",
-      type: $("m_type").value.trim(),
-      tags: $("m_tags").value.trim(),
-      links: $("m_links").value || "",
-      note: $("m_note").value || "",
-      createdAt: nowISO(),
-      updatedAt: nowISO()
-    };
-    state.data.materials.push(item);
-    saveAll();
-    render();
-    toast("已保存素材");
-  };
-
-  document.querySelectorAll("#m_list .item").forEach(el=>{
-    const id = el.getAttribute("data-id");
-    const item = state.data.materials.find(x=>x.id===id);
-    if(!item) return;
-
-    el.querySelector(".btnMCopy").onclick=()=>{
-      const txt = [
-        `【素材】${item.title}`,
-        `【類型】${item.type||""}`,
-        "",
-        "【連結】",
-        item.links||"",
-        "",
-        "【備註】",
-        item.note||"",
-        "",
-        "【Tags】",
-        item.tags||""
-      ].join("\n");
-      copyText(txt);
-    };
-
-    el.querySelector(".btnMLoad").onclick=()=>{
-      state.data.draft.links = (state.data.draft.links||"").trim()
-        ? (state.data.draft.links.trim()+"\n"+(item.links||""))
-        : (item.links||"");
-      saveAll();
-      toast("已載入到創作區連結");
-    };
-
-    el.querySelector(".btnMDel").onclick=()=>{
-      if(!confirm("刪除這筆素材？")) return;
-      state.data.materials = state.data.materials.filter(x=>x.id!==id);
-      saveAll();
-      render();
-      toast("已刪除");
-    };
-  });
-}
-
-/* =========================
-   Promos
-   ========================= */
-function renderPromos(){
-  const q = state.filters.promoQuery.trim();
-  const arr = (state.data.promos||[]).filter(x=>matchesQuery(x, q, ["title","platform","series","tool","body","tags","links","cta"])).slice().reverse();
-
-  const d = state.data.draft;
+/* ---------- create (創作區) ---------- */
+function renderCreate(){
+  const c=state.data.create;
+  c.prompt = buildCreatePrompt();
+  const linked = c.linkMaterialId ? state.data.materials.find(m=>m.id===c.linkMaterialId) : null;
 
   return `
   <div class="grid">
-    <section class="card">
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>文宣庫｜貼文/短介紹/活動文案</h2>
-          <div class="hint">保存可重用的文宣：FB/IG/Threads… 一鍵複製整包。</div>
+          <p class="title">✍️ 創作區（書稿 / 口說稿 / 課程 / 打包）</p>
+          <p class="hint">先貼原文/素材 → 複製咒語包（含分流）→ 讓 AI 產出 → 再貼回來 → 可存成「完稿」。</p>
+          ${linked ? `<div class="small">已連結素材：<code class="inline">${escapeHtml(linked.title)}</code></div>` : ``}
         </div>
-        <div class="btns">
-          <button class="btn ghost" id="p_fillFromCreate">從創作區帶入</button>
-          <button class="btn ghost" id="p_clear">清空輸入</button>
-          <button class="btn ok" id="p_save">保存文宣</button>
+        <div class="kbar">
+          <button id="btnCreateCopyAll">複製全部</button>
+          <button id="btnCreateSaveFinal" class="ok">存成完稿</button>
         </div>
       </div>
-      <div class="bd">
-        <div class="row2">
-          <div class="field">
-            <label>文宣標題</label>
-            <input id="p_title" placeholder="例如：零用錢練功房｜延遲選擇訓練" />
-          </div>
-          <div class="field">
-            <label>平台</label>
-            <input id="p_platform" placeholder="FB（長文）/ IG / Threads" />
-          </div>
-        </div>
 
-        <div class="row2">
-          <div class="field">
+      <div class="bd">
+        <div class="row three">
+          <div>
             <label>系列</label>
-            <input id="p_series" placeholder="幸福教養/詩詞人生…" />
+            <select id="c_series">${SERIES.map(s=>`<option ${s===c.series?"selected":""}>${s}</option>`).join("")}</select>
           </div>
-          <div class="field">
-            <label>工具/專案</label>
-            <input id="p_tool" placeholder="幸福教養｜零用錢練功房" />
+          <div>
+            <label>用途（文稿分流）</label>
+            <select id="c_purpose">${PURPOSE.map(s=>`<option ${s===c.purpose?"selected":""}>${s}</option>`).join("")}</select>
           </div>
-        </div>
-
-        <div class="field">
-          <label>連結</label>
-          <textarea id="p_links" style="min-height:90px" placeholder="貼上主頁 / 工具 / 表單"></textarea>
-        </div>
-
-        <div class="field">
-          <label>Hashtags</label>
-          <input id="p_tags" placeholder="#幸福教養 #天使笑長" />
-        </div>
-
-        <div class="field">
-          <label>文宣內容</label>
-          <textarea id="p_body" placeholder="貼文內容…"></textarea>
-        </div>
-
-        <div class="field">
-          <label>CTA / 互動引導</label>
-          <textarea id="p_cta" style="min-height:90px" placeholder="例如：留言：理智隊長報到！"></textarea>
-        </div>
-      </div>
-    </section>
-
-    <aside class="card">
-      <div class="hd">
-        <div>
-          <h2>文宣清單</h2>
-          <div class="hint">搜尋、載入、複製、刪除</div>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="field">
-          <label>搜尋</label>
-          <input id="p_q" value="${esc(state.filters.promoQuery)}" placeholder="關鍵字" />
-        </div>
-        <div class="list" id="p_list">
-          ${arr.length? arr.map(x=>`
-            <div class="item" data-id="${x.id}">
-              <div class="t">
-                <strong>${esc(x.title||"(未命名)")}</strong>
-                <span class="pill">${esc(x.platform||"")}</span>
-              </div>
-              <div class="meta">${esc([x.series, x.tool].filter(Boolean).join("｜"))}</div>
-              <div class="actions">
-                <button class="btn ghost btnPCopy">複製整包</button>
-                <button class="btn ok btnPLoad">載入到表單</button>
-                <button class="btn danger btnPDel">刪除</button>
-              </div>
-            </div>
-          `).join("") : `<div class="small">尚無文宣或沒有符合搜尋。</div>`}
-        </div>
-      </div>
-    </aside>
-  </div>
-  `;
-}
-
-function bindPromos(){
-  $("p_q").oninput=(e)=>{ state.filters.promoQuery=e.target.value; render(); };
-
-  $("p_clear").onclick=()=>{
-    ["p_title","p_platform","p_series","p_tool","p_links","p_tags","p_body","p_cta"].forEach(id=>$(id).value="");
-    toast("已清空");
-  };
-
-  $("p_fillFromCreate").onclick=()=>{
-    const d = state.data.draft;
-    $("p_series").value = d.series||"";
-    $("p_tool").value = d.tool||"";
-    $("p_platform").value = d.platform||"";
-    $("p_links").value = d.links||"";
-    $("p_tags").value = d.hashtags||"";
-    $("p_title").value = inferTitleFromContent() || d.title || "";
-    $("p_body").value = short100(d.content||d.prompt||"");
-    $("p_cta").value = "留言：「理智隊長報到！」一起交流";
-    toast("已帶入");
-  };
-
-  $("p_save").onclick=()=>{
-    const item = {
-      id: uid(),
-      title: $("p_title").value.trim() || "(未命名文宣)",
-      platform: $("p_platform").value.trim(),
-      series: $("p_series").value.trim(),
-      tool: $("p_tool").value.trim(),
-      links: $("p_links").value || "",
-      tags: $("p_tags").value.trim(),
-      body: $("p_body").value || "",
-      cta: $("p_cta").value || "",
-      createdAt: nowISO(),
-      updatedAt: nowISO()
-    };
-    state.data.promos.push(item);
-    saveAll();
-    render();
-    toast("已保存文宣");
-  };
-
-  document.querySelectorAll("#p_list .item").forEach(el=>{
-    const id = el.getAttribute("data-id");
-    const item = state.data.promos.find(x=>x.id===id);
-    if(!item) return;
-
-    el.querySelector(".btnPCopy").onclick=()=>{
-      const txt=[
-        `【標題】${item.title}`,
-        `【工具/專案】${item.tool||""}`,
-        `【系列】${item.series||""}`,
-        `【平台】${item.platform||""}`,
-        "",
-        "【連結】",
-        item.links||"",
-        "",
-        "【Hashtags】",
-        item.tags||"",
-        "",
-        "【文宣內容】",
-        item.body||"",
-        "",
-        "【互動/CTA】",
-        item.cta||""
-      ].join("\n");
-      copyText(txt);
-    };
-
-    el.querySelector(".btnPLoad").onclick=()=>{
-      $("p_title").value = item.title||"";
-      $("p_platform").value = item.platform||"";
-      $("p_series").value = item.series||"";
-      $("p_tool").value = item.tool||"";
-      $("p_links").value = item.links||"";
-      $("p_tags").value = item.tags||"";
-      $("p_body").value = item.body||"";
-      $("p_cta").value = item.cta||"";
-      toast("已載入");
-    };
-
-    el.querySelector(".btnPDel").onclick=()=>{
-      if(!confirm("刪除這筆文宣？")) return;
-      state.data.promos = state.data.promos.filter(x=>x.id!==id);
-      saveAll();
-      render();
-      toast("已刪除");
-    };
-  });
-}
-
-/* =========================
-   Publish pack
-   ========================= */
-function renderPublish(){
-  const d = state.data.publishDraft;
-  const q = state.filters.publishQuery.trim();
-  const arr = (state.data.publishes||[]).filter(x=>matchesQuery(x, q, ["title","intro","hashtags","toolLinks","notes","date"])).slice().reverse();
-
-  return `
-  <div class="grid">
-    <section class="card">
-      <div class="hd">
-        <div>
-          <h2>發片打包｜描述、hashtags、工具連結一次到位</h2>
-          <div class="hint">你可以直接複製貼上 YouTube 描述欄；也能保存成打包模板。</div>
-        </div>
-        <div class="btns">
-          <button class="btn ghost" id="pb_clear">清空</button>
-          <button class="btn ghost" id="pb_copy">複製打包</button>
-          <button class="btn ok" id="pb_save">保存打包</button>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="row2">
-          <div class="field" style="flex:1.2">
-            <label>影片標題</label>
-            <input id="pb_title" value="${esc(d.title)}" placeholder="會從一鍵轉打包自動填，也可手改" />
+          <div>
+            <label>主題</label>
+            <input id="c_topic" value="${escapeHtml(c.topic)}" placeholder="例如：無欲則剛｜零用錢練功房">
           </div>
-          <div class="field" style="flex:.8">
-            <label>日期（可空）</label>
-            <input id="pb_date" value="${esc(d.date)}" placeholder="2026-01-04" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>影片介紹（100 字自動截斷可手改）</label>
-          <textarea id="pb_intro" style="min-height:120px">${esc(d.intro)}</textarea>
-        </div>
-
-        <div class="field">
-          <label>Hashtags</label>
-          <input id="pb_tags" value="${esc(d.hashtags)}" />
-        </div>
-
-        <div class="field">
-          <label>工具/連結（主頁 / PWA / 表單…）</label>
-          <textarea id="pb_links" style="min-height:120px">${esc(d.toolLinks)}</textarea>
-        </div>
-
-        <div class="field">
-          <label>備註（不一定要貼到描述欄，可當內部提示）</label>
-          <textarea id="pb_notes" style="min-height:120px">${esc(d.notes)}</textarea>
-        </div>
-
-        <div class="small">小提醒：你也可以回到「創作區」按 <strong>一鍵轉成發片打包</strong>，它會自動填標題、100字介紹、hashtags、工具連結。</div>
-      </div>
-    </section>
-
-    <aside class="card">
-      <div class="hd">
-        <div>
-          <h2>打包清單</h2>
-          <div class="hint">載入 / 複製 / 刪除</div>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="field">
-          <label>搜尋</label>
-          <input id="pb_q" value="${esc(state.filters.publishQuery)}" placeholder="關鍵字" />
-        </div>
-        <div class="list" id="pb_list">
-          ${arr.length? arr.map(x=>`
-            <div class="item" data-id="${x.id}">
-              <div class="t">
-                <strong>${esc(x.title||"(未命名打包)")}</strong>
-                <span class="pill">${esc(x.date||"")}</span>
-              </div>
-              <div class="meta">${esc(short100(x.intro||""))}</div>
-              <div class="actions">
-                <button class="btn ghost btnPBLoad">載入</button>
-                <button class="btn ok btnPBCopy">複製</button>
-                <button class="btn danger btnPBDel">刪除</button>
-              </div>
-            </div>
-          `).join("") : `<div class="small">尚無打包或沒有符合搜尋。</div>`}
-        </div>
-      </div>
-    </aside>
-  </div>
-  `;
-}
-
-function bindPublish(){
-  $("pb_q").oninput=(e)=>{ state.filters.publishQuery=e.target.value; render(); };
-
-  const d = state.data.publishDraft;
-
-  ["pb_title","pb_date","pb_intro","pb_tags","pb_links","pb_notes"].forEach(id=>{
-    $(id).oninput = (e)=>{
-      if(id==="pb_title") d.title=e.target.value;
-      if(id==="pb_date") d.date=e.target.value;
-      if(id==="pb_intro") d.intro=e.target.value;
-      if(id==="pb_tags") d.hashtags=e.target.value;
-      if(id==="pb_links") d.toolLinks=e.target.value;
-      if(id==="pb_notes") d.notes=e.target.value;
-    };
-  });
-
-  $("pb_clear").onclick=()=>{
-    state.data.publishDraft = { title:"", date:"", intro:"", hashtags: state.data.settings.defaultHashtags, toolLinks: state.data.settings.defaultToolLinks, notes:"" };
-    saveAll();
-    render();
-    toast("已清空");
-  };
-
-  $("pb_copy").onclick=()=>{
-    const txt=[
-      `【影片標題】${d.title||""}`,
-      d.date ? `【日期】${d.date}` : "",
-      "",
-      "【影片介紹】",
-      d.intro||"",
-      "",
-      "【Hashtags】",
-      d.hashtags||"",
-      "",
-      "【工具/連結】",
-      d.toolLinks||"",
-      d.notes ? ("\n【備註】\n"+(d.notes||"")) : ""
-    ].filter(Boolean).join("\n");
-    copyText(txt);
-  };
-
-  $("pb_save").onclick=()=>{
-    const item={
-      id: uid(),
-      title: (d.title||"").trim() || "(未命名打包)",
-      date: (d.date||"").trim(),
-      intro: d.intro||"",
-      hashtags: d.hashtags||"",
-      toolLinks: d.toolLinks||"",
-      notes: d.notes||"",
-      createdAt: nowISO(),
-      updatedAt: nowISO()
-    };
-    state.data.publishes.push(item);
-    saveAll();
-    render();
-    toast("已保存打包");
-  };
-
-  document.querySelectorAll("#pb_list .item").forEach(el=>{
-    const id=el.getAttribute("data-id");
-    const item=state.data.publishes.find(x=>x.id===id);
-    if(!item) return;
-
-    el.querySelector(".btnPBLoad").onclick=()=>{
-      state.data.publishDraft = {
-        title: item.title||"",
-        date: item.date||"",
-        intro: item.intro||"",
-        hashtags: item.hashtags||state.data.settings.defaultHashtags,
-        toolLinks: item.toolLinks||state.data.settings.defaultToolLinks,
-        notes: item.notes||""
-      };
-      saveAll();
-      render();
-      toast("已載入");
-    };
-
-    el.querySelector(".btnPBCopy").onclick=()=>{
-      const txt=[
-        `【影片標題】${item.title||""}`,
-        item.date ? `【日期】${item.date}` : "",
-        "",
-        "【影片介紹】",
-        item.intro||"",
-        "",
-        "【Hashtags】",
-        item.hashtags||"",
-        "",
-        "【工具/連結】",
-        item.toolLinks||"",
-        item.notes ? ("\n【備註】\n"+(item.notes||"")) : ""
-      ].filter(Boolean).join("\n");
-      copyText(txt);
-    };
-
-    el.querySelector(".btnPBDel").onclick=()=>{
-      if(!confirm("刪除這筆打包？")) return;
-      state.data.publishes = state.data.publishes.filter(x=>x.id!==id);
-      saveAll();
-      render();
-      toast("已刪除");
-    };
-  });
-}
-
-/* =========================
-   Spells（分流）
-   ========================= */
-function renderSpells(){
-  const facets = buildSpellsFacet();
-
-  // 修正：若篩選值不存在，就回到「全部」
-  if(!facets.series.includes(state.filters.spellsSeries)) state.filters.spellsSeries="全部";
-  if(!facets.kind.includes(state.filters.spellsKind)) state.filters.spellsKind="全部";
-  if(!facets.style.includes(state.filters.spellsStyle)) state.filters.spellsStyle="全部";
-  if(!facets.category.includes(state.filters.spellsCategory)) state.filters.spellsCategory="全部";
-
-  const q = (state.filters.spellsQuery||"").trim();
-  const arr = (state.data.spells||[]).filter(x=>{
-    const s=state.filters.spellsSeries, k=state.filters.spellsKind, st=state.filters.spellsStyle, c=state.filters.spellsCategory;
-    if(s!=="全部" && (x.series||"未分類")!==s) return false;
-    if(k!=="全部" && (x.kind||"未分類")!==k) return false;
-    if(st!=="全部" && (x.style||"未分類")!==st) return false;
-    if(c!=="全部" && (x.category||"未分類")!==c) return false;
-    if(q && !matchesQuery(x, q, ["title","content","category","style","kind","series"])) return false;
-    return true;
-  }).slice().reverse();
-
-  const d = state.spellDraft;
-
-  return `
-  <div class="grid">
-    <section class="card">
-      <div class="hd">
-        <div>
-          <h2>咒語庫｜分流管理</h2>
-          <div class="hint">分流維度：系列 / 種類 / 風格 / 類別。可複製、載入編輯、插入創作區。</div>
-        </div>
-        <div class="btns">
-          <button class="btn ghost" id="s_clear">清空輸入</button>
-          <button class="btn ghost" id="s_copy">複製咒語</button>
-          <button class="btn ok" id="s_save">保存咒語</button>
-        </div>
-      </div>
-      <div class="bd">
-        <div class="row2">
-          <div class="field">
-            <label>標題</label>
-            <input id="s_title" value="${esc(d.title)}" placeholder="例如：水彩插畫｜車內對話（16:9）" />
-          </div>
-          <div class="field">
-            <label>系列</label>
-            <select id="s_series">
-              ${["幸福教養","詩詞人生","幸福關係","幸福小腦袋","其他"].map(x=>`<option ${d.series===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-        </div>
-
-        <div class="row2">
-          <div class="field">
-            <label>種類（分流）</label>
-            <select id="s_kind">
-              ${["插畫咒語","文案咒語","口說稿咒語","封面咒語","其他"].map(x=>`<option ${d.kind===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>風格（分流）</label>
-            <select id="s_style">
-              ${["水彩插畫","寫實電影感","繪本風","簡報風","口說稿","其他"].map(x=>`<option ${d.style===x?"selected":""}>${x}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>類別（分流）</label>
-            <input id="s_cat" value="${esc(d.category)}" placeholder="例如：車內對話/超市情境/前額葉/Hook+CTA" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>咒語內容</label>
-          <textarea id="s_content" placeholder="貼上完整咒語…">${esc(d.content)}</textarea>
         </div>
 
         <div class="row">
-          <button class="btn ghost" id="s_toCreatePrompt">插入到創作區 Prompt</button>
-          <button class="btn ghost" id="s_toCreateContent">插入到創作區 完稿</button>
+          <div>
+            <label>✅ 咒語分流（同用途不同模板/強度）</label>
+            <select id="c_route">${SPELL_ROUTE.map(r=>`<option ${r===c.spellRoute?"selected":""}>${escapeHtml(r)}</option>`).join("")}</select>
+            <div class="noteCard" style="margin-top:8px">
+              你要「保留原架構」：用途分流不動（書稿/口說稿/課程…），只是多一層「咒語分流」讓你同一份素材可以走不同強度：故事更完整 / 腦科學更細 / 工具更落地。
+            </div>
+          </div>
         </div>
 
-        <div class="small" style="margin-top:10px">
-          小技巧：你可以用「類別」把咒語分得更細（例如：車內、超市、情緒急救、前額葉…），之後用右側篩選一秒找回來。
+        <div class="sectionSep"></div>
+
+        <div class="row">
+          <div>
+            <label>原文/素材（故事全文、書稿段落、影片正文）</label>
+            <textarea id="c_body" placeholder="貼進來...">${escapeHtml(c.body)}</textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>🪄 協作提示（咒語包）</label>
+            <textarea id="c_prompt" readonly>${escapeHtml(c.prompt)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnCreateCopyPrompt">複製咒語包</button>
+              <button id="btnCreateSaveSpell" class="primary">收藏成咒語</button>
+            </div>
+          </div>
+
+          <div>
+            <label>🧩 產出區（AI 生成後貼回來）</label>
+            <textarea id="c_output" placeholder="把 AI 產出貼在這裡...">${escapeHtml(c.output)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnCreateCopyOut">複製產出</button>
+              <button id="btnCreateClearOut" class="danger">清空產出</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="small">
+          小提醒：若你要做「發片打包」，請到「發片打包」分頁建立一筆（之後可複用）。<br>
+          ✅【新動線】你也可以：完稿庫 → 一鍵打包 → 自動填好標題/100字介紹/hashtags/工具連結。
         </div>
       </div>
-    </section>
+    </div>
 
-    <aside class="card">
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>咒語清單（分流篩選）</h2>
-          <div class="hint">篩選後只顯示符合分流的咒語</div>
+          <p class="title">🧭 快捷</p>
+          <p class="hint">常用動線：素材庫 → 創作區 → 完稿庫 → 發片打包/文宣庫 → 雲端備份</p>
         </div>
       </div>
       <div class="bd">
-        <div class="row2">
-          <div class="field">
-            <label>系列</label>
-            <select id="sf_series">${facets.series.map(x=>`<option ${state.filters.spellsSeries===x?"selected":""}>${x}</option>`).join("")}</select>
-          </div>
-          <div class="field">
-            <label>種類</label>
-            <select id="sf_kind">${facets.kind.map(x=>`<option ${state.filters.spellsKind===x?"selected":""}>${x}</option>`).join("")}</select>
-          </div>
+        <div class="kbar">
+          <button id="btnGoMaterials">回素材庫</button>
+          <button id="btnGoFinals">去完稿庫</button>
+          <button id="btnGoPromo">去文宣庫</button>
+          <button id="btnGoPublish">去發片打包</button>
         </div>
-        <div class="row2">
-          <div class="field">
-            <label>風格</label>
-            <select id="sf_style">${facets.style.map(x=>`<option ${state.filters.spellsStyle===x?"selected":""}>${x}</option>`).join("")}</select>
-          </div>
-          <div class="field">
-            <label>類別</label>
-            <select id="sf_cat">${facets.category.map(x=>`<option ${state.filters.spellsCategory===x?"selected":""}>${x}</option>`).join("")}</select>
-          </div>
-        </div>
-        <div class="field">
-          <label>搜尋</label>
-          <input id="sf_q" value="${esc(state.filters.spellsQuery)}" placeholder="關鍵字（標題/內容）" />
-        </div>
-
-        <div class="list" id="s_list">
-          ${arr.length ? arr.map(x=>`
-            <div class="item" data-id="${x.id}">
-              <div class="t">
-                <strong>${esc(x.title||"(未命名)")}</strong>
-                <span class="pill">${esc(x.series||"")}</span>
-              </div>
-              <div class="meta">${esc([x.kind,x.style,x.category].filter(Boolean).join("｜"))}</div>
-              <div class="actions">
-                <button class="btn ghost btnSCopy">複製</button>
-                <button class="btn ok btnSEdit">編輯</button>
-                <button class="btn ghost btnSInsertPrompt">插入Prompt</button>
-                <button class="btn danger btnSDel">刪除</button>
-              </div>
-            </div>
-          `).join("") : `<div class="small">沒有符合的咒語。</div>`}
+        <div class="divider"></div>
+        <div class="small">
+          ✅ 要避免換手機消失：請定期按 <code class="inline">📦 匯出 JSON</code>，或用 <code class="inline">☁️ 一鍵雲端備份</code>。
         </div>
       </div>
-    </aside>
-  </div>
-  `;
+    </div>
+  </div>`;
 }
 
-function bindSpells(){
-  // filters
-  $("sf_series").onchange=(e)=>{ state.filters.spellsSeries=e.target.value; render(); };
-  $("sf_kind").onchange=(e)=>{ state.filters.spellsKind=e.target.value; render(); };
-  $("sf_style").onchange=(e)=>{ state.filters.spellsStyle=e.target.value; render(); };
-  $("sf_cat").onchange=(e)=>{ state.filters.spellsCategory=e.target.value; render(); };
-  $("sf_q").oninput=(e)=>{ state.filters.spellsQuery=e.target.value; render(); };
-
-  // draft inputs
-  const d = state.spellDraft;
-
-  ["s_title","s_series","s_kind","s_style","s_cat","s_content"].forEach(id=>{
-    $(id).oninput=(e)=>{
-      if(id==="s_title") d.title=e.target.value;
-      if(id==="s_series") d.series=e.target.value;
-      if(id==="s_kind") d.kind=e.target.value;
-      if(id==="s_style") d.style=e.target.value;
-      if(id==="s_cat") d.category=e.target.value;
-      if(id==="s_content") d.content=e.target.value;
-    };
-    $(id).onchange=(e)=>$(id).oninput(e);
-  });
-
-  $("s_clear").onclick=()=>{
-    state.spellDraft = {id:"", title:"", series:"幸福教養", kind:"插畫咒語", style:"水彩插畫", category:"", content:""};
-    render();
-    toast("已清空");
-  };
-
-  $("s_copy").onclick=()=>{
-    copyText($("s_content").value || "");
-  };
-
-  $("s_save").onclick=()=>{
-    const obj = {
-      id: d.id || uid(),
-      title: ($("s_title").value||"").trim() || "(未命名咒語)",
-      series: $("s_series").value || "其他",
-      kind: $("s_kind").value || "其他",
-      style: $("s_style").value || "其他",
-      category: ($("s_cat").value||"").trim() || "未分類",
-      content: $("s_content").value || "",
-      createdAt: d.id ? (d.createdAt || nowISO()) : nowISO(),
-      updatedAt: nowISO()
-    };
-
-    if(d.id){
-      state.data.spells = state.data.spells.map(x=> x.id===d.id ? {...x, ...obj} : x);
-    }else{
-      state.data.spells.push(obj);
-    }
-    state.spellDraft = {...obj};
-    saveAll();
-    render();
-    toast(d.id ? "已覆蓋保存" : "已保存咒語");
-  };
-
-  // insert to create
-  function insertToCreate(field){
-    const content = $("s_content").value || "";
-    if(!content.trim()) return toast("咒語內容是空的");
-    const d2 = state.data.draft;
-    if(field==="prompt"){
-      d2.prompt = (d2.prompt||"").trim()
-        ? (d2.prompt.trim()+"\n\n"+content)
-        : content;
-    }else{
-      d2.content = (d2.content||"").trim()
-        ? (d2.content.trim()+"\n\n"+content)
-        : content;
-    }
-    saveAll();
-    toast("已插入創作區");
+/* ---------- finals (完稿庫) ---------- */
+function renderFinals(){
+  const q=(state.filters.finalsQuery||"").trim().toLowerCase();
+  let items=state.data.finals.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.series} ${x.purpose} ${x.spellRoute||""} ${x.topic} ${x.body} ${x.output}`.toLowerCase();
+      return blob.includes(q);
+    });
   }
-
-  $("s_toCreatePrompt").onclick=()=> insertToCreate("prompt");
-  $("s_toCreateContent").onclick=()=> insertToCreate("content");
-
-  // list actions
-  document.querySelectorAll("#s_list .item").forEach(el=>{
-    const id = el.getAttribute("data-id");
-    const item = state.data.spells.find(x=>x.id===id);
-    if(!item) return;
-
-    el.querySelector(".btnSCopy").onclick=()=> copyText(item.content||"");
-
-    el.querySelector(".btnSEdit").onclick=()=>{
-      state.spellDraft = {...item};
-      render();
-      toast("已載入可編輯");
-    };
-
-    el.querySelector(".btnSInsertPrompt").onclick=()=>{
-      const d2 = state.data.draft;
-      d2.prompt = (d2.prompt||"").trim()
-        ? (d2.prompt.trim()+"\n\n"+(item.content||""))
-        : (item.content||"");
-      saveAll();
-      toast("已插入 Prompt");
-      setTab("create");
-    };
-
-    el.querySelector(".btnSDel").onclick=()=>{
-      if(!confirm("刪除這筆咒語？")) return;
-      state.data.spells = state.data.spells.filter(x=>x.id!==id);
-      saveAll();
-      render();
-      toast("已刪除");
-    };
-  });
-}
-
-/* =========================
-   Backup
-   ========================= */
-function renderBackup(){
   return `
   <div class="grid">
-    <section class="card">
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>備份｜匯出/匯入（JSON）</h2>
-          <div class="hint">把整套資料（素材/文宣/打包/咒語/草稿）備份到檔案，或從檔案復原。</div>
+          <p class="title">✅ 完稿庫</p>
+          <p class="hint">把創作區的「產出」存進來，之後要改稿、要打包、要做文宣，都可以回來找。</p>
         </div>
-        <div class="btns">
-          <button class="btn ok" id="b_export">匯出備份檔</button>
-          <button class="btn ghost" id="b_importBtn">匯入備份檔</button>
-          <button class="btn danger" id="b_reset">重置全部資料</button>
+        <div class="kbar">
+          <button id="btnFinalsCopyAll">複製目前頁面清單（摘要）</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="f_query" value="${escapeHtml(state.filters.finalsQuery||"")}" placeholder="例如：無欲則剛 / 零用錢 / 等一下">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            ✅ 新增：每筆完稿都有「一鍵打包」→ 自動填發片打包表單。
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="finalList">
+          ${items.length===0 ? `<div class="small">目前沒有完稿。到「創作區」按「存成完稿」即可。</div>` : items.map(renderFinalItem).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🧩 快速操作</p>
+          <p class="hint">點「帶回創作」→ 你就能在創作區繼續改或再生成新版本。</p>
         </div>
       </div>
       <div class="bd">
         <div class="small">
-          <div>1) 匯出會下載一個 <span class="kbd">.json</span> 檔。</div>
-          <div>2) 匯入會用檔案內容覆蓋目前資料（建議先匯出留存）。</div>
+          ✅ 你要做「活動文宣」：從完稿抽亮點 → 去文宣庫生成 FB/IG/LINE/官網四版。<br>
+          ✅ 你要做「發片打包」：完稿庫點「一鍵打包」→ 直接去打包庫微調就能發。<br>
         </div>
-        <div class="mutedline"></div>
-        <details>
-          <summary>（可選）直接在這裡貼 JSON 匯入</summary>
-          <div class="field" style="margin-top:10px">
-            <label>JSON</label>
-            <textarea id="b_paste" class="mono" style="min-height:160px" placeholder='貼上整段 JSON…'></textarea>
-          </div>
-          <button class="btn ok" id="b_importPaste">用貼上內容匯入</button>
-        </details>
       </div>
-    </section>
+    </div>
+  </div>`;
+}
+function renderFinalItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.topic||"(未命名完稿)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">${escapeHtml(x.purpose||"")}</span>
+            ${x.spellRoute ? `<span class="badge">分流：${escapeHtml(x.spellRoute)}</span>` : ``}
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnFinalUse primary">帶回創作</button>
+          <button class="btnFinalPack ok">一鍵打包</button>
+          <button class="btnFinalCopy">複製</button>
+          <button class="btnFinalDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.output||"").slice(0, 520))}${(x.output||"").length>520?"…":""}</div>
+    </div>
+  `;
+}
 
-    <aside class="card">
+/* ---------- promo (文宣庫) ---------- */
+function renderPromo(){
+  const p=state.data.promoDraft;
+  p.prompt = buildPromoPrompt();
+
+  const q=(state.filters.promoQuery||"").trim().toLowerCase();
+  const filterTool=state.filters.promoTool||"全部";
+  const filterSeries=state.filters.promoSeries||"全部";
+  const filterType=state.filters.promoType||"全部";
+
+  let items=state.data.promos.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(filterTool!=="全部") items=items.filter(x=>x.tool===filterTool);
+  if(filterSeries!=="全部") items=items.filter(x=>x.series===filterSeries);
+  if(filterType!=="全部") items=items.filter(x=>x.type===filterType);
+  if(q){
+    items = items.filter(x=>{
+      const blob = `${x.tool} ${x.series} ${x.type} ${x.title} ${x.body} ${x.tags} ${x.links}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  const tools=Array.from(new Set(state.data.promos.map(x=>x.tool))).sort();
+
+  return `
+  <div class="grid">
+    <div class="card">
       <div class="hd">
         <div>
-          <h2>目前資料概況</h2>
-          <div class="hint">確認資料數量</div>
+          <p class="title">📣 文宣／推廣內容創作</p>
+          <p class="hint">建立可重用的宣傳資產：同一份素材一鍵變 FB/IG/LINE/官網四版。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnPromoSave" class="ok">保存到文宣庫</button>
+          <button id="btnPromoCopyAll">複製文宣（含咒語包）</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>關聯工具 / 專案</label>
+            <input id="p_tool" value="${escapeHtml(p.tool)}" placeholder="例如：幸福教養｜零用錢練功房">
+          </div>
+          <div>
+            <label>系列</label>
+            <select id="p_series">${SERIES.map(s=>`<option ${s===p.series?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+        </div>
+
+        <div class="row three">
+          <div>
+            <label>文宣用途</label>
+            <select id="p_type">${PROMO_TYPE.map(s=>`<option ${s===p.type?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>目標平台（主版本）</label>
+            <select id="p_platform">${PROMO_PLATFORM.map(s=>`<option ${s===p.platform?"selected":""}>${s}</option>`).join("")}</select>
+          </div>
+          <div>
+            <label>標題/主題</label>
+            <input id="p_title" value="${escapeHtml(p.title)}" placeholder="例如：零用錢練功房｜試用活動介紹文">
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>連結（可多行）</label>
+            <textarea id="p_links" style="min-height:90px" placeholder="貼工具連結、教學連結...">${escapeHtml(p.links)}</textarea>
+          </div>
+          <div>
+            <label>Hashtags（可多行）</label>
+            <textarea id="p_tags" style="min-height:90px" placeholder="#幸福教養 #零用錢練功房">${escapeHtml(p.tags)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>文宣內容（草稿/全文）</label>
+            <textarea id="p_body" placeholder="把你的文宣草稿貼進來...">${escapeHtml(p.body)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>互動/CTA（留言句、分享引導等）</label>
+            <input id="p_cta" value="${escapeHtml(p.cta)}" placeholder="例如：留言『理智隊長報到！』一起交流">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row two">
+          <div>
+            <label>🪄 文宣咒語包（提示）</label>
+            <textarea id="p_prompt" readonly>${escapeHtml(p.prompt)}</textarea>
+            <div class="kbar" style="margin-top:8px">
+              <button id="btnPromoCopyPrompt">複製文宣咒語包</button>
+              <button id="btnPromoSaveSpell" class="primary">收藏成咒語</button>
+            </div>
+          </div>
+
+          <div>
+            <label>快捷提醒</label>
+            <div class="small">
+              ✅ 文宣是「可重發資產」：每次只改 10% 就能再推一次。<br>
+              ✅ 建議：每次發文後，把該版本保存到文宣庫（方便回收）。<br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 文宣存放與搜尋</p>
+          <p class="hint">可依工具/系列/用途篩選，並關鍵字搜尋（主題、內文、標籤都搜得到）。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="p_query" value="${escapeHtml(state.filters.promoQuery||"")}" placeholder="例如：試用 / 免安裝 / 理智消費">
+          </div>
+          <div>
+            <label>工具（篩選）</label>
+            <select id="p_filterTool">
+              <option>全部</option>
+              ${tools.map(t=>`<option ${t===filterTool?"selected":""}>${escapeHtml(t)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div class="row three">
+          <div>
+            <label>系列</label>
+            <select id="p_filterSeries">
+              <option ${filterSeries==="全部"?"selected":""}>全部</option>
+              ${SERIES.map(s=>`<option ${s===filterSeries?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div>
+            <label>文宣用途</label>
+            <select id="p_filterType">
+              <option ${filterType==="全部"?"selected":""}>全部</option>
+              ${PROMO_TYPE.map(s=>`<option ${s===filterType?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap">
+            <button id="btnPromoClear" class="ghost">清空篩選</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="promoList">
+          ${items.length===0 ? `<div class="small">目前沒有符合的文宣。你可以先「保存到文宣庫」。</div>` : items.map(renderPromoItem).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderPromoItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名文宣)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.tool||"")}</span>
+            <span class="badge">${escapeHtml(x.series||"")}</span>
+            <span class="badge">${escapeHtml(x.type||"")}</span>
+            <span class="badge">${escapeHtml(x.platform||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnPromoEdit">編輯</button>
+          <button class="btnPromoCopy">複製</button>
+          <button class="btnPromoDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.body||"").slice(0, 520))}${(x.body||"").length>520?"…":""}</div>
+    </div>
+  `;
+}
+
+/* ---------- publish (發片打包) ---------- */
+function renderPublish(){
+  const d=state.data.publishDraft;
+  const q=(state.filters.publishQuery||"").trim().toLowerCase();
+  let items=state.data.publishes.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(q){
+    items=items.filter(x=>{
+      const blob = `${x.title} ${x.intro} ${x.hashtags} ${x.toolLinks} ${x.notes} ${x.date}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">📦 發片打包庫</p>
+          <p class="hint">一支影片一筆：標題/介紹/hashtags/工具連結/上片日。之後要再推同一支很省力。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnPubSave" class="ok">保存打包</button>
+          <button id="btnPubCopy" class="primary">複製這筆打包</button>
+          <button id="btnPubClear" class="ghost">清空表單</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>影片標題</label>
+            <input id="pb_title" value="${escapeHtml(d.title)}" placeholder="例如：無欲則剛｜孩子學會等一下，一輩子選擇力就開始長出來">
+          </div>
+          <div>
+            <label>預計發片日（可空）</label>
+            <input id="pb_date" value="${escapeHtml(d.date)}" placeholder="例如：2026-01-10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>影片介紹（建議 100 字內，可多行）</label>
+            <textarea id="pb_intro" style="min-height:90px" placeholder="貼你的 100 字介紹...">${escapeHtml(d.intro)}</textarea>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label>Hashtags</label>
+            <textarea id="pb_tags" style="min-height:90px">${escapeHtml(d.hashtags)}</textarea>
+          </div>
+          <div>
+            <label>工具/連結（可多行）</label>
+            <textarea id="pb_links" style="min-height:90px" placeholder="工具連結、教學連結、表單...">${escapeHtml(d.toolLinks)}</textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>備註（封面字/留言引導/置頂留言）</label>
+            <textarea id="pb_notes" style="min-height:90px">${escapeHtml(d.notes)}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 搜尋與管理</p>
+          <p class="hint">搜尋標題/介紹/hashtags/連結/備註。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="pb_query" value="${escapeHtml(state.filters.publishQuery||"")}" placeholder="例如：零用錢 / 每週五更新 / 理智隊長">
+          </div>
+          <div class="small" style="display:flex;align-items:flex-end">
+            ✅ 你也可以從「完稿庫」一鍵打包（自動填表）。
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="pubList">
+          ${items.length===0 ? `<div class="small">目前沒有打包內容。</div>` : items.map(renderPublishItem).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderPublishItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名打包)")}</div>
+          <div class="badges">
+            <span class="badge">日期：${escapeHtml(x.date||"—")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnPubLoad">載入</button>
+          <button class="btnPubCopy">複製</button>
+          <button class="btnPubDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.intro||"").slice(0, 360))}${(x.intro||"").length>360?"…":""}</div>
+    </div>
+  `;
+}
+
+/* ---------- spells (咒語包庫) ---------- */
+function renderSpells(){
+  const q=(state.filters.spellsQuery||"").trim().toLowerCase();
+  const cat=state.filters.spellsCat||"全部";
+
+  let items=state.data.spells.slice().sort((a,b)=> (b.updatedAt||b.createdAt).localeCompare(a.updatedAt||a.createdAt));
+  if(cat!=="全部") items=items.filter(x=>x.category===cat);
+  if(q){
+    items=items.filter(x=>{
+      const blob = `${x.title} ${x.category} ${x.content}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  const categories=Array.from(new Set(state.data.spells.map(x=>x.category))).filter(Boolean).sort();
+
+  const draft=state._spellDraft || {id:"", title:"", category:"創作", content:""};
+
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🧙 咒語包庫（提示收藏｜含分流）</p>
+          <p class="hint">把常用提示存起來：創作提示、文宣提示、課程提示、固定 CTA 模板…都可以。</p>
+        </div>
+        <div class="kbar">
+          <button id="btnSpellSave" class="ok">${draft.id ? "覆蓋保存" : "保存咒語"}</button>
+          <button id="btnSpellClear" class="ghost">清空表單</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>咒語標題</label>
+            <input id="s_title" value="${escapeHtml(draft.title)}" placeholder="例如：幸福教養長片｜腦科學加強版">
+          </div>
+          <div>
+            <label>分類</label>
+            <input id="s_cat" value="${escapeHtml(draft.category)}" placeholder="例如：創作 / 文宣 / 課程 / CTA">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>咒語內容</label>
+            <textarea id="s_content" placeholder="貼你的提示內容...">${escapeHtml(draft.content)}</textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnSpellCopy">複製此咒語</button>
+          <button id="btnSpellToCreate" class="primary">➡️ 貼到創作區提示欄（手動用）</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🗂 搜尋與管理</p>
+          <p class="hint">可依分類篩選、關鍵字搜尋。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row two">
+          <div>
+            <label>搜尋（關鍵字）</label>
+            <input id="s_query" value="${escapeHtml(state.filters.spellsQuery||"")}" placeholder="例如：Hook / 3000字 / 工具加強">
+          </div>
+          <div>
+            <label>分類（篩選）</label>
+            <select id="s_filterCat">
+              <option>全部</option>
+              ${categories.map(c=>`<option ${c===cat?"selected":""}>${escapeHtml(c)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="spellList">
+          ${items.length===0 ? `<div class="small">目前沒有咒語。你可以從創作區/文宣庫一鍵收藏。</div>` : items.map(renderSpellItem).join("")}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderSpellItem(x){
+  const time=fmt(x.updatedAt||x.createdAt);
+  return `
+    <div class="item" data-id="${escapeHtml(x.id)}">
+      <div class="itemTop">
+        <div>
+          <div class="itemTitle">${escapeHtml(x.title||"(未命名咒語)")}</div>
+          <div class="badges">
+            <span class="badge">${escapeHtml(x.category||"")}</span>
+            <span class="badge">更新：${escapeHtml(time)}</span>
+          </div>
+        </div>
+        <div class="itemBtns">
+          <button class="btnSpellEdit">編輯</button>
+          <button class="btnSpellCopy">複製</button>
+          <button class="btnSpellDel danger">刪除</button>
+        </div>
+      </div>
+      <div class="sectionSep"></div>
+      <div class="mono">${escapeHtml((x.content||"").slice(0, 520))}${(x.content||"").length>520?"…":""}</div>
+    </div>
+  `;
+}
+
+/* ---------- backup (設定/備份) ---------- */
+function renderBackup(){
+  return `
+  <div class="grid">
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">🛡️ 設定/備份（換手機最穩）</p>
+          <p class="hint">建議習慣：每週一次或每次大改版 → 匯出 JSON；平常寫完 → 一鍵雲端備份。</p>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="kbar">
+          <button id="btnBackupCloudCfg" class="primary">⚙️ 打開雲端設定</button>
+          <button id="btnBackupTestCloud" class="ok">送出雲端測試</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kbar">
+          <button id="btnGen192">生成並下載 icon-192.png</button>
+          <button id="btnGen512">生成並下載 icon-512.png</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="small" style="line-height:1.7">
+          ✅ Android：Chrome → 右上「⋮」→ <b>加到主畫面</b><br>
+          ✅ iPhone：Safari → 分享 → <b>加入主畫面</b><br><br>
+          （此版已依你的要求：<b>不顯示安裝按鈕</b>，避免干擾。）
+        </div>
+
+        <div class="divider"></div>
+
+        <label>資料概況（快照）</label>
+        <div class="mono" id="snapshot" style="min-height:140px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <p class="title">📌 系統狀態</p>
+          <p class="hint">Service Worker 註冊狀態與簡易紀錄。</p>
         </div>
       </div>
       <div class="bd">
-        <div class="mono">${esc(JSON.stringify({
-          materials: state.data.materials.length,
-          promos: state.data.promos.length,
-          publishes: state.data.publishes.length,
-          spells: state.data.spells.length
-        }, null, 2))}</div>
-      </div>
-    </aside>
-  </div>
-  <input type="file" id="b_file" accept="application/json" style="display:none" />
-  `;
-}
-
-function bindBackup(){
-  $("b_export").onclick=()=>{
-    const blob = new Blob([JSON.stringify(state.data, null, 2)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `angel_studio_backup_${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    toast("已匯出");
-  };
-
-  $("b_importBtn").onclick=()=> $("b_file").click();
-
-  $("b_file").onchange=async(e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f) return;
-    try{
-      const txt = await f.text();
-      const obj = JSON.parse(txt);
-      state.data = mergeDeep(structuredClone(DEFAULTS), obj);
-      saveAll();
-      render();
-      toast("已匯入");
-    }catch(err){
-      alert("匯入失敗：JSON 解析錯誤");
-    }finally{
-      e.target.value="";
-    }
-  };
-
-  $("b_importPaste").onclick=()=>{
-    const txt = $("b_paste").value || "";
-    if(!txt.trim()) return toast("沒有內容");
-    try{
-      const obj = JSON.parse(txt);
-      state.data = mergeDeep(structuredClone(DEFAULTS), obj);
-      saveAll();
-      render();
-      toast("已匯入");
-    }catch(err){
-      alert("匯入失敗：JSON 解析錯誤");
-    }
-  };
-
-  $("b_reset").onclick=()=>{
-    if(!confirm("確定重置？這會清空所有資料。")) return;
-    state.data = structuredClone(DEFAULTS);
-    saveAll();
-    render();
-    toast("已重置");
-  };
-}
-
-/* =========================
-   Help
-   ========================= */
-function renderHelp(){
-  return `
-  <section class="card">
-    <div class="hd">
-      <div>
-        <h2>使用說明</h2>
-        <div class="hint">你要的兩個重點：① 咒語分流 ② 一鍵轉發片打包</div>
+        <div class="mono" id="sysLog" style="min-height:180px"></div>
       </div>
     </div>
-    <div class="bd">
-      <h3 style="margin:0 0 10px; font-size:14px;">① 咒語分流怎麼用？</h3>
-      <div class="small">
-        <div>到「咒語庫」新增咒語時，填：<strong>系列 / 種類 / 風格 / 類別</strong>。</div>
-        <div>以後右側用分流篩選，一秒找到你要的咒語。</div>
-        <div>也可以在「創作區」的「快速插入咒語」用分流直接插入 Prompt。</div>
-      </div>
-
-      <div class="mutedline"></div>
-
-      <h3 style="margin:0 0 10px; font-size:14px;">② 一鍵把完稿轉成發片打包</h3>
-      <div class="small">
-        <div>在「創作區」按 <strong>一鍵轉成發片打包</strong>：</div>
-        <ul>
-          <li>標題：優先用你填的標題；若沒填，就取完稿第一行/第一句當標題。</li>
-          <li>介紹：自動從完稿內容抓 <strong>100 字</strong>（可在設定改字數上限）。</li>
-          <li>Hashtags：用你草稿裡的 hashtags；若空白，用設定的預設 hashtags。</li>
-          <li>工具連結：用你草稿裡的連結；若空白，用設定的預設工具連結。</li>
-        </ul>
-        <div>轉完會自動跳到「發片打包」分頁，你直接按「複製打包」貼到 YouTube 描述欄即可。</div>
-      </div>
-
-      <div class="mutedline"></div>
-
-      <h3 style="margin:0 0 10px; font-size:14px;">資料安全</h3>
-      <div class="small">
-        <div>所有資料都存在你的瀏覽器 <span class="kbd">localStorage</span>（不會上傳）。</div>
-        <div>建議常用「備份 → 匯出備份檔」存一份 JSON。</div>
-      </div>
-    </div>
-  </section>
-  `;
+  </div>`;
 }
 
-function bindHelp(){}
+/* ---------- main render ---------- */
+function render(){
+  const v=$("view");
+  if(state.tab==="materials") v.innerHTML = renderMaterials();
+  if(state.tab==="create") v.innerHTML = renderCreate();
+  if(state.tab==="finals") v.innerHTML = renderFinals();
+  if(state.tab==="promo") v.innerHTML = renderPromo();
+  if(state.tab==="publish") v.innerHTML = renderPublish();
+  if(state.tab==="spells") v.innerHTML = renderSpells();
+  if(state.tab==="backup") v.innerHTML = renderBackup();
 
-/* =========================
-   Init
-   ========================= */
-loadAll();
-renderTabs();
-renderPills();
-render();
+  bindEvents();
+  updatePills();
+
+  const snap=$("snapshot");
+  if(snap){
+    snap.textContent = JSON.stringify({
+      updatedAt: state.data.updatedAt,
+      lastCloudAt: state.data.lastCloudAt,
+      counts: {
+        materials: state.data.materials.length,
+        finals: state.data.finals.length,
+        promos: state.data.promos.length,
+        publishes: state.data.publishes.length,
+        spells: state.data.spells.length
+      }
+    }, null, 2);
+  }
+}
+
+/* ---------- 完稿 → 一鍵打包（核心新增） ---------- */
+function packFromFinal(finalItem){
+  const title = finalItem.topic || "(未填主題)";
+  const intro = stripToIntro(finalItem.output || "");
+  const tags = hashtagsForSeries(finalItem.series || "其他");
+
+  // 抽工具連結：先從原文(body)找，再從完稿(output)找
+  const urls = [
+    ...extractUrls(finalItem.body || ""),
+    ...extractUrls(finalItem.output || "")
+  ];
+  const toolLinks = urls.length ? urls.join("\n") : "";
+
+  state.data.publishDraft.title = title;
+  state.data.publishDraft.intro = intro;
+  state.data.publishDraft.hashtags = tags;
+  state.data.publishDraft.toolLinks = toolLinks;
+  state.data.publishDraft.notes =
+    `來源完稿：${finalItem.series || ""}｜${finalItem.purpose || ""}\n` +
+    (finalItem.spellRoute ? `咒語分流：${finalItem.spellRoute}\n` : "") +
+    `提示：可在這裡補「置頂留言/封面字/互動引導」。`;
+
+  saveAll();
+  state.tab="publish";
+  renderTabs();
+  render();
+  toast("已一鍵打包（可微調）");
+}
+
+/* ---------- bind events per tab ---------- */
+function bindEvents(){
+  // Header buttons
+  $("btnSaveAll").onclick = saveAll;
+
+  $("btnExport").onclick = exportJSON;
+  $("btnImport").onclick = ()=> $("fileImport").click();
+  $("fileImport").onchange = (e)=>{
+    const f=e.target.files?.[0];
+    if(f) importJSON(f);
+    e.target.value="";
+  };
+
+  $("btnCloud").onclick = ()=> cloudBackup();
+  $("btnCloudCfg").onclick = ()=>{
+    $("dlgCloud").showModal();
+    $("cfgFormResponse").value = state.cloud.formResponse || "";
+    $("cfgEntryJson").value = state.cloud.entryJson || "";
+    $("cfgEntryNote").value = state.cloud.entryNote || "";
+    $("cloudLog").textContent = "";
+    cloudLog("開啟雲端設定。");
+  };
+
+  // Cloud dialog buttons
+  if($("btnSaveCloudCfg")){
+    $("btnSaveCloudCfg").onclick = (e)=>{ e.preventDefault(); saveCloudCfg(); };
+    $("btnTestCloud").onclick = async (e)=>{ e.preventDefault(); saveCloudCfg(); cloudLog("開始送出測試…"); await cloudBackup({test:true}); };
+    $("btnResetCloudCfg").onclick = (e)=>{ e.preventDefault(); resetCloudCfg(); };
+  }
+
+  // Tab: materials
+  if(state.tab==="materials"){
+    $("m_query").oninput = (e)=>{ state.filters.materialsQuery=e.target.value; render(); };
+
+    $("btnMatClear").onclick = ()=>{
+      state._materialDraft = {id:"",title:"",scene:"",feel:"",insight:"",tool:"",series:"幸福教養"};
+      render(); toast("已清空");
+    };
+
+    $("btnMatCopy").onclick = ()=>{
+      const text = [
+        `【標題】${$("m_title").value}`,
+        `【系列】${$("m_series").value}`,
+        "",
+        "【生命場景】",
+        $("m_scene").value,
+        "",
+        "【感受】",
+        $("m_feel").value,
+        "",
+        "【洞見】",
+        $("m_insight").value,
+        "",
+        "【關聯工具】",
+        $("m_tool").value,
+      ].join("\n");
+      copyText(text);
+    };
+
+    $("btnMatToCreate").onclick = ()=>{
+      const title=$("m_title").value.trim();
+      const series=$("m_series").value;
+      const body = [
+        `【素材標題】${title||"(未填)"}`,
+        `【生命場景】\n${$("m_scene").value||""}`,
+        `\n【感受】\n${$("m_feel").value||""}`,
+        `\n【洞見】\n${$("m_insight").value||""}`,
+        `\n【關聯工具】\n${$("m_tool").value||""}`,
+      ].join("\n");
+
+      state.data.create.series = series;
+      state.data.create.topic = title || state.data.create.topic;
+      state.data.create.body = body;
+      if(state._materialDraft?.id) state.data.create.linkMaterialId = state._materialDraft.id;
+
+      state.tab="create"; saveAll(); renderTabs(); render();
+      toast("已帶入創作區");
+    };
+
+    $("btnMatSave").onclick = ()=>{
+      const draft = state._materialDraft || {id:""};
+      const obj = {
+        id: draft.id || uid(),
+        title: $("m_title").value.trim(),
+        series: $("m_series").value,
+        scene: $("m_scene").value,
+        feel: $("m_feel").value,
+        insight: $("m_insight").value,
+        tool: $("m_tool").value,
+        createdAt: draft.id ? (draft.createdAt || nowISO()) : nowISO(),
+        updatedAt: nowISO()
+      };
+
+      if(draft.id){
+        state.data.materials = state.data.materials.map(x=> x.id===draft.id ? {...x, ...obj} : x);
+      }else{
+        state.data.materials.push(obj);
+      }
+
+      state._materialDraft = {...obj};
+      saveAll();
+      render();
+      toast(draft.id ? "已覆蓋保存" : "已保存素材");
+    };
+
+    const list=$("matList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.materials.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnMatEdit").onclick = ()=>{
+          state._materialDraft = {...item};
+          render(); toast("已載入可編輯");
+        };
+        el.querySelector(".btnMatUse").onclick = ()=>{
+          state._materialDraft = {...item};
+          $("btnMatToCreate").click();
+        };
+        el.querySelector(".btnMatDel").onclick = ()=>{
+          if(!confirm("刪除這筆素材？")) return;
+          state.data.materials = state.data.materials.filter(x=>x.id!==id);
+          if(state.data.create.linkMaterialId===id) state.data.create.linkMaterialId="";
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: create
+  if(state.tab==="create"){
+    const c=state.data.create;
+
+    $("c_series").onchange = (e)=>{ c.series=e.target.value; c.prompt=buildCreatePrompt(); saveAll(); render(); };
+    $("c_purpose").onchange = (e)=>{ c.purpose=e.target.value; c.prompt=buildCreatePrompt(); saveAll(); render(); };
+    $("c_route").onchange = (e)=>{ c.spellRoute=e.target.value; c.prompt=buildCreatePrompt(); saveAll(); render(); };
+
+    $("c_topic").oninput = (e)=>{ c.topic=e.target.value; c.prompt=buildCreatePrompt(); };
+    $("c_body").oninput = (e)=>{ c.body=e.target.value; c.prompt=buildCreatePrompt(); };
+    $("c_output").oninput = (e)=>{ c.output=e.target.value; };
+
+    $("btnCreateCopyPrompt").onclick = ()=> copyText(buildCreatePrompt());
+    $("btnCreateCopyOut").onclick = ()=> copyText(c.output||"");
+
+    $("btnCreateClearOut").onclick = ()=>{
+      if(confirm("清空產出區？")){ c.output=""; saveAll(); render(); }
+    };
+
+    $("btnCreateCopyAll").onclick = ()=>{
+      const txt = [
+        `【系列】${c.series}`,
+        `【用途】${c.purpose}`,
+        `【咒語分流】${c.spellRoute}`,
+        `【主題】${c.topic}`,
+        "",
+        "【原文/素材】",
+        c.body,
+        "",
+        "【協作提示】",
+        buildCreatePrompt(),
+        "",
+        "【產出】",
+        c.output,
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnCreateSaveFinal").onclick = ()=>{
+      const item = {
+        id: uid(),
+        series: c.series,
+        purpose: c.purpose,
+        spellRoute: c.spellRoute,
+        topic: c.topic || "(未填主題)",
+        body: c.body || "",
+        output: c.output || "",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.finals.push(item);
+      saveAll();
+      toast("已存成完稿");
+      state.tab="finals"; renderTabs(); render();
+    };
+
+    $("btnCreateSaveSpell").onclick = ()=>{
+      const s = {
+        id: uid(),
+        title: `${c.series}｜${c.purpose}｜${c.spellRoute}`,
+        category: "創作",
+        content: buildCreatePrompt(),
+        meta: { series:c.series, purpose:c.purpose, spellRoute:c.spellRoute },
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.spells.push(s);
+      saveAll();
+      toast("已收藏咒語");
+    };
+
+    $("btnGoMaterials").onclick = ()=>{ state.tab="materials"; renderTabs(); render(); };
+    $("btnGoFinals").onclick = ()=>{ state.tab="finals"; renderTabs(); render(); };
+    $("btnGoPromo").onclick = ()=>{ state.tab="promo"; renderTabs(); render(); };
+    $("btnGoPublish").onclick = ()=>{ state.tab="publish"; renderTabs(); render(); };
+  }
+
+  // Tab: finals
+  if(state.tab==="finals"){
+    $("f_query").oninput = (e)=>{ state.filters.finalsQuery=e.target.value; render(); };
+
+    $("btnFinalsCopyAll").onclick = ()=>{
+      const txt = state.data.finals.map(x=>`- ${x.topic}｜${x.series}｜${x.purpose}${x.spellRoute?`｜${x.spellRoute}`:""}｜${fmt(x.updatedAt||x.createdAt)}`).join("\n");
+      copyText(txt || "(目前沒有完稿)");
+    };
+
+    const list=$("finalList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.finals.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnFinalCopy").onclick = ()=>{
+          const txt = [
+            `【主題】${item.topic}`,
+            `【系列】${item.series}`,
+            `【用途】${item.purpose}`,
+            item.spellRoute ? `【咒語分流】${item.spellRoute}` : "",
+            "",
+            "【原文】",
+            item.body,
+            "",
+            "【完稿】",
+            item.output
+          ].filter(Boolean).join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnFinalUse").onclick = ()=>{
+          state.data.create.series=item.series;
+          state.data.create.purpose=item.purpose;
+          state.data.create.spellRoute=item.spellRoute || state.data.create.spellRoute;
+          state.data.create.topic=item.topic;
+          state.data.create.body=item.body;
+          state.data.create.output=item.output;
+          state.data.create.linkMaterialId="";
+          saveAll();
+          state.tab="create"; renderTabs(); render();
+          toast("已帶回創作區");
+        };
+
+        // ✅新增：一鍵打包
+        el.querySelector(".btnFinalPack").onclick = ()=>{
+          packFromFinal(item);
+        };
+
+        el.querySelector(".btnFinalDel").onclick = ()=>{
+          if(!confirm("刪除這筆完稿？")) return;
+          state.data.finals = state.data.finals.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: promo
+  if(state.tab==="promo"){
+    const p=state.data.promoDraft;
+
+    $("p_tool").oninput=(e)=>{ p.tool=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_series").onchange=(e)=>{ p.series=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_type").onchange=(e)=>{ p.type=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_platform").onchange=(e)=>{ p.platform=e.target.value; p.prompt=buildPromoPrompt(); saveAll(); render(); };
+    $("p_title").oninput=(e)=>{ p.title=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_links").oninput=(e)=>{ p.links=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_tags").oninput=(e)=>{ p.tags=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_body").oninput=(e)=>{ p.body=e.target.value; p.prompt=buildPromoPrompt(); };
+    $("p_cta").oninput=(e)=>{ p.cta=e.target.value; p.prompt=buildPromoPrompt(); };
+
+    $("btnPromoCopyPrompt").onclick=()=>copyText(buildPromoPrompt());
+
+    $("btnPromoSave").onclick=()=>{
+      const title=(p.title||"").trim() || `${p.tool}｜${p.type}`;
+      const item={
+        id: uid(),
+        tool: (p.tool||"").trim()||"（未填工具）",
+        series: p.series,
+        type: p.type,
+        platform: p.platform,
+        title,
+        body: p.body||"",
+        links: p.links||"",
+        tags: p.tags||"",
+        cta: p.cta||"",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.promos.push(item);
+      saveAll(); render(); toast("已保存到文宣庫");
+    };
+
+    $("btnPromoCopyAll").onclick=()=>{
+      const txt=[
+        `【工具/專案】${p.tool}`,
+        `【系列】${p.series}`,
+        `【用途】${p.type}`,
+        `【平台】${p.platform}`,
+        `【標題】${p.title}`,
+        "",
+        "【連結】",
+        p.links,
+        "",
+        "【Hashtags】",
+        p.tags,
+        "",
+        "【文宣內容】",
+        p.body,
+        "",
+        "【互動/CTA】",
+        p.cta,
+        "",
+        "【文宣咒語包】",
+        buildPromoPrompt()
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnPromoSaveSpell").onclick=()=>{
+      const s={
+        id: uid(),
+        title: `${p.series}｜文宣提示（FB/IG/LINE/官網）`,
+        category:"文宣",
+        content: buildPromoPrompt(),
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.spells.push(s);
+      saveAll(); toast("已收藏咒語");
+    };
+
+    $("p_query").oninput=(e)=>{ state.filters.promoQuery=e.target.value; render(); };
+    $("p_filterTool").onchange=(e)=>{ state.filters.promoTool=e.target.value; render(); };
+    $("p_filterSeries").onchange=(e)=>{ state.filters.promoSeries=e.target.value; render(); };
+    $("p_filterType").onchange=(e)=>{ state.filters.promoType=e.target.value; render(); };
+    $("btnPromoClear").onclick=()=>{
+      state.filters.promoQuery="";
+      state.filters.promoTool="全部";
+      state.filters.promoSeries="全部";
+      state.filters.promoType="全部";
+      render();
+    };
+
+    const list=$("promoList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.promos.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnPromoCopy").onclick=()=>{
+          const txt=[
+            `【標題】${item.title}`,
+            `【工具/專案】${item.tool}`,
+            `【系列】${item.series}`,
+            `【用途】${item.type}`,
+            `【平台】${item.platform}`,
+            "",
+            "【連結】",
+            item.links,
+            "",
+            "【Hashtags】",
+            item.tags,
+            "",
+            "【文宣內容】",
+            item.body,
+            "",
+            "【互動/CTA】",
+            item.cta
+          ].join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnPromoEdit").onclick=()=>{
+          state.data.promoDraft = {...state.data.promoDraft, ...item};
+          state.data.promoDraft.prompt = buildPromoPrompt();
+          saveAll(); render(); toast("已載入可編輯");
+        };
+
+        el.querySelector(".btnPromoDel").onclick=()=>{
+          if(!confirm("刪除這筆文宣？")) return;
+          state.data.promos = state.data.promos.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: publish
+  if(state.tab==="publish"){
+    const d=state.data.publishDraft;
+
+    $("pb_title").oninput=(e)=>{ d.title=e.target.value; };
+    $("pb_date").oninput=(e)=>{ d.date=e.target.value; };
+    $("pb_intro").oninput=(e)=>{ d.intro=e.target.value; };
+    $("pb_tags").oninput=(e)=>{ d.hashtags=e.target.value; };
+    $("pb_links").oninput=(e)=>{ d.toolLinks=e.target.value; };
+    $("pb_notes").oninput=(e)=>{ d.notes=e.target.value; };
+
+    $("btnPubClear").onclick=()=>{
+      d.title=""; d.date=""; d.intro=""; d.hashtags=hashtagsForSeries("幸福教養"); d.toolLinks=""; d.notes="";
+      saveAll(); render(); toast("已清空");
+    };
+
+    $("btnPubCopy").onclick=()=>{
+      const txt=[
+        `【標題】${d.title}`,
+        `【日期】${d.date||"—"}`,
+        "",
+        "【介紹（100字內）】",
+        d.intro,
+        "",
+        "【Hashtags】",
+        d.hashtags,
+        "",
+        "【工具/連結】",
+        d.toolLinks,
+        "",
+        "【備註】",
+        d.notes
+      ].join("\n");
+      copyText(txt);
+    };
+
+    $("btnPubSave").onclick=()=>{
+      const item={
+        id: uid(),
+        title: (d.title||"").trim()||"(未命名打包)",
+        date: (d.date||"").trim(),
+        intro: d.intro||"",
+        hashtags: d.hashtags||"",
+        toolLinks: d.toolLinks||"",
+        notes: d.notes||"",
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+      state.data.publishes.push(item);
+      saveAll(); render(); toast("已保存打包");
+    };
+
+    $("pb_query").oninput=(e)=>{ state.filters.publishQuery=e.target.value; render(); };
+
+    const list=$("pubList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.publishes.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnPubLoad").onclick=()=>{
+          state.data.publishDraft = {...state.data.publishDraft, ...item};
+          saveAll(); render(); toast("已載入");
+        };
+
+        el.querySelector(".btnPubCopy").onclick=()=>{
+          const txt=[
+            `【標題】${item.title}`,
+            `【日期】${item.date||"—"}`,
+            "",
+            "【介紹】",
+            item.intro,
+            "",
+            "【Hashtags】",
+            item.hashtags,
+            "",
+            "【工具/連結】",
+            item.toolLinks,
+            "",
+            "【備註】",
+            item.notes
+          ].join("\n");
+          copyText(txt);
+        };
+
+        el.querySelector(".btnPubDel").onclick=()=>{
+          if(!confirm("刪除這筆打包？")) return;
+          state.data.publishes = state.data.publishes.filter(x=>x.id!==id);
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: spells
+  if(state.tab==="spells"){
+    const draft = state._spellDraft || {id:"", title:"", category:"創作", content:""};
+
+    $("btnSpellClear").onclick=()=>{
+      state._spellDraft = {id:"", title:"", category:"創作", content:""};
+      render(); toast("已清空");
+    };
+
+    $("btnSpellCopy").onclick=()=>{
+      copyText($("s_content").value || "");
+    };
+
+    $("btnSpellToCreate").onclick=()=>{
+      // 這裡是「手動用」：把咒語複製到剪貼簿（避免破壞創作區 readonly）
+      copyText($("s_content").value || "");
+      toast("已複製（到創作區貼上用）");
+    };
+
+    $("btnSpellSave").onclick=()=>{
+      const cur = state._spellDraft || {id:""};
+      const obj = {
+        id: cur.id || uid(),
+        title: $("s_title").value.trim() || "(未命名咒語)",
+        category: $("s_cat").value.trim() || "其他",
+        content: $("s_content").value || "",
+        createdAt: cur.id ? (cur.createdAt || nowISO()) : nowISO(),
+        updatedAt: nowISO()
+      };
+      if(cur.id){
+        state.data.spells = state.data.spells.map(x=> x.id===cur.id ? {...x, ...obj} : x);
+      }else{
+        state.data.spells.push(obj);
+      }
+      state._spellDraft = {...obj};
+      saveAll(); render(); toast(cur.id ? "已覆蓋保存" : "已保存咒語");
+    };
+
+    $("s_query").oninput=(e)=>{ state.filters.spellsQuery=e.target.value; render(); };
+    $("s_filterCat").onchange=(e)=>{ state.filters.spellsCat=e.target.value; render(); };
+
+    const list=$("spellList");
+    if(list){
+      list.querySelectorAll(".item").forEach(el=>{
+        const id=el.getAttribute("data-id");
+        const item=state.data.spells.find(x=>x.id===id);
+        if(!item) return;
+
+        el.querySelector(".btnSpellCopy").onclick=()=> copyText(item.content||"");
+        el.querySelector(".btnSpellEdit").onclick=()=>{
+          state._spellDraft = {...item};
+          render(); toast("已載入可編輯");
+        };
+        el.querySelector(".btnSpellDel").onclick=()=>{
+          if(!confirm("刪除這筆咒語？")) return;
+          state.data.spells = state.data.spells.filter(x=>x.id!==id);
+          if(state._spellDraft?.id===id) state._spellDraft = {id:"", title:"", category:"創作", content:""};
+          saveAll(); render(); toast("已刪除");
+        };
+      });
+    }
+  }
+
+  // Tab: backup
+  if(state.tab==="backup"){
+    $("btnBackupCloudCfg").onclick=()=> $("btnCloudCfg").click();
+    $("btnBackupTestCloud").onclick=async()=>{ $("btnCloudCfg").click(); };
+
+    $("btnGen192").onclick=()=>{
+      const c=drawIcon(192);
+      downloadCanvas(c,"icon-192.png");
+      toast("已下載 icon-192.png");
+    };
+    $("btnGen512").onclick=()=>{
+      const c=drawIcon(512);
+      downloadCanvas(c,"icon-512.png");
+      toast("已下載 icon-512.png");
+    };
+
+    const sys=$("sysLog");
+    if(sys){
+      sys.textContent =
+        "✅ 這裡只顯示狀態（不影響功能）。\n" +
+        "- 建議：每次大改版先匯出 JSON。\n" +
+        "- 若要離線：請確保 sw.js 正常放置並可註冊。\n";
+    }
+  }
+}
+
+/* ---------- init ---------- */
+function init(){
+  loadAll();
+  renderTabs();
+  render();
+  // 預設 hashtags（如果空）
+  if(!state.data.publishDraft.hashtags){
+    state.data.publishDraft.hashtags = hashtagsForSeries("幸福教養");
+  }
+  // Service Worker（可選；不影響主功能）
+  const sys = $("sysLog");
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("./sw.js").then(reg=>{
+      if(sys) sys.textContent = (sys.textContent||"") + `\nSW 註冊成功：${reg.scope}\n`;
+    }).catch(err=>{
+      if(sys) sys.textContent = (sys.textContent||"") + `\nSW 註冊失敗：${err.message}\n`;
+    });
+  }else{
+    if(sys) sys.textContent = (sys.textContent||"") + "\n此瀏覽器不支援 SW。\n";
+  }
+}
+init();
 </script>
 </body>
-</html>
+  </html>
